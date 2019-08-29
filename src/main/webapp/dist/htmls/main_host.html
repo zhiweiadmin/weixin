@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>金控物联</title>
+    <!--meta-->
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link href="../assets/plugins/pace/themes/pace-theme-flash.css" rel="stylesheet" type="text/css" />
+    <script src="../assets/plugins/pace/pace.min.js" type="text/javascript"></script>
+    <script src="../assets/scripts/plugins/swiper.js" type="text/javascript"></script>
+    <style>
+        body{
+            background: -webkit-linear-gradient(#83DECF, #fff) no-repeat 100% 100% ; /* Safari 5.1 - 6.0 */
+            background: -o-linear-gradient(#83DECF, #fff) no-repeat 100% 100%; /* Opera 11.1 - 12.0 */
+            background: -moz-linear-gradient(#83DECF, #fff) no-repeat 100% 100%; /* Firefox 3.6 - 15 */
+            background: linear-gradient(#83DECF, #fff) no-repeat 100% 100%; /* 标准的语法 */
+        }
+
+    </style>
+</head>
+<body>
+<div id="main"></div>
+<div id="others"></div>
+<script type="text/javascript" src="../assets/plugins/require.min.js"></script>
+<script type="text/javascript">
+    var timestamp = (new Date()).getTime();
+    document.write('<script type="text/javascript" src="../assets/scripts/apps/config.js?v=' + timestamp +'"><\/script>');
+    document.write('<script type="text/javascript" src="../assets/scripts/apps/main_host.js?v=' + timestamp +'"><\/script>');
+</script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+body{
+    background-color: #d2d2d2;
+    font-family: "Microsoft YaHei";
+}
+#main{
+    overflow: hidden;
+}
+.btn.blue{
+    background-color: #64ade0;
+    color: #fff;
+}
+.form-horizontal .form-group{
+    margin-bottom: 30px;
+}
+.form-horizontal .form-control{
+    border: 0px;
+    border-bottom: 1px solid #c2cad8;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-transition: none;
+    -o-transition: none;
+    transition: none;
+}
+.form-horizontal .form-control:focus {
+    border: 0px;
+    border-bottom: 1px solid #c2cad8;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.form-horizontal .control-label{
+    padding-right: 0px;
+    line-height: 32px;
+}
+.form-horizontal .control-label+div{
+    padding-left: 0px;
+}
+.padding-15{
+    padding: 15px;
+}
+.bind-account form{
+    background-color: #fff;
+}
+.bg-color-white{
+    background-color: #fff;
+}
+.margin-bottom-50{
+    margin-bottom: 50px;
+}
+.margin-top-40{
+    margin-top: 40px;
+}
+.margin-bottom-40{
+    margin-bottom: 40px;
+}
+#alert button.btn-block{
+    margin-top: 50px;
+    margin-bottom: 10px;
+}
+#confirm-alert .btn-group{
+    margin-top: 50px;
+    margin-bottom: 10px;
+}
+.btn.grey{
+    background-color: #9b9b9b;
+    color: #fff;
+}
+.modal-header{
+    border: none;
+}
+.ui-loader-default{
+    display:none
+}
+.ui-mobile-viewport{
+    border:none;
+}
+.ui-page {
+    padding: 0;
+    margin: 0;
+    outline: 0;
+}
+.binded-account p{
+    word-wrap:break-word;
+    word-break:normal;
+}
+input::-webkit-input-placeholder{
+    color:#ffffff !important;
+    text-align: center;
+}
+.text-center{
+    text-align: center;
+}
+.margin-top-15{
+    margin-top: 15px;
+}
+.input-style{
+    width:80%;
+    margin-left:10%;
+    height:50px;
+    border-radius:10px;
+}
+.back-color-transparent{
+    background-color: transparent;
+}
+.back-color-login{
+    background-color:#036EB6 ;
+    color: #ffffff;
+}

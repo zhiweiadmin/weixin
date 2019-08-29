@@ -1,0 +1,392 @@
+<%if(tempId == 'layout'){%>
+<div class="row">
+    <div class="col-xs-12">
+        <ul class="nav nav-pills">
+            <li class="active">
+                <a href="javascript:;">待录入</a>
+            </li>
+            <li>
+                <a href="javascript:;">已录入</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-xs-12" id="content"></div>
+    <div class="col-xs-12" id="modal"></div>
+</div>
+<%}else if(tempId == 'default-navbar-1'){%>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="col-xs-12 padding-top-15">
+            <div id="addDeviceBtn">
+                <p class="text-center">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </p>
+                <p class="text-center">
+                    <span class="glyphicon-title">点击添加安装设备</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<%}else if(tempId == 'default-navbar-2'){%>
+<div class="row">
+    <div class="col-xs-12 bg-color-white">
+        <div class="col-xs-3 padding-top-10 padding-bottom-10">
+            <div class="btn-group">
+                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="statusBtn">
+                    <span id="statusText">未对接</span>
+                    <span class="glyphicon glyphicon-chevron-down"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="javascript:;">未对接</a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">已对接</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-6 padding-top-10 padding-bottom-10 text-center" id="msg"></div>
+        <div class="col-xs-3 text-right padding-top-10 padding-bottom-10">
+            <button type="button" class="btn" id="refresh">
+                <span class="glyphicon glyphicon-refresh"></span>刷新
+            </button>
+        </div>
+        <div class="quick-btns hidden">
+            <a href="javascript:;" class="btn border-bottom-0" id="asc">
+                <i class="glyphicon glyphicon-sort-by-attributes"></i>
+            </a>
+            <a href="javascript:;" class="btn border-bottom-0" id="desc">
+                <i class="glyphicon glyphicon-sort-by-attributes-alt"></i>
+            </a>
+            <a href="javascript:;" class="btn border-bottom-0" id="search">
+                <i class="glyphicon glyphicon-search"></i>
+            </a>
+            <a href="javascript:;" class="btn" id="top">
+                <i class="glyphicon glyphicon-arrow-up"></i>
+            </a>
+    </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 bg-color-grey padding-top-15 " id="navbar-2-container"></div>
+</div>
+<div class="row">
+    <div class="col-xs-12 padding-top-10" id="footer-btns">
+        <p class="text-center">
+            <span class="glyphicon glyphicon-menu-down"></span> 加载更多
+        </p>
+        <p class="text-center hidden">
+            <span class="glyphicon glyphicon-repeat"></span> 获取中
+        </p>
+        <p class="text-center hidden">
+            无更多数据
+        </p>
+    </div>
+</div>
+<%}else if(tempId == 'add-device-panel'){%>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="col-xs-12 padding-top-10 padding-bottom-10">
+            <div class="col-xs-12 bg-color-white padding-top-10 padding-bottom-10">
+                <form class="form-horizontal" id="addDeviceForm">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p class="text-center font-size-32">SE</p>
+                                <div class="col-xs-12 text-center">
+                                    <a href="javascript:;" class="btn btn-link scan" name="scan1">扫码</a>
+                                    <input type="text" class="hidden" name="serialNumber"/>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 hidden">
+                                <p class="text-center font-size-32">空调</p>
+                                <div class="col-xs-12 text-center">
+                                    <a href="javascript:;" class="btn btn-link scan" name="scan2">扫码</a>
+                                    <input type="text" class="hidden" name="acNumber"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">设备型号</label>
+                        <div class="col-xs-9">
+                            <select class="form-control" name="type">
+                                <option value="-1">请选择</option>
+                                <%_.each(device_type, function(o){%>
+                                    <option value="<%=o.value%>"><%=o.name%></option>
+                                <%});%>
+                            </select>
+                        </div>
+                    </div>
+                    <%if(support_temperature_module){%>
+                    <div class="form-group">
+                        <label class="col-xs-4 control-label">温感模块数目</label>
+                        <div class="col-xs-8">
+                            <select class="form-control" name="temperatureModuleNum">
+                                <%_.each(temperature_module_collection, function(o){%>
+                                    <option value="<%=o%>"><%=o%>个</option>
+                                <%})%>
+                            </select>
+                        </div>
+                    </div>
+                    <%}%>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">安装地址</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" placeholder="请填写" name="installPlace"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">住户姓名</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" placeholder="请填写" name="householdName"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">联系电话</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" placeholder="请填写" name="phone"/>
+                        </div>
+                    </div>
+                    <button type="button" class="btn blue btn-lg btn-block" id="next">保存</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%}else if(tempId == 'add-device-confirm'){%>
+<div class="modal fade" id="confirm">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title font-red">请检查并确认以下信息是否填写正确</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">设备型号</label>
+                        <div class="col-xs-9">
+                            <select class="form-control" name="type">
+                                <%_.each(device_type, function(o){%>
+                                    <%if(o.value == data.type){%>
+                                        <option value="<%=o.value%>" selected><%=o.name%></option>
+                                    <%}else{%>
+                                        <option value="<%=o.value%>"><%=o.name%></option>
+                                    <%}%>
+                                <%});%>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">安装地址</label>
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" placeholder="请填写" name="installPlace" value="<%=data.installPlace%>"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-xs-3 control-label">SE序列号</label>
+                        <div class="col-xs-9">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="serialNumber" placeholder="请填写" value="<%=data.serialNumber%>" readonly/>
+                                <span class="input-group-addon scan" name="scan1">重新扫码</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group hidden">
+                        <label class="col-xs-3 control-label">空调序列号</label>
+                        <div class="col-xs-9">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="acNumber" placeholder="请填写" value="<%=data.acNumber%>"/>
+                                <span class="input-group-addon scan" name="scan2">重新扫码</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn blue btn-lg btn-block" id="addDevice">确定</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%}else if(tempId == 'statusText_disconnect_none'){%>
+<div class="row">
+    <div class="col-xs-12">
+        <p class="text-center margin-top-50">目前无未对接的SE和设备</p>
+        <p class="text-center margin-bottom-50">可切换已对接查看安装的设备</p>
+    </div>
+</div>
+<%}else if(tempId == 'statusText_connect_none'){%>
+<div class="row">
+    <div class="col-xs-12">
+        <p class="text-center margin-top-50">目前无已对接的SE和设备</p>
+        <p class="text-center margin-bottom-50">可切换未对接查看安装的设备</p>
+    </div>
+</div>
+<%}else if(tempId == 'msg_device_disconnect'){%>
+<span class="font-red line-height-32">你有<%=data%>个设备未对接成功</span>
+<%}else if(tempId == 'single-device'){%>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="single-device padding-left-15 padding-right-15">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <%if(!data.disconnect){%>
+                                <span class="font-red">未对接成功</span>
+                            <%}else{%>
+                                <span class="font-blue">已对接成功</span>
+                            <%}%>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <span><%=data.installDate%></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12 font-size-18">
+                            <span class="glyphicon glyphicon-map-marker"></span>
+                            <%=data.installPlace%>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <span>设备型号</span>
+                        </div>
+                        <div class="col-xs-8">
+                            <span><%=data.type%></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <span>住户姓名</span>
+                        </div>
+                        <div class="col-xs-8">
+                            <span><%=data.householdName%></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <span>联系电话</span>
+                        </div>
+                        <div class="col-xs-8">
+                            <span><%=data.phone%></span>
+                        </div>
+                    </div>
+                    <div class="row hidden">
+                        <div class="col-xs-4">
+                            <span>空调序列号</span>
+                        </div>
+                        <div class="col-xs-8">
+                            <span><%=data.acNumber%></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <span>SE序列号</span>
+                        </div>
+                        <div class="col-xs-8">
+                            <span><%=data.serialNumber%></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer text-right">
+                    <span class="font-red">*</span>长按可操作
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%}else if(tempId == 'taphold'){%>
+<div class="shade" style="width:<%=data.width%>px;height:<%=data.height%>px;"></div>
+<div class="shade-content" style="top:<%=(data.height-50.5)/2%>px;left:<%=(data.width-40)/2%>px;">
+    <h5 class="text-center">操作</h5>
+    <button type="button" class="btn blue btn-block" id="edit">修改</button>
+    <button type="button" class="btn btn-block" id="cancle">取消</button>
+</div>
+<%}else if(tempId == 'edit-device'){%>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="edit-device padding-left-15 padding-right-15">
+            <form class="form-horizontal padding-left-15 padding-right-15 padding-top-15 padding-bottom-15">
+                <div class="form-group">
+                    <label class="col-xs-3 control-label">设备型号</label>
+                    <div class="col-xs-9">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="请填写" value="<%=data.type%>" readonly/>
+                            <span class="input-group-addon font-grey">不可修改</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-3 control-label">住户姓名</label>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" placeholder="请填写" name="householdName" value="<%=data.householdName%>"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-3 control-label">联系电话</label>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" placeholder="请填写" name="phone" value="<%=data.phone%>"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-3 control-label">安装地址</label>
+                    <div class="col-xs-9">
+                        <input type="text" class="form-control" placeholder="请填写" name="installPlace" value="<%=data.installPlace%>"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-xs-3 control-label">SE序列号</label>
+                    <div class="col-xs-9">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="请填写" value="<%=data.serialNumber%>" readonly/>
+                            <span class="input-group-addon font-grey">不可修改</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group hidden">
+                    <label class="col-xs-3 control-label">空调序列号</label>
+                    <div class="col-xs-9">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="请填写" name="acNumber" value="<%=data.acNumber%>"/>
+                            <span class="input-group-addon" name="scan">重新扫码</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group btn-group-lg btn-group-justified">
+                    <a href="javascript:;" class="btn blue" id="editDevice">保存</a>
+                    <%if(status_text == 0){%>
+                    <a href="javascript:;" class="btn red" id="deleteDevice">删除</a>
+                    <%}else{%>
+                        <a href="javascript:;" class="btn red hidden" id="deleteDevice">删除</a>
+                    <%}%>
+                    <a href="javascript:;" class="btn grey" id="cancle">取消</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<%}else if(tempId == 'search-dialog'){%>
+<div class="modal fade" id="searchDialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title font-red">请输入查询的设备序列号</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="form-control margin-bottom-20" name="serialNumber" placeholder="序列号"/>
+                <button type="button" class="btn blue btn-lg btn-block" id="searchSubmit">搜索</button>
+            </div>
+        </div>
+    </div>
+</div>
+<%}%>

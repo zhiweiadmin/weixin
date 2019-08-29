@@ -1,0 +1,23 @@
+.item-control{
+    background-color: #fff;
+    padding: 15px;
+    display: block;
+    position: absolute;
+    z-index: 100;
+}
+.btn.red{
+    background-color: #c7254e;
+    color: #fff;
+}
+.btn.blue{
+    background-color: #64ade0;
+    color: #fff;
+}
+.btn.block{
+    border-radius: 0px;
+    border-left: 1px solid #fff;
+}
+.input-group-addon{
+    background-color: #fff !important;
+    border: none !important;
+}

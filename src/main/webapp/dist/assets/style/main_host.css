@@ -1,0 +1,561 @@
+body{
+    background-color: #d2d2d2;
+    font-family: "Microsoft YaHei";
+    font-size: 18px;
+}
+#main{
+    overflow: hidden;
+}
+.ui-loader-default{
+    display:none
+}
+.ui-mobile-viewport{
+    border:none;
+}
+.ui-page {
+    padding: 0;
+    margin: 0;
+    outline: 0;
+}
+.auto-style{
+    background:linear-gradient(left,#34C7F3,#33B1EC);
+    background:-webkit-linear-gradient(left,#34C7F3,#33B1EC);
+    background:-o-linear-gradient(left,#34C7F3,#33B1EC);
+    background:-moz-linear-gradient(left,#34C7F3,#33B1EC);
+}
+.hot-style{
+    background:linear-gradient(left,#F4D15D,#EFB43E);
+    background:-webkit-linear-gradient(left,#F4D15D,#EFB43E);
+    background:-o-linear-gradient(left,#F4D15D,#EFB43E);
+    background:-moz-linear-gradient(left,#F4D15D,#EFB43E)
+}
+.cold-style{
+    background:linear-gradient(left,#3787C2,#494EA0);
+    background:-webkit-linear-gradient(left,#3787C2,#494EA0);
+    background:-o-linear-gradient(left,#3787C2,#494EA0);
+    background:-moz-linear-gradient(left,#3787C2,#494EA0)
+}
+.wind-style{
+    background:linear-gradient(left,#9FCD4E,#4CBA61);
+    background:-webkit-linear-gradient(left,#9FCD4E,#4CBA61);
+    background:-o-linear-gradient(left,#9FCD4E,#4CBA61);
+    background:-moz-linear-gradient(left,#9FCD4E,#4CBA61)
+}
+.left-first{
+    position: relative;
+    animation: leftFirstStyle 0.5s;
+    -moz-animation: leftFirstStyle 0.5s;
+    -webkit-animation: leftFirstStyle 0.5s;
+    -o-animation: leftFirstStyle 0.5s;
+    animation-fill-mode: forwards;
+    /*animation-iteration-count: 1;
+    -webkit-animation-iteration-count: 1;*/
+    -webkit-animation-fill-mode: forwards;
+}
+.left-first-close{
+    position: relative;
+    animation: leftFirstCloseStyle 0.5s;
+    -moz-animation: leftFirstCloseStyle 0.5s;
+    -webkit-animation: leftFirstCloseStyle 0.5s;
+    -o-animation: leftFirstCloseStyle 0.5s;
+    animation-fill-mode: forwards;
+    /*animation-iteration-count: 1;
+    -webkit-animation-iteration-count: 1;*/
+    -webkit-animation-fill-mode: forwards;
+}
+.left-second{
+    position: relative;
+    animation: leftSecondStyle 0.5s;
+    -moz-animation: leftSecondStyle 0.5s;
+    -webkit-animation: leftSecondStyle 0.5s;
+    -o-animation: leftSecondStyle 0.5s;
+    /*animation-iteration-count: 1;*/
+    animation-fill-mode: forwards;
+    -webkit-animation-fill-mode: forwards;
+    /*-webkit-animation-iteration-count: 1;*/
+}
+.left-second-close{
+    position: relative;
+    animation: leftSecondCloseStyle 0.5s;
+    -moz-animation: leftSecondCloseStyle 0.5s;
+    -webkit-animation: leftSecondCloseStyle 0.5s;
+    -o-animation: leftSecondCloseStyle 0.5s;
+    /*animation-iteration-count: 1;*/
+    animation-fill-mode: forwards;
+    -webkit-animation-fill-mode: forwards;
+    /*-webkit-animation-iteration-count: 1;*/
+}
+.right-first{
+    position: relative;
+    animation: rightFirstStyle 0.5s;
+    -moz-animation: rightFirstStyle 0.5s;
+    -webkit-animation: rightFirstStyle 0.5s;
+    -o-animation: rightFirstStyle 0.5s;
+    animation-fill-mode: forwards;
+    /*animation-iteration-count: 1;
+    -webkit-animation-iteration-count: 1;*/
+    -webkit-animation-fill-mode: forwards;
+}
+.right-first-close{
+    position: relative;
+    animation: rightFirstCloseStyle 0.5s;
+    -moz-animation: rightFirstCloseStyle 0.5s;
+    -webkit-animation: rightFirstCloseStyle 0.5s;
+    -o-animation: rightFirstCloseStyle 0.5s;
+    animation-fill-mode: forwards;
+    /*animation-iteration-count: 1;
+    -webkit-animation-iteration-count: 1;*/
+    -webkit-animation-fill-mode: forwards;
+}
+.right-second{
+    position: relative;
+    animation: rightSecondStyle 0.5s;
+    -moz-animation: rightSecondStyle 0.5s;
+    -webkit-animation: rightSecondStyle 0.5s;
+    -o-animation: rightSecondStyle 0.5s;
+    /*animation-iteration-count: 1;*/
+    animation-fill-mode: forwards;
+    -webkit-animation-fill-mode: forwards;
+    /*-webkit-animation-iteration-count: 1;*/
+}
+.right-second-close{
+    position: relative;
+    animation: rightSecondCloseStyle 0.5s;
+    -moz-animation: rightSecondCloseStyle 0.5s;
+    -webkit-animation: rightSecondCloseStyle 0.5s;
+    -o-animation: rightSecondCloseStyle 0.5s;
+    /*animation-iteration-count: 1;*/
+    animation-fill-mode: forwards;
+    -webkit-animation-fill-mode: forwards;
+    /*-webkit-animation-iteration-count: 1;*/
+}
+@keyframes leftFirstStyle {
+    from{left: 0px;}
+    to{left: -60px;}
+}
+@-webkit-keyframes  leftFirstStyle {
+    from{left: 0px;}
+    to{left: -60px;}
+}
+@keyframes leftFirstCloseStyle {
+    from{left:-60px;}
+    to{left: 0px;}
+}
+@-webkit-keyframes leftFirstCloseStyle {
+    from{left: -60px;}
+    to{left:0px;}
+}
+@keyframes leftSecondStyle {
+    from{left:0px;}
+    to{left:-30px;}
+}
+@-webkit-keyframes leftSecondStyle {
+    from{left:0px;}
+    to{left:-30px;}
+}
+@keyframes leftSecondCloseStyle {
+    from{left:-30px;}
+    to{left: 0px;}
+}
+@-webkit-keyframes leftSecondCloseStyle {
+    from{left:-30px;}
+    to{left:0px;}
+}
+@keyframes rightFirstStyle {
+    from{right: 0px;}
+    to{right: -60px;}
+}
+@-webkit-keyframes rightFirstStyle {
+    from{right: 0px;}
+    to{right: -60px;}
+}
+@keyframes rightFirstCloseStyle {
+    from{right: -60px;}
+    to{right: 0px;}
+}
+@-webkit-keyframes rightFirstCloseStyle {
+    from{right: -60px;}
+    to{right: 0px;}
+}
+@keyframes rightSecondStyle {
+    from{right:0px;}
+    to{right: -30px;}
+}
+@-webkit-keyframes rightSecondStyle {
+    from{right:0px;}
+    to{right: -30px;}
+}
+@keyframes rightSecondCloseStyle {
+    from{right: -30px;}
+    to{right: 0px;}
+}
+@-webkit-keyframes rightSecondCloseStyle {
+    from{right: -30px;}
+    to{right: 0px;}
+}
+.text-center{
+    text-align: center;
+}
+strong i{
+    font-size:20px;
+    display:inline-block;
+    margin-top:0px;
+}
+.white{
+    color:#fff;
+}
+.loading-style{
+    z-index:9999;
+    position:fixed;
+    background-color:rgba(0,0,0,0.5);
+    width:100%;
+    height:100%;
+}
+.loading-inner-style{
+    z-index:9999;
+    position:fixed;
+    margin-top:60%;
+    margin-left:45%;
+}
+.margin-left-5{
+    margin-left: 0px !important;
+}
+.font-11{
+    font-size: 11px;
+}
+.font-12{
+    font-size: 12px;
+}
+.font-13{
+    font-size: 13px;
+}
+.font-14{
+    font-size: 14px;
+}
+.tab-first{
+    height:45px;
+    border-bottom:1px solid #C8C8C8;
+}
+.inline-span{
+    display:block;
+    padding-top:10px;
+}
+.inline-left-span{
+    padding-left:20px;
+    display:inline-block;
+}
+.inline-right-span{
+    padding-right:20px;
+    display:inline-block;
+}
+.img-style{
+    width:30px;
+    height:30px;
+}
+.img-style2{
+    width: 25px;
+    height: 25px;
+}
+.little-img-style{
+    width: 26px;
+    height: 26px;
+}
+.tab-second{
+    width:95%;
+    margin-left:5%;
+    height:45px;
+    border-bottom:1px solid #dddddd
+}
+#myInput::-webkit-input-placeholder { /* WebKit browsers */
+    color: #000!important;
+    opacity: 0.65;
+    text-align: left;
+}
+#myInput:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #000!important;
+    opacity: 0.65;
+    text-align: left;
+}
+#myInput::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #000!important;
+    opacity: 0.65;
+    text-align: left;
+}
+#myInput:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #000!important;
+    opacity: 0.65;
+    text-align: left;
+}
+
+
+/*=================================================================华丽丽的分隔符=================================================*/
+/*=================================================================华丽丽的分隔符=================================================*/
+/*=================================================================华丽丽的分隔符=================================================*/
+/*=================================================================华丽丽的分隔符=================================================*/
+/*=================================================================华丽丽的分隔符=================================================*/
+/*=================================================================华丽丽的分隔符=================================================*/
+/*=================================================================华丽丽的分隔符=================================================*/
+
+/*头样式包括基础页面样式*/
+.top {
+    padding: 10px;
+    font-size: 16px;
+    color:#1B6653;
+}
+
+
+.topbtn {
+    color: white;
+    background-color: #4AD0B9;
+    border-color: #4AD0B9;
+    font-size: 20px;
+}
+
+.btn:focus, .btn:active,.active {
+    color: white;
+    background-color: #00BB9C;
+    border-color: #00BB9C;
+}
+
+#weatherCorn {
+    display: inline-block;
+    position: absolute;
+    top: -25px;
+}
+#weatherCornsub {
+    position: absolute;
+    top: 24px;
+    right: -44px;
+    width: 72px;
+}
+
+body{
+    background: -webkit-linear-gradient(#83DECF, #fff); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(#83DECF, #fff); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(#83DECF, #fff); /* Firefox 3.6 - 15 */
+    background: linear-gradient(#83DECF, #fff); /* 标准的语法 */
+}
+
+.content_body{
+    background: -webkit-linear-gradient(#ECFBF8, #fff); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(#ECFBF8, #fff); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(#ECFBF8, #fff); /* Firefox 3.6 - 15 */
+    background: linear-gradient(#ECFBF8, #fff); /* 标准的语法 */
+    border-radius: 5px;
+}
+._content{
+    padding: 10px;
+    overflow-x: hidden;
+}
+
+.rightModel{
+    border-left: 1px solid;
+}
+
+/*主机*/
+
+.title, .value {
+    font-size: 14px;
+    color: grey;
+    height: 80px;
+}
+
+.title {
+    text-align: left;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+}
+
+.value {
+    text-align: right;
+    padding-right: 30px;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+}
+
+#host_switch {
+    width: 22px;
+    height: 22px;
+    margin-top: -5px;
+}
+
+.acrossbar {
+    border-bottom: 1px solid #EAEAEA;
+}
+
+.host_img{
+    width: 45px;
+}
+
+.online_status{
+    width: 50px;
+    position: absolute;
+    right: 25px;
+}
+.temp_img{
+    width: 35px;
+}
+
+.color_active{
+    color:#00BB9C;
+}
+
+.color_cold_active{
+    color:#00BB9C;
+}
+
+.color_hot_active{
+    color:#E8AF00;
+}
+
+.switch_title{
+    padding-left: 50px;
+    font-size: 20px;
+}
+
+/*房控样式*/
+.control_sub_right{
+    font-size: 25px;
+}
+
+.main_room,.sub_info{
+    color:grey;
+}
+.main_room{
+    font-size: 17px;
+}
+.sub_info{
+    font-size:12px;
+}
+.control_right_div{
+    text-align: left;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    font-size: 14px;
+    color: grey;
+    height: 80px;
+}
+
+/*房控房间细节*/
+.cold_parent {
+    background: #00BA9B;
+    border-radius: 8px;
+}
+
+.cold_child {
+    border-radius: 8px;
+    display: block;
+    background: #00BA9B;
+}
+
+.hot_parent {
+    background: #E8AF00;
+    border-radius: 8px;
+}
+
+.hot_child {
+    border-radius: 8px;
+    display: block;
+    background: #E8AF00;
+}
+
+.control_temp {
+    font-size: 40px;
+}
+
+.control_bottom_menu{
+    color:#7C7C7C;
+}
+.control_bottom_menu i{
+    font-size: 25px;
+}
+
+.control_bottom_back{
+    font-size: 40px;
+    color:#7C7C7C;
+    position: fixed;
+    bottom: -10px;
+}
+
+.control_icon_img{
+    width: 40px;
+    border-radius: 20px;
+}
+
+.onColor{
+    color:#00BA9B;
+}
+
+.offColor{
+    color:grey;
+}
+
+/*高级设置*/
+
+#repair_submit {
+    font-size: 15px;
+    width: 110px;
+    padding: 1px;
+    color: white;
+    background-color: #4AD0B9;
+    border-color: #4AD0B9;
+}
+.senior_left_div{
+    font-size: 25px;
+    position: absolute;
+    top: 38px;
+    left: 20px;
+}
+
+.main_title_div{
+    height: 75px;
+
+}
+
+.main_title{
+    font-size: 20px;
+    line-height: 50px;
+}
+
+.senior_icon{
+    font-size: 25px;
+    color: #00BB9C;
+}
+
+.senior_title_div{
+    color: grey;
+    line-height: 48px;
+    height: 65px;
+}
+
+.senior_title{
+    font-size: 16px;
+}
+
+.senior_right_div{
+    text-align: left;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    color: grey;
+    height: 65px;
+}
+.senior_sub_right{
+    font-size: 25px;
+}
+.border_bottom{
+    border-bottom: 1px solid #EAEAEA;
+}
+
+.senior_icon_p{
+    width: 40px;
+}
+
+.senior_icon_repair{
+    width: 30px;
+    margin-left: 5px;
+}
+
+
+#open_time, #colse_time,#time_day {
+    font-size: 14px;
+}

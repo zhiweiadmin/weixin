@@ -1,0 +1,15 @@
+<%if(tempId == 'single-item'){%>
+<div class="filter-item">
+    <%if(data.readOnly == 1){%>
+        <i class="glyphicon glyphicon-hand-up"></i>
+    <%}%>
+    <%=data.alias%>
+    <span class="pull-right">
+        <%if(typeof data.tag != 'undefined'){%>
+            <%=data.tag%>
+        <%}else{%>
+            <%=data.val%>
+        <%}%>
+    </span>
+</div>
+<%}%>

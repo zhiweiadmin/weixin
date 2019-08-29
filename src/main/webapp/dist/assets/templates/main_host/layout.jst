@@ -1,0 +1,608 @@
+<%if(tempId=='before'){%>
+<div>
+    <div class="height1"
+         style="width:100%;height:50px;background:#00BB9C;top:0px;text-align:center;color:#fff;position:fixed;z-index:9999;">
+        <div style="padding-top:13px;">项目列表</div>
+    </div>
+    <div style="width:100%;position:relative;margin-top:50px;">
+        <div class="height2" style="width:100%;height:60px;background:#EBEBEB;">
+            <div style="width:90%;margin-left:5%;padding-top:10px;">
+                <div style="height:40px;background:#fff;border-top-left-radius:20px;border-bottom-left-radius:20px;border-top-right-radius:20px;border-bottom-right-radius:20px;">
+                    <div style="display:inline;">
+                        <div style="width:8%;height:100%;float:left;"></div>
+                        <div style="width:77%;height:100%;float:left;">
+                            <input type="text" style="width:100%;height:100%;border:0px;outline:none;" id="myInput"
+                                   placeholder="请输入关键字..."/>
+                        </div>
+                        <div style="width:15%;height:100%;float:left;">
+                            <image src="../assets/image/search.png" id="searchProj"
+                                   style="width:40px;height:40px"></image>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pro_list" id="projectList" style="background:#fff;">
+        </div>
+    </div>
+    <%}else if(tempId=='simple-projectInfo2'){%>
+    <div class="parentTab">
+        <div class="secondChild">
+            <div class="tab-second" projectId="<%=data.id%>">
+                <div>
+              <span class="inline-span">
+                 <span class="inline-left-span">
+                   <image src="../assets/image/icon.png" class="little-img-style"></image>
+                   <span><%=data.name%></span>
+                 </span>
+                 <span class="inline-right-span pull-right">
+                   <image src="../assets/image/right_icon.png" class="img-style"></image>
+                 </span>
+              </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%}else if(tempId=='simple-projectInfo'){%>
+<div class="parentTab">
+    <div class="tab-first firstChild" drop="true">
+       <span class="inline-span">
+          <span class="inline-left-span"><%=data.name%></span>
+          <span class="inline-right-span pull-right"><image src="../assets/image/down.png"
+                                                            class="dropImage img-style"></image></span>
+       </span>
+    </div>
+    <div class="secondChild">
+        <%_.each(data.nodes,function(p){%>
+        <div class="tab-second" projectId="<%=p.id%>">
+            <div>
+             <span class="inline-span">
+                <span class="inline-left-span">
+                  <image src="../assets/image/icon.png" class="little-img-style"></image>
+                  <span><%=p.name%></span>
+                </span>
+                 <!-- <span style="right:40px;;display:inline-block;position:absolute;"><i class="fa fa-angle-right" style="font-size:26px;padding-top:12px;"></i></span>-->
+                <span class="inline-right-span pull-right">
+                  <image src="../assets/image/right_icon.png" class="img-style2"></image>
+                </span>
+             </span>
+            </div>
+        </div>
+        <%})%>
+    </div>
+</div>
+<%}else if(tempId=='basic_frame'){%>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row top">
+                <div class="col-xs-10 pad5">
+                    <div class="row">
+                        <div class="col-xs-6 padl10 padr5">
+                            温度：<%=temperature%>℃
+                        </div>
+                        <div class="col-xs-6 padl5 padr5 rightModel">
+                            湿度：<%=humidity%>%
+                        </div>
+                        <div class="col-xs-6 padl10 padr5 mt5">
+                            天气：<%=weather%>
+                        </div>
+                        <div class="col-xs-6 padl5 padr5 rightModel mt5">
+                            风力：<%=wind%>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-2 pad5">
+                    <div id="weatherCorn"><img id="weatherCornsub" img src="<%=air_img%>"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 ">
+            <div class="row button">
+                <div class="col-xs-4 padl10 padr5">
+                    <button type="button" id="host" class="btn width100 active padb5 padt5 topbtn">
+                        主机
+                    </button>
+                </div>
+                <div class="col-xs-4 padl5 padr5">
+                    <button type="button" id="control" class="btn width100 padb5 padt5 topbtn">
+                        房控
+                    </button>
+                </div>
+                <div class="col-xs-4 padl5 padr10">
+                    <button type="button" id="senior" class="btn width100 padb5 padt5 topbtn">
+                        高级
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 _content">
+            <div class="content_body">
+                <div class="content row padb15">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%}else if(tempId=='host_mode'){%>
+<!--在线状态-->
+<div class="col-xs-2 padt20 padb20">
+    <img class="host_img" src="../assets/image/img/online_model.png">
+</div>
+<div class="col-xs-8 title  padt20 padb20">在线状态</div>
+<div class="col-xs-2 value status_value  padt20 padb20">
+    <img class="online_status online" src="../assets/image/img/online.png">
+</div>
+<div class="col-xs-12">
+    <div class="acrossbar"></div>
+</div>
+<!--温度-->
+<div class="col-xs-2 padt20 padb20">
+    <img class="host_img" src="../assets/image/img/temp_icon.png">
+</div>
+<div class="col-xs-4 title  padt20 padb20">设定温度(℃)</div>
+<div class="col-xs-2 title  padt20 padb20 padl0">
+    <img class="temp_img" id="minus_temp" src="../assets/image/img/minus_temp.png">
+</div>
+<div class="col-xs-2 value status_value padl0 padt20 padb20">
+    <span id="temNum"></span>℃
+</div>
+<div class="col-xs-2 title padl0 padt20 padb20">
+    <img class="temp_img" id="add_temp" src="../assets/image/img/add_temp.png">
+</div>
+
+<div class="col-xs-12">
+    <div class="acrossbar"></div>
+</div>
+<!--设定运行模式-->
+<div class="col-xs-2 padt20 padb20">
+    <img class="host_img" src="../assets/image/img/setting_model.png">
+</div>
+<div class="col-xs-4 title  padt20 padb20">设定模式</div>
+<div class="col-xs-3  title  padt10 padb10 padl5 color_cold_active" id="cold_model">
+    <span>&nbsp;<i class="fa fa-snowflake-o"></i></span>
+    &nbsp;制冷
+</div>
+<div class="col-xs-3 title padl0 padt10 padb10 " id="hot_model">
+    <span>&nbsp;<i class="fa fa-sun-o"></i></span>
+    &nbsp;制热
+</div>
+<div class="col-xs-12">
+    <div class="acrossbar"></div>
+</div>
+<!--回水温度-->
+<div class="col-xs-2 padt20 padb20">
+    <img class="host_img" src="../assets/image/img/temp_icon.png">
+</div>
+<div class="col-xs-4 title  padt20 padb20">回水温度</div>
+<div class="col-xs-offset-3 col-xs-3  title textRight  padt20 padb20 padl10 ">
+    25.6℃&nbsp;
+</div>
+<div class="col-xs-12">
+    <div class="acrossbar"></div>
+</div>
+<!--出水温度-->
+<div class="col-xs-2 padt20 padb20">
+    <img class="host_img" src="../assets/image/img/temp_icon.png">
+</div>
+<div class="col-xs-4 title  padt20 padb20">出水温度</div>
+<div class="col-xs-offset-3 col-xs-3  title textRight  padt20 padb20 padl10 ">
+    25.6℃&nbsp;
+</div>
+<div class="col-xs-12">
+    <div class="acrossbar"></div>
+</div>
+<!--开关-->
+<div class="col-xs-6 title  padt20 padb20 switch_title" style="padding-left: 28px;">开关</div>
+<div class="col-xs-offset-3 col-xs-3  title textRight  padt20 padb20 padl10 color_active">
+    <img id="host_switch" class="on" src="../assets/image/img/switch_on_o.png">
+</div>
+<%}else if(tempId=='single_room_device'){%>
+<div class="col-xs-2 padt20 padb20">
+    <img class="host_img" src="<%=room_img%>">
+</div>
+<div class="col-xs-4   padt20 padb20">
+    <div class="main_room width100"><%=name%></div>
+    <div class="sub_info"><%=count%>个设备</div>
+</div>
+<div class="col-xs-offset-3 col-xs-3 control_right_div padt20 padb20 padl25 ">
+    <span class="control_sub_right" count='<%=count%>'>&nbsp;<i class="fa fa-angle-right"></i></span>
+</div>
+<div class="col-xs-12">
+    <div class="acrossbar"></div>
+</div>
+<%}else if(tempId=='senior_mode'){%>
+<div class="col-xs-12 " style="width:100%;height:50px;margin-top: 13px;">
+                                       <span style="margin-top:3px;">
+                                          <span style="display:inline-block;font-size:26px;margin-left: 20px"><span
+                                                  id="backBtn">&nbsp;<i class="fa fa-angle-left"></i></span></span>
+                                          <span style="display:inline-block;margin-left:32%;margin-top:10px;font-size: 18px">高级设置</span>
+                                       </span>
+</div>
+<div class="col-xs-12">
+    <div class="acrossbar"></div>
+</div>
+
+<!--用户注销-->
+<div class="row">
+    <div class="col-xs-3 padt20 padb10 padl40">
+        <span class="senior_icon">&nbsp;<i class="fa fa-user-circle-o"></i></span>
+    </div>
+    <div class="col-xs-6  padl5 padb10 padt10 border_bottom senior_title_div">
+        <div class="senior_title width100">用户注销</div>
+    </div>
+    <div class="col-xs-3 senior_right_div padb10 padt10 padl25 border_bottom">
+        <span class="senior_sub_right" id="logout">&nbsp;<i class="fa fa-angle-right"></i></span>
+    </div>
+</div>
+
+<!--项目列表-->
+<div class="row">
+    <div class="col-xs-3 padt20 padb10 padl40">
+        <span class="senior_icon">&nbsp;<i class="fa fa-list-ul"></i></span>
+    </div>
+    <div class="col-xs-6 padl5  padb10 padt10 border_bottom senior_title_div">
+        <div class="senior_title width100">项目列表</div>
+    </div>
+    <div class="col-xs-3 senior_right_div padb10 padt10 padl25 border_bottom">
+        <span class="senior_sub_right" id="project_list">&nbsp;<i class="fa fa-angle-right"></i></span>
+    </div>
+</div>
+
+<!--权限设置-->
+<div class="row">
+    <div class="col-xs-3 padt20 padb10 padl40">
+        <img class="senior_icon_p" src="../assets/image/img/senior_role.png">
+    </div>
+    <div class="col-xs-6 padl5  padb10 padt10 border_bottom senior_title_div">
+        <div class="senior_title width100">权限设置</div>
+    </div>
+    <div class="col-xs-3 senior_right_div padb10 padt10 padl25 border_bottom">
+        <span class="senior_sub_right role_setting">&nbsp;<i class="fa fa-angle-right"></i></span>
+    </div>
+</div>
+
+<!--我要报修-->
+<div class="row">
+    <div class="col-xs-3 padt20 padb10 padl40">
+        <img class="senior_icon_repair" src="../assets/image/img/senior_repair.png">
+    </div>
+    <div class="col-xs-6 padl5  padb10 padt10 border_bottom senior_title_div">
+        <div class="senior_title width100">我要报修</div>
+    </div>
+    <div class="col-xs-3 senior_right_div padb10 padt10 padl25 border_bottom">
+        <span class="senior_sub_right" id="need_repair">&nbsp;<i class="fa fa-angle-right"></i></span>
+    </div>
+</div>
+
+<!--联系我们-->
+<div class="row">
+    <div class="col-xs-3 padt20 padb10 padl40">
+        <img class="senior_icon_p" src="../assets/image/img/senior_phone.png">
+    </div>
+    <div class="col-xs-6 padl5  padb10 padt10 border_bottom senior_title_div">
+        <div class="senior_title width100">联系我们</div>
+    </div>
+    <div class="col-xs-3 senior_right_div padb10 padt10 padl25 border_bottom">
+        <span class="senior_sub_right">&nbsp;<i class="fa fa-angle-right"></i></span>
+    </div>
+</div>
+<%}else if(tempId=='role_setting_mode'){%>
+<div class="col-xs-12 " style="width:100%;height:50px;margin-top: 13px;">
+                                       <span style="margin-top:3px;">
+                                          <span style="display:inline-block;font-size:26px;margin-left: 20px"><span
+                                                  id="backBtn">&nbsp;<i class="fa fa-angle-left"></i></span></span>
+                                          <span style="display:inline-block;margin-left:32%;margin-top:10px;font-size: 18px">权限设置</span>
+                                       </span>
+    <div class="col-xs-12">
+        <div class="acrossbar"></div>
+    </div>
+</div>
+
+<!--用户权限-->
+<div class="row">
+    <div class="col-xs-3 padt20 padb10 padl40">
+        <span class="senior_icon">&nbsp;<i class="fa fa-user-circle-o"></i></span>
+    </div>
+    <div class="col-xs-6  padl5 padb10 padt10 border_bottom senior_title_div">
+        <div class="senior_title width100">用户权限</div>
+    </div>
+    <div class="col-xs-3 senior_right_div padb10 padt10 padl25 border_bottom">
+        <span class="senior_sub_right" id="user_role">&nbsp;<i class="fa fa-angle-right"></i></span>
+    </div>
+</div>
+<div class="row user_sub disNone">
+    <div class="col-xs-offset-3 col-xs-6  padl25 padb10 padt10 border_bottom senior_title_div">
+        <div class="senior_title width100">控制权限</div>
+    </div>
+    <div class="col-xs-3 senior_right_div padb10 padt10 padl0 border_bottom">
+                                        <span class="senior_sub_right">&nbsp;
+                                            <img style="width: 40px" src="../assets/image/img/switch_on_full.png"
+                                                 class="on" id="control_role_switch">
+                                        </span>
+    </div>
+</div>
+
+
+<!--项目列表-->
+<div class="row">
+    <div class="col-xs-3 padt20 padb10 padl40">
+        <span class="senior_icon">&nbsp;<i class="fa fa-list-ul"></i></span>
+    </div>
+    <div class="col-xs-6 padl5  padb10 padt10 border_bottom senior_title_div">
+        <div class="senior_title width100">项目权限</div>
+    </div>
+    <div class="col-xs-3 senior_right_div padb10 padt10 padl25 border_bottom">
+        <span class="senior_sub_right" id="project_role">&nbsp;<i class="fa fa-angle-right"></i></span>
+    </div>
+</div>
+<div class="row project_sub disNone">
+    <div class="col-xs-offset-3 col-xs-6  padl25 padb10 padt10 border_bottom senior_title_div">
+        <div class="senior_title width100">主机权限</div>
+    </div>
+    <div class="col-xs-3 senior_right_div padb10 padt10 padl0 border_bottom">
+                                        <span class="senior_sub_right">&nbsp;
+                                            <img style="width: 40px" src="../assets/image/img/switch_on_full.png"
+                                                 class="on" id="host_role_switch">
+                                        </span>
+    </div>
+
+    <div class="col-xs-offset-3 col-xs-6  padl25 padb10 padt10 border_bottom senior_title_div">
+        <div class="senior_title width100">房控权限</div>
+    </div>
+    <div class="col-xs-3 senior_right_div padb10 padt10 padl0 border_bottom">
+                                        <span class="senior_sub_right">&nbsp;
+                                            <img style="width: 40px" src="../assets/image/img/switch_on_full.png"
+                                                 class="on" id="room_control_switch">
+                                        </span>
+    </div>
+</div>
+
+<!--定时开关-->
+<div class="row">
+    <div class="col-xs-3  padb10 " style="padding-top: 13px;padding-left: 36px;">
+        <img style="width: 55px" src="../assets/image/img/clock.png">
+    </div>
+    <div class="col-xs-6  padl5 padb10 padt10 border_bottom senior_title_div">
+        <div class="senior_title width100">定时开关</div>
+    </div>
+    <div class="col-xs-3 senior_right_div padb10 padt10 padl25 border_bottom">
+        <span class="senior_sub_right time_control">&nbsp;<i class="fa fa-angle-right"></i></span>
+    </div>
+</div>
+<%}else if(tempId=='time_swtich'){%>
+<div class="col-xs-12 " style="width:100%;height:50px;margin-top: 13px;">
+                                       <span style="margin-top:3px;">
+                                          <span style="display:inline-block;font-size:26px;margin-left: 20px"><span
+                                                  id="backRoleBtn">&nbsp;<i class="fa fa-angle-left"></i></span></span>
+                                          <span style="display:inline-block;margin-left:32%;margin-top:10px;font-size: 18px">定时开关机</span>
+                                       </span>
+    <div class="col-xs-12">
+        <div class="acrossbar"></div>
+    </div>
+</div>
+
+
+<!--定时开、关机 开关-->
+<div class="col-xs-offset-2 col-xs-6 senior_right_div padl5 padb10 padt10  ">
+    <div class="senior_title width100">定时开、关机</div>
+</div>
+<div class="col-xs-4 senior_right_div padb10 padt10 padl10 ">
+    <img style="width: 50px" src="../assets/image/img/switch_on_full.png" class="on" id="time_switch">
+</div>
+<div class="col-xs-12">
+    <div class="acrossbar"></div>
+</div>
+
+<!--开机时间-->
+<div class="col-xs-offset-2 col-xs-6 senior_right_div padl5 padb10 padt10  ">
+    <div class="senior_title width100">开机时间</div>
+</div>
+<div class="col-xs-4 senior_right_div padb10 padt10 padl10 ">
+    <span class="senior_sub_right" id="open_time">&nbsp;<span id="open_time_t">00:00</span> &nbsp;<i id="open_time_i"
+                                                                                                     class="fa fa-angle-right"></i></span>
+</div>
+<div class="col-xs-12">
+    <div class="acrossbar"></div>
+</div>
+
+<!--关机时间-->
+<div class="col-xs-offset-2 col-xs-6 senior_right_div padl5 padb10 padt10  ">
+    <div class="senior_title width100">关机时间</div>
+</div>
+<div class="col-xs-4 senior_right_div padb10 padt10 padl10 ">
+    <span class="senior_sub_right" id="colse_time">&nbsp;<span id="close_time_t">00:00</span> &nbsp;<i id="close_time_i"
+                                                                                                       class="fa fa-angle-right"></i></span>
+</div>
+<div class="col-xs-12">
+    <div class="acrossbar"></div>
+</div>
+
+
+<%}else if(tempId=='need_repair'){%>
+<div class="col-xs-12 " style="width:100%;height:50px;margin-top: 13px;">
+                                            <span style="margin-top:3px;">
+                                                <span style="display:inline-block;font-size:26px;margin-left: 20px"><span
+                                                        id="backBtn">&nbsp;<i
+                                                        class="fa fa-angle-left"></i></span></span>
+                                                <span style="display:inline-block;margin-left:32%;margin-top:10px;font-size: 18px"
+                                                      id="room_title">我要报修</span>
+                                            </span>
+</div>
+<div class="col-xs-12">
+    <div class="acrossbar"></div>
+</div>
+
+<div class="col-xs-offset-1 col-xs-10 mt25 textLeft">
+    报修原因
+</div>
+
+<div class="col-xs-offset-1 col-xs-10 mt10">
+    <input type="text" class="width100" style="border:1px solid grey;height: 30px">
+</div>
+
+<div class="col-xs-offset-1 col-xs-10 mt25 textLeft">
+    报修描述
+</div>
+
+<div class="col-xs-offset-1 col-xs-10 mt10">
+    <textarea class="width100" style="border:1px solid grey;height: 150px"></textarea>
+</div>
+
+<div class="col-xs-12 textCenter">
+    <button type="button" id="repair_submit" class="btn mt10">
+        提交申请
+    </button>
+</div>
+<%}else if(tempId=='room_detail_basic'){%>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="row top">
+                <div class="col-xs-10 pad5">
+                    <div class="row">
+                        <div class="col-xs-6 padl10 padr5">
+                            温度：<%=temperature%>℃
+                        </div>
+                        <div class="col-xs-6 padl5 padr5 rightModel">
+                            湿度：<%=humidity%>%
+                        </div>
+                        <div class="col-xs-6 padl10 padr5 mt5">
+                            天气：<%=weather%>
+                        </div>
+                        <div class="col-xs-6 padl5 padr5 rightModel mt5">
+                            风力：<%=wind%>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-2 pad5">
+                    <div id="weatherCorn"><img id="weatherCornsub" img src="<%=air_img%>"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 _content">
+            <div class="content ">
+                <div class="swiper-container textCenter">
+                    <div class="swiper-wrapper">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%}else if(tempId=='room_detail_basic_device'){%>
+<div class="swiper-slide" id="swiper<%=deviceId%>">
+    <div class="col-xs-12 " style="margin-top: -8px">
+        <div><img class='control_top_icon' src="../assets/image/img/woshi-o.png" style="width: 80px"></div>
+        <div class="color_white font-25">主卧房控</div>
+    </div>
+    <div class="parent <%=parent%> mt25">
+        <div class="child <%=child%>" id="<%=wraId%>">
+            <strong class="control_temp width100 disBlock color_white">
+                <div id="<%=temId%>">
+                    <%=temp%>℃
+                </div>
+            </strong>
+            <div class="mt25">
+                <span class="color_white font-30 "><i class="fa <%=modelImg%>"></i></span>
+            </div>
+            <div class="color_white">
+                <%=model%>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="col-xs-3 control_bottom_menu">
+            <div class="mt25 device_switch on" deviceId="<%=deviceId%>">
+                <img class="control_icon_img" src="../assets/image/img/control_switch.png">
+            </div>
+            <div class="onColor">
+                开关
+            </div>
+        </div>
+        <div class="col-xs-3 control_bottom_menu">
+            <div class="mt25 device_model cold_model" deviceId="<%=deviceId%>">
+                <img class="control_icon_img" src="../assets/image/img/control_model.png">
+            </div>
+            <div class="onColor">
+                模式
+            </div>
+        </div>
+        <div class="col-xs-3 control_bottom_menu">
+            <div class="mt25 device_speed" deviceId="<%=deviceId%>">
+                <img class="control_icon_img" src="../assets/image/img/control_speed.png">
+            </div>
+            <div class="onColor">
+                <%=speed%>
+            </div>
+        </div>
+        <div class="col-xs-3 control_bottom_menu">
+            <div class="mt25">
+                <img class="control_icon_img" src="../assets/image/img/control_time.png">
+            </div>
+            <div>
+                定时
+            </div>
+        </div>
+    </div>
+</div>
+<%} else if(tempId=='room_detail_basic_device_model'){%>
+<div class="col-xs-12 " style="margin-top: -8px">
+    <div><img class='control_top_icon' src="../assets/image/img/woshi-o.png" style="width: 80px"></div>
+    <div class="color_white font-25">主卧房控</div>
+</div>
+<div class="parent <%=parent%> mt25">
+    <div class="child <%=child%>" id="<%=wraId%>">
+        <strong class="control_temp width100 disBlock color_white">
+            <div id="<%=temId%>">
+                <%=temp%>℃
+            </div>
+        </strong>
+        <div class="mt25">
+            <span class="color_white font-30 "><i class="fa <%=modelImg%>"></i></span>
+        </div>
+        <div class="color_white">
+            <%=model%>
+        </div>
+    </div>
+</div>
+<div>
+    <div class="col-xs-3 control_bottom_menu">
+        <div class="mt25 device_switch on" deviceId="<%=deviceId%>">
+            <img class="control_icon_img" src="../assets/image/img/control_switch.png">
+        </div>
+        <div class="onColor">
+            开关
+        </div>
+    </div>
+    <div class="col-xs-3 control_bottom_menu">
+        <div class="mt25 device_model cold_model" deviceId="<%=deviceId%>">
+            <img class="control_icon_img" src="../assets/image/img/control_model.png">
+        </div>
+        <div class="onColor">
+            模式
+        </div>
+    </div>
+    <div class="col-xs-3 control_bottom_menu">
+        <div class="mt25 device_speed" deviceId="<%=deviceId%>">
+            <img class="control_icon_img" src="../assets/image/img/control_speed.png">
+        </div>
+        <div class="onColor">
+             <%=speed%>
+        </div>
+    </div>
+    <div class="col-xs-3 control_bottom_menu">
+        <div class="mt25">
+            <img class="control_icon_img" src="../assets/image/img/control_time.png">
+        </div>
+        <div>
+            定时
+        </div>
+    </div>
+</div>
+<%}
+%>

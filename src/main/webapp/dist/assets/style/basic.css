@@ -1,0 +1,140 @@
+body {
+    background-color: #fff;
+}
+
+.width100 {
+    width: 100%;
+}
+
+.textRight {
+    text-align: right !important;
+}
+
+.textLeft {
+    text-align: left !important;
+}
+
+.textCenter {
+    text-align: center !important;
+}
+
+.disBlock {
+    display: block;
+}
+
+.disInlineBlock {
+    display: inline-block;
+}
+
+.disNone{
+    display: none;
+}
+
+.mt5{
+    margin-top: 5px;
+}
+
+.mt10 {
+    margin-top: 10px;
+}
+
+.mt25 {
+    margin-top: 25px;
+}
+
+
+.mb10 {
+    margin-bottom: 10px;
+}
+
+.ml10 {
+    margin-left: 10px;
+}
+
+.fr{
+    float: right;
+}
+
+.padt20{
+    padding-top: 20px;
+}
+
+.padb20{
+    padding-bottom: 20px;
+    padding-left: 21px;
+}
+
+
+.padt5{
+    padding-top: 5px;
+}
+
+.padb5{
+    padding-bottom: 5px;
+}
+
+.padt10{
+    padding-top: 10px;
+}
+
+.padb10{
+    padding-bottom: 10px;
+}
+
+.padb15{
+    padding-bottom: 15px;
+}
+
+
+.padl25{
+    padding-left: 25px;
+}
+
+.padl30{
+    padding-left: 30px;
+}
+
+.padl40{
+    padding-left: 40px;
+}
+
+
+.padl10{
+    padding-left: 10px;
+}
+
+.padl5{
+    padding-left: 5px;
+}
+
+.padl0{
+    padding-left: 0px;
+}
+
+.padr10{
+    padding-right: 10px;
+}
+
+.padr5{
+    padding-right: 5px;
+}
+
+.pad5{
+    padding:5px;
+}
+
+.pad20{
+    padding: 20px;
+}
+
+.color_white{
+    color:white;
+}
+
+.font-30{
+    font-size: 30px;
+}
+
+.font-25{
+    font-size: 25px;
+}

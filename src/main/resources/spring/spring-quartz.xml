@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	">
+	<!--
+	 Spring管理的quartz,xml方式只能静态加载,每次修改需要重新启动项目
+	-->
+	<!-- 定义触发时间 ，这边就不同了，这里必须将时间设置成无限长，因为我们要去读取数据库的时间来做为定时器的触发时间-->
+<!--	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean ">-->
+<!--		<property name="jobDetail">-->
+<!--			<bean id="jobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+<!--				&lt;!&ndash; 调用的类  &ndash;&gt;-->
+<!--				<property name="targetObject">-->
+<!--					&lt;!&ndash; 这个类用来做需要完成的业务&ndash;&gt;-->
+<!--					<bean id="staticJobQuartz" class="com.redbudtek.weixin.quartz.InitJobQuartz"></bean>-->
+<!--				</property>-->
+<!--				&lt;!&ndash; 调用类中的方法  &ndash;&gt;-->
+<!--				<property name="targetMethod" value="execute" />-->
+<!--				&lt;!&ndash; 是否并发  &ndash;&gt;-->
+<!--				<property name ="concurrent" value ="false"  />-->
+<!--			</bean>-->
+<!--		</property>-->
+<!--		&lt;!&ndash; cron表达式  &ndash;&gt;-->
+<!--		<property name="cronExpression" value="0" />-->
+<!--	</bean>-->
+
+	<!-- quartz实例化5秒后执行一次job的方式 -->
+	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail">
+			<bean id="jobTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+				<!-- 调用的类  -->
+				<property name="targetObject">
+					<!-- 这个类用来做需要完成的业务-->
+					<bean id="staticJobQuartz" class="com.redbudtek.weixin.quartz.InitJobQuartz"></bean>
+				</property>
+				<!-- 调用类中的方法  -->
+				<property name="targetMethod" value="execute" />
+				<!-- 是否并发  -->
+				<property name ="concurrent" value ="false"  />
+			</bean>
+		</property>
+		<property name="startDelay" value="2000" /> <!--启动延迟 单位/毫秒-->
+		<property name="repeatCount" value="0" />   <!-- 重复次数 -->
+	</bean>
+
+	<!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
+	<bean id="startQuertz" lazy-init="true" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="simpleTrigger" />
+			</list>
+		</property>
+	</bean>
+
+    <bean id="schedulerFactory" class="org.quartz.impl.StdSchedulerFactory"/>
+
+</beans>

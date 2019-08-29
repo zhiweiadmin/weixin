@@ -1,0 +1,204 @@
+<%if(tempId=='room-set-frame'){%>
+ <div>
+     <div class="col-xs-12  header" style="width:100%;border-bottom:2px solid #D3D3D3;position:fixed;top:0px;z-index:9999">
+        <span style="display:block;margin-top:3px;">
+            <span style="display:inline-block;font-size:26px;"><span id="back">&nbsp;<i class="fa fa-angle-left"></i></span></span>
+            <span style="display:inline-block;margin-left:32%;margin-top:10px;" id="room_title">房间列表</span>
+        </span>
+     </div>
+     <div class="col-xs-12 room-set-content-style" style="margin-top:55px;">
+     </div>
+     <div class="col-xs-12 room-set-bottom hidden">
+     </div>
+    <div id="loadingAjax" class="loading-style" style="display:none;margin-top:0 px;">
+        <div class="loading-inner-style">
+           <img src="../assets/image/loading.gif" style="width:50px;height:50px;" />
+        </div>
+    </div>
+    <div id="loading" class="loading-style" style="display:none;margin-top:0 px;">
+     <div class="loading-inner-style">
+       <img src="../assets/image/loading.gif"  style="width:50px;height:50px;" />
+       <div class="margin-left-20">
+         <p><h5><b><span id="msg_control" style="color:#fff;margin-left:-20px;" class="">获取控制结果中...</span></b></h5></p>
+       </div>
+     </div>
+   </div>
+     <div class="modal" id="edit_room_name_modal">
+        <div class="modal-dialog">
+            <div class="modal-content" style="height:120px;">
+                <div class="row">
+                    <div class="col-xs-12">
+                       <div style="margin-top:10px;text-align:center;">
+                           <span>更改房间名称</span>
+                       </div>
+                    </div>
+                    <div class="col-xs-12">
+                       <div style="width:90%;margin-left:5%;margin-top:5px;">
+                           <input type="text" class="form-control" id="edit_room_name_input">
+                       </div>
+                    </div>
+                    <div class="col-xs-12">
+                        <div style="margin-top:5px;">
+                           <div class="col-xs-6" id="room_name_submit" style="text-align:center;margin-top:10px;border-right:1px solid #bfbfbf;line-height:15px;"><button type="button"  style="border:0;background:#fff;color:#8DC11F;">确认</button></div>
+                           <div class="col-xs-6" style="text-align:center;margin-top:10px;line-height:15px;"><button type="button"  style="border:0;background:#fff;color:#C30E21;"  data-dismiss="modal">取消</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+     </div>
+
+
+     <div class="modal" id="edit_room_temp_modal">
+         <div class="modal-dialog">
+                 <div class="modal-content" style="height:150px;">
+                     <div class="row">
+                         <div class="col-xs-12">
+                            <div style="margin-top:10px;text-align:center;">
+                                <span>请输入设定温度</span>
+                            </div>
+                         </div>
+                         <div class="col-xs-12" style="" id="show_err_msg">
+                            <div style="margin-top:5px;text-align:center;height:13px;margin-bottom:6px;">
+                                <span id="err_msg" style="font-size:11px;color:red;display:inline-block;"></span>
+                            </div>
+                         </div>
+                         <div class="col-xs-12">
+                            <div style="width:90%;margin-left:5%;margin-top:5px;">
+                                <input type="text" class="form-control" id="edit_room_temp_input">
+                            </div>
+                         </div>
+                         <div class="col-xs-12">
+                             <div style="margin-top:5px;">
+                                <div class="col-xs-6" id="room_temp_submit" style="text-align:center;margin-top:10px;border-right:1px solid #bfbfbf;line-height:15px;"><button type="button"  style="border:0;background:#fff;color:#8DC11F;">确认</button></div>
+                                <div class="col-xs-6" style="text-align:center;margin-top:10px;line-height:15px;"><button type="button"  style="border:0;background:#fff;color:#C30E21;"  data-dismiss="modal">取消</button></div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+          </div>
+     </div>
+
+
+     <div class="modal" id="remove_room_list_modal">
+        <div class="modal-dialog">
+            <div class="modal-content" style="height:120px;">
+               <div class="row">
+                  <div class="col-xs-12">
+                      <div style="margin-top:10px;text-align:center;line-height:45px;">
+                         <span>删除房间</span>
+                      </div>
+                  </div>
+                  <div class="col-xs-12">
+                     <span style="width:90%;display:block;border-top:1px solid #bfbfbf;margin-left:5%;"></span>
+                  </div>
+                  <div class="col-xs-12">
+                        <div style="margin-top:10px;">
+                           <div class="col-xs-6" style="text-align:center;margin-top:10px;border-right:1px solid #bfbfbf;line-height:15px;"><button type="button"  style="border:0;background:#fff;color:#8DC11F;">确认</button></div>
+                           <div class="col-xs-6" style="text-align:center;margin-top:10px;line-height:15px;"><button type="button"  style="border:0;background:#fff;color:#C30E21;"  data-dismiss="modal">取消</button></div>
+                        </div>
+                  </div>
+               </div>
+            </div>
+        </div>
+     </div>
+
+
+     <div class="modal" id="edit_power_modal">
+         <div class="modal-dialog">
+             <div class="modal-content" style="height:150px;">
+                <div class="row">
+                   <div class="col-xs-12">
+                       <div style="margin-top:10px;text-align:center;height:80px;">
+                          <span style="margin-top:13px;display:inline-block;margin-left:8px;margin-right:8px">确定改变房间 <span id="changeRoomName"></span> 的状态吗?</span>
+                       </div>
+                   </div>
+                   <div class="col-xs-12">
+                      <span style="width:90%;display:block;border-top:1px solid #bfbfbf;margin-left:5%;"></span>
+                   </div>
+                   <div class="col-xs-12">
+                         <div style="margin-top:10px;">
+                            <div class="col-xs-6" id="editSubmit"  style="text-align:center;margin-top:10px;border-right:1px solid #bfbfbf;line-height:15px;"><button type="button"  style="border:0;background:#fff;color:#8DC11F;">确认</button></div>
+                            <div class="col-xs-6" style="text-align:center;margin-top:10px;line-height:15px;"><button type="button"  style="border:0;background:#fff;color:#C30E21;"  data-dismiss="modal">取消</button></div>
+                         </div>
+                   </div>
+                </div>
+             </div>
+         </div>
+      </div>
+
+ </div>
+<%}else if(tempId=='single-room-info'){%>
+<div class="row single-room-info">
+   <div class="col-xs-12">
+      <div >
+          <div class="panel panel-default">
+              <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="media">
+                               <div class="media-body" style="color:#000;font-family:'Microsoft YaHei'">
+                                    <h5 style="opacity:0.8!important;font-family:'宋体'" class="roomName" roomid="<%=data.id%>">
+                                        <span style="font-size:18px;">房间名称:</span>
+                                        <span class="pull-right" d_id="<%=index%>-1" style="font-size:18px;">
+                                           <%=data.name%>
+                                        </span>
+                                    </h5>
+                                    <h5 style="display:block;opacity:0.65;">
+                                        <span class="col-xs-6 row" style="font-size:16px;">
+                                            室温:
+                                            <span  style="margin-left:5px;" d_id="<%=index%>-2">
+                                              <%=data.items[1].val||''%>℃
+                                            </span>
+                                        </span>
+                                        <span class="col-xs-6 row set_temp" d_id="<%=index%>-3" itemid="<%=data.items[4].itemid%>" devid="<%=data.items[4].devid%>" style="position:relative;float:right;display:inline-block;text-align:right;font-size:16px;">
+                                              <span style="display:inline-block;position:absolute;right:70px;" class="setting-style">设定:</span>
+                                              <span style="margin-left:5px;">
+                                                 <%=data.items[0].val||''%>℃
+                                              </span>
+                                         </span>
+                                    </h5>
+                                    <br>
+                                    <h5 style="opacity:0.65">
+                                        <span class="col-xs-6 row" style="font-size:16px;">
+                                         湿度:
+                                         <span style="margin-left:5px;" d_id="<%=index%>-4">
+                                          <%=data.items[2].val%>%
+                                         </span>
+                                        </span>
+                                        <span class="col-xs-6 row" style="position:relative;float:right;display:inline-block;text-align:right;font-size:16px;">
+                                          <span style="display:inline-block;position:absolute;right:70px;" class="text-status">状态:</span>
+                                         <span style="margin-left:25px;" class="switch">
+                                            <div id="switch_content"  style="display:inline-block;opacity:1!important;">
+                                               <%if(data.items[3].val=='0'){%>
+                                                   <span id="btn_status" setVal="<%=data.items[5].val%>" d_id="<%=index%>-5" status="<%=data.items[3].val%>" itemid="<%=data.items[5].itemid%>" devid="<%=data.items[4].devid%>" name="<%=data.name%>" class="switch-off">
+                                                       <span class="slider"></span>
+                                                   </span>
+                                               <%}else{%>
+                                                   <span id="btn_status" setVal="<%=data.items[5].val%>" d_id="<%=index%>-5" status="<%=data.items[3].val%>" itemid="<%=data.items[5].itemid%>" devid="<%=data.items[4].devid%>" name="<%=data.name%>"  class="switch-on">
+                                                      <span class="slider"></span>
+                                                   </span>
+                                               <%}%>
+                                            </div>
+                                         </span>
+                                        </span>
+                                    </h5>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+              </div>
+          </div>
+      </div>
+   </div>
+</div>
+
+<%}else if(tempId=='bottom-menu-template'){%>
+<div class="row">
+   <div style="margin-top:10px;line-height:40px;color:#EAEAEA;" class="col-xs-12">
+       <div class="col-xs-4" id="edit" style="border-right:0.5px solid #EAEAEA;"><span id="edit_back" style="display:none;"><img src="../assets/image/edit_back.png" style="width:23px;margin-top:-2px;">&nbsp;<span style="display:inline-block;margin-left:5px;">返回</span></span><span id="edit_room"><img src="../assets/image/edit.png" style="width:23px;margin-top:-2px;">&nbsp;<span style="display:inline-block;margin-left:5px;">编辑</span></span></div>
+       <div class="col-xs-4" style="border-right:0.5px solid #EAEAEA;" id="add_room_list"><img src="../assets/image/add.png" style="width:23px;margin-top:-2px;">&nbsp;<span style="display:inline-block;margin-left:5px;">添加</span></div>
+       <div class="col-xs-4" id="remove"><img src="../assets/image/delete.png" style="width:23px;margin-top:-2px;">&nbsp;<span style="display:inline-block;margin-left:5px;">删除</span></div>
+   </div>
+</div>
+<%}%>

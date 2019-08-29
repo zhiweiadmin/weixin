@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        "
+       xmlns:context="http://www.springframework.org/schema/context">
+    <context:component-scan base-package="com.redbudtek.weixin">
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation"
+                                expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
+    </context:component-scan>
+
+    <!-- quartz -->
+    <bean id="accessJob" class="com.redbudtek.weixin.job.AccessJob"/>
+    <bean id="accessTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="accessJob"/>
+        </property>
+        <property name="targetMethod">
+            <value>updateAccess</value>
+        </property>
+    </bean>
+    <bean id="accessTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="accessTask"/>
+        </property>
+        <property name="cronExpression">
+            <value>0 0 0/2 * * ?</value>
+        </property>
+    </bean>
+    <bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="accessTime"/>
+            </list>
+        </property>
+    </bean>
+
+    <!-- 调度工厂 -->
+    <bean id="schedulerFactory" class="org.quartz.impl.StdSchedulerFactory"/>
+</beans>

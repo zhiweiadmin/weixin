@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.redbudtek.weixin.mapper.ScheduledMapper" >
+    <resultMap id="BaseResultMap" type="com.redbudtek.weixin.model.JobEntity" >
+        <id column="job_id" property="jobId" jdbcType="BIGINT" />
+        <result column="project_id" property="projectId" jdbcType="BIGINT" />
+        <result column="device_id" property="deviceId" jdbcType="BIGINT" />
+        <result column="power_status" property="powerStatus" jdbcType="INTEGER" />
+        <result column="job_status" property="jobStatus" jdbcType="INTEGER" />
+        <result column="cron_time" property="cronTime" jdbcType="TIMESTAMP" />
+        <result column="create_dttm" property="createDttm" jdbcType="TIMESTAMP" />
+        <result column="update_dttm" property="updateDttm" jdbcType="TIMESTAMP"  />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        job_id, project_id, device_id,power_status,job_status,cron_time,create_dttm,update_dttm
+    </sql>
+
+    <insert id="insert" parameterType="com.redbudtek.weixin.model.JobEntity" useGeneratedKeys="true" keyProperty="jobId">
+    insert into t_device_schedule_job
+        (job_id,
+        project_id,
+        device_id,
+        power_status,
+        cron_time,
+        create_dttm,
+        update_dttm)
+    values (
+       #{jobId,jdbcType=BIGINT},
+       #{projectId,jdbcType=BIGINT},
+       #{deviceId,jdbcType=BIGINT},
+       #{powerStatus,jdbcType=INTEGER},
+       #{jobStatus,jdbcType=INTEGER},
+       #{cronTime,jdbcType=VARCHAR},
+       #{createDttm,jdbcType=TIMESTAMP},
+       #{updateDttm,jdbcType=TIMESTAMP})
+  </insert>
+
+    <select id="selectJobByFields" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+            t_device_schedule_job
+        where
+            1 = 1
+            <if test="jobStatus != null">
+                and job_status = #{jobStatus,jdbcType=INTEGER}
+            </if>
+    </select>
+
+</mapper>

@@ -1,0 +1,251 @@
+<%if(tempId == 'Constant-addDevice-msg'){%>
+你已成功录入一组设备，可在已录入里查看设备安装情况
+<%}else if(tempId == 'alert'){%>
+<div class="modal fade" id="alert" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4 class="text-center"><%=data%></h4>
+                <button type="button" class="btn blue btn-lg btn-block" data-dismiss="modal">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<%}else if(tempId == 'confirm-alert'){%>
+<div class="modal fade" id="confirm-alert" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4 class="text-center"><%=data%></h4>
+                <div class="btn-group btn-group-lg btn-group-justified">
+                    <a href="javascript:;" class="btn blue" style="backgroud-color" id="ok" data-dismiss="modal">确定</a>
+                    <a href="javascript:;" class="btn grey" id="cancle" data-dismiss="modal">取消</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%}else if(tempId == 'device_on'){%>
+<div class="modal fade" id="confirm-alert" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4 class="text-center"><%=data%></h4>
+                <div class="btn-group btn-group-lg btn-group-justified">
+                    <a href="javascript:;" class="btn blue" style="backgroud-color" id="ok" data-dismiss="modal">确定</a>
+                    <a href="javascript:;" class="btn grey" id="cancle" data-dismiss="modal">取消</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%}else if(tempId == 'device_model'){%>
+<div class="modal fade" id="confirm-alert" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4 class="text-center">模式</h4>
+                <div class="btn-group btn-group-lg btn-group-justified">
+                    <a href="javascript:;" class="btn blue" style="backgroud-color" id="ok" data-dismiss="modal"> <span ><i class="fa fa-snowflake-o"></i></span>&nbsp;&nbsp;制冷</a>
+                    <a href="javascript:;" class="btn grey" id="cancle" data-dismiss="modal"><span ><i class="fa fa-sun-o"></i></span>&nbsp;&nbsp;制热</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%}
+else if(tempId == 'device_speed'){%>
+<div class="modal fade" id="confirm-alert" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4 class="text-center">风速</h4>
+                <div class="btn-group btn-group-lg btn-group-justified">
+                    <a href="javascript:;" class="btn <%=lowColor%>" data-dismiss="modal">低速</a>
+                    <a href="javascript:;" class="btn <%=midColor%> mid" data-dismiss="modal">中速</a>
+                    <a href="javascript:;" class="btn <%=highColor%> high" data-dismiss="modal">高速</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%}
+else if(tempId == 'Constant-editDevice-msg'){%>
+确定进行修改?
+<%}else if(tempId == 'Constant-turn-down-msg'){%>
+确定关机吗?
+<%}else if(tempId == 'Constant-turn-on-msg'){%>
+确定开机吗?
+<%}else if(tempId == 'Constant-deleteDevice-msg'){%>
+确定进行删除?
+<%}else if(tempId == 'Constant-account-bind-confirm'){%>
+确定进行绑定?
+<%}else if(tempId == 'Constant-account-unbind-confirm'){%>
+确定进行解绑?
+<%}else if(tempId == 'Constant-account-bind-validate-userName'){%>
+用户名必填
+<%}else if(tempId == 'Constant-account-bind-validate-password'){%>
+密码必填
+<%}else if(tempId == 'Constant-addDevice-validate-type'){%>
+必须选择机型
+<%}else if(tempId == 'Constant-addDevice-validate-installPlace'){%>
+必须填写安装地址
+<%}else if(tempId == 'Constant-addDevice-validate-householdName'){%>
+必须填写住户姓名
+<%}else if(tempId == 'Constant-addDevice-validate-phone'){%>
+请正确填写联系电话
+<%}else if(tempId == 'Constant-addDevice-validate-serialNumber'){%>
+请扫码
+<%}else if(tempId == 'Constant-addDevice-validate-acNumber'){%>
+请扫码
+<%}else if(tempId == 'Constant-addDevice-serialNumber-invalid'){%>
+非法的序列号
+<%}else if(tempId == 'Constant-addDevice-serialNumber-encrypt-error'){%>
+序列号申请进行验证失败
+<%}else if(tempId == 'Constant-addDevice-serialNumber-failed'){%>
+序列号验证不通过
+<%}else if(tempId == 'Constant-addDevice-error-register'){%>
+SE注册不成功，请检查SE是否连接正常
+<%}else if(tempId == 'Constant-addDeviceInfo-error'){%>
+空调信息录入出错，请检查页面版本
+<%}else if(tempId == 'year'){%>
+年
+<%}else if(tempId == 'month'){%>
+月
+<%}else if(tempId == 'day'){%>
+日
+<%}else if(tempId == 'Constant-bindDeviceUser-error'){%>
+设备信息已录入，但用户与设备绑定失败，请联系管理员手动绑定
+<%}else if(tempId == 'Constant-editDeviceInfo-error'){%>
+修改设备信息失败
+<%}else if(tempId == 'Constant-editDeviceInfo-success'){%>
+修改设备信息成功
+<%}else if(tempId == 'Constant-deleteAgent-error'){%>
+下发进行删除设备失败
+<%}else if(tempId == 'Constant-deleteDeviceInfo-error'){%>
+删除设备信息失败
+<%}else if(tempId == 'Constant-unbindUserDevice-error'){%>
+解除用户与设备绑定失败
+<%}else if(tempId == 'Constant-deleteDevice-success'){%>
+成功删除设备
+<%}else if(tempId == 'Constant-addDevice-serialNumber-isUsed'){%>
+序列号已被使用，不可重复添加
+<%}else if(tempId == 'Constant-device-type-error'){%>
+警告!不识别的机型
+<%}else if(tempId == 'Constant-acNumber-search-error'){%>
+未入库的空调序列号
+<%}else if(tempId == 'Constant-device-bind-error'){%>
+绑定失败
+<%}else if(tempId == 'Constant-device-bind-success'){%>
+绑定成功
+<%}else if(tempId == 'Constant-control-stop'){%>
+获取控制结果已达到60秒，不再获取
+<%}else if(tempId == 'Constant-control-overtime'){%>
+控制超时
+<%}else if(tempId == 'Constant-control-success'){%>
+控制成功
+<%}else if(tempId == 'Constant-control-process'){%>
+获取控制结果中...
+<%}else if(tempId == 'Constant-deviceAttr-config-error'){%>
+获取设备台账字段配置参数信息错误
+<%}else if(tempId =='Constant-Setting'){%>
+高级设置
+<%}else if(tempId =='Constant-Quartz-Power-On-Off'){%>
+定时开关机
+<%}else if(tempId=='Constant-Upload-Error'){%>
+我要报修
+<%}else if(tempId=='Constant-About-Us'){%>
+关于我们
+<%}else if(tempId=='Constant-Logout-User'){%>
+确定注销当前用户吗?
+<%}else if(tempId=='Constant-Out-Temperature'){%>
+F001
+<%}else if(tempId=='Constant-Out-Humidity'){%>
+F002
+<%}else if(tempId=='Constant-In-Temperature'){%>
+F003
+<%}else if(tempId=='Constant-In-Humidity'){%>
+F004
+<%}else if(tempId=='Constant-In-CO2'){%>
+F005
+<%}else if(tempId=='Constant-In-PM25'){%>
+F006
+<%}else if(tempId=='Constant-In-VOC'){%>
+F007
+<%}else if(tempId=='Constant-System-Work-Mode'){%>
+F008
+<%}else if(tempId=='Constant-System-Setting-Temperature'){%>
+F009
+<%}else if(tempId=='Constant-System-Power'){%>
+F010
+<%}else if(tempId=='Constant-Out-Or-In-Home'){%>
+F011
+<%}else if(tempId=='Constant-Alert-Show'){%>
+F502
+<%}else if(tempId=='Constant-Config-Setting-Auto'){%>
+F014
+<%}else if(tempId=='Constant-Config-Setting-Cold'){%>
+F015
+<%}else if(tempId=='Constant-Config-Setting-Hot'){%>
+F016
+<%}else if(tempId=='Constant-Config-Setting-Wind'){%>
+F017
+<%}else if(tempId=='Constant-Config-Setting-Power'){%>
+F012
+<%}else if(tempId=='Constant-Config-Setting-HomeIn'){%>
+F013
+<%}else if(tempId=='Constant-Config-Setting-Temperature-Add'){%>
+F018
+<%}else if(tempId=='Constant-Config-Setting-Temperature-Minus'){%>
+F019
+<%}else if(tempId=='Constant-Setting-Time-Job-Start-Success'){%>
+设置定时开机成功
+<%}else if(tempId=='Constant-Setting-Time-Job-End-Success'){%>
+设置定时关机成功
+<%}else if(tempId=='Constant-Setting-Time-Job-Start-Fail'){%>
+设置定时开机失败
+<%}else if(tempId=='Constant-Setting-Time-Job-End-Fail'){%>
+设置定时关机失败
+<%}else if(tempId=='Constant-Cancel-Time-Job-Start-Success'){%>
+取消定时开机成功
+<%}else if(tempId=='Constant-Cancel-Time-Job-End-Success'){%>
+取消定时关机成功
+<%}else if(tempId=='Constant-Cancel-Time-Job-End-Fail'){%>
+取消定时关机失败
+<%}else if(tempId=='Constant-Cancel-Time-Job-Start-Fail'){%>
+取消定时开机失败
+<%}else if(tempId=='Constant-Setting-Time-Job-Undefined-Date'){%>
+请选择自定义日期
+<%}else if(tempId=='Constant-Setting-Time-Job-Undefined-Start-Time'){%>
+请输入开机时间
+<%}else if(tempId=='Constant-Setting-Time-Job-Undefined-End-Time'){%>
+请输入关机时间
+<%}else if(tempId=='Constant-Setting-Time-Job-Undefined-Repeat-Date'){%>
+请选择重复日期
+<%}%>
+
