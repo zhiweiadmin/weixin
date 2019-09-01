@@ -40,8 +40,8 @@ define([
     };
 
     //房控房间细节样式
-    var room_detail_basic_device = function(wraId,temId,parent,child,model,modelImg,temp,deviceId,speed){
-        return template({'tempId': 'room_detail_basic_device','wraId':wraId,'temId':temId,'parent':parent,'child':child,'model':model,'modelImg':modelImg,'temp':temp,'deviceId':deviceId,'speed':speed});
+    var room_detail_basic_device = function(wraId,temId,parent,child,model,modelImg,temp,deviceId,speed,deviceName){
+        return template({'tempId': 'room_detail_basic_device','wraId':wraId,'temId':temId,'parent':parent,'child':child,'model':model,'modelImg':modelImg,'temp':temp,'deviceId':deviceId,'speed':speed,'deviceName':deviceName});
     };
 
     //房控细节修改模式，从新渲染装置内容
@@ -61,8 +61,8 @@ define([
     }
 
     //房控设备列表
-    var room_device=function (room_img,name,count) {
-        return template({'tempId':'single_room_device','room_img':room_img,'name':name,'count':count});
+    var room_device=function (room_img,name,count,vid) {
+        return template({'tempId':'single_room_device','room_img':room_img,'name':name,'count':count,'vid':vid});
     }
 
 

@@ -148,7 +148,7 @@
     <img class="temp_img" id="minus_temp" src="../assets/image/img/minus_temp.png">
 </div>
 <div class="col-xs-2 value status_value padl0 padt20 padb20">
-    <span id="temNum"></span>℃
+    <span id="extTemp"></span>℃
 </div>
 <div class="col-xs-2 title padl0 padt20 padb20">
     <img class="temp_img" id="add_temp" src="../assets/image/img/add_temp.png">
@@ -179,7 +179,7 @@
 </div>
 <div class="col-xs-4 title  padt20 padb20">回水温度</div>
 <div class="col-xs-offset-3 col-xs-3  title textRight  padt20 padb20 padl10 ">
-    25.6℃&nbsp;
+    <span id="inTemp"></span>℃
 </div>
 <div class="col-xs-12">
     <div class="acrossbar"></div>
@@ -190,7 +190,7 @@
 </div>
 <div class="col-xs-4 title  padt20 padb20">出水温度</div>
 <div class="col-xs-offset-3 col-xs-3  title textRight  padt20 padb20 padl10 ">
-    25.6℃&nbsp;
+    <span id="outTemp"></span>℃
 </div>
 <div class="col-xs-12">
     <div class="acrossbar"></div>
@@ -209,7 +209,7 @@
     <div class="sub_info"><%=count%>个设备</div>
 </div>
 <div class="col-xs-offset-3 col-xs-3 control_right_div padt20 padb20 padl25 ">
-    <span class="control_sub_right" count='<%=count%>'>&nbsp;<i class="fa fa-angle-right"></i></span>
+    <span class="control_sub_right" count='<%=count%>' id='<%=vid%>' name='<%=name%>'>&nbsp;<i class="fa fa-angle-right"></i></span>
 </div>
 <div class="col-xs-12">
     <div class="acrossbar"></div>
@@ -498,7 +498,7 @@
 <div class="swiper-slide" id="swiper<%=deviceId%>">
     <div class="col-xs-12 " style="margin-top: -8px">
         <div><img class='control_top_icon' src="../assets/image/img/woshi-o.png" style="width: 80px"></div>
-        <div class="color_white font-25">主卧房控</div>
+        <div class="color_white font-25"><%=deviceName%></div>
     </div>
     <div class="parent <%=parent%> mt25">
         <div class="child <%=child%>" id="<%=wraId%>">

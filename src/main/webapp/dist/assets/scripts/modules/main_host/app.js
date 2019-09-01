@@ -50,6 +50,15 @@ define([
     var cur_add_set = -1;
     //当前设置减得val
     var cur_minus_set = -1;
+    //出水温度 jiangzhiwei
+    var cur_out_temp;
+    var cur_in_temp;
+    var cur_sys_ext_temp;
+    var run_status;
+    var run_model;
+    var deviceItems;//变量组数据
+    var cur_item_data;//变量组实时数据
+
     //当前所有项目列表
     var cur_all_projects = [];
     //当前带有层级的项目列表
@@ -115,8 +124,6 @@ define([
             })
 
             cur_all_projects_cascade = ttt;
-            console.log("ttt");
-            console.log(ttt);
             // if(ttt.length==1&&ttt[0].nodes.length==1){
             //     var projectId=ttt[0].nodes[0].id;
             //     cur_projectId=projectId;
@@ -228,89 +235,6 @@ define([
             },
             dataType: 'json',
             success: function (res) {
-                res = JSON.parse("{\n" +
-                    "    \"status\": \"100\",\n" +
-                    "    \"data\": [\n" +
-                    "        {\n" +
-                    "            \"active\": 1,\n" +
-                    "            \"address\": \"\",\n" +
-                    "            \"city\": \"成都\",\n" +
-                    "            \"contactName\": \"\",\n" +
-                    "            \"contactPhone\": \"\",\n" +
-                    "            \"createOn\": 1527669783753,\n" +
-                    "            \"createdBy\": 1,\n" +
-                    "            \"customerType\": \"\",\n" +
-                    "            \"firstparty\": \"\",\n" +
-                    "            \"hasPermission\": 1,\n" +
-                    "            \"id\": 18,\n" +
-                    "            \"name\": \"四川地区\",\n" +
-                    "            \"projectType\": \"\",\n" +
-                    "            \"province\": \"四川\",\n" +
-                    "            \"updatedBy\": 1,\n" +
-                    "            \"updatedOn\": 1527669783753\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"active\": 1,\n" +
-                    "            \"address\": \"\",\n" +
-                    "            \"city\": \"\",\n" +
-                    "            \"contactName\": \"\",\n" +
-                    "            \"contactPhone\": \"\",\n" +
-                    "            \"createOn\": 1527669885071,\n" +
-                    "            \"createdBy\": 1,\n" +
-                    "            \"customerType\": \"\",\n" +
-                    "            \"firstparty\": \"\",\n" +
-                    "            \"hasPermission\": 1,\n" +
-                    "            \"id\": 19,\n" +
-                    "            \"latitude\": 30.398101,\n" +
-                    "            \"longitude\": 104.554585,\n" +
-                    "            \"name\": \"成都简阳\",\n" +
-                    "            \"parentId\": 18,\n" +
-                    "            \"projectType\": \"\",\n" +
-                    "            \"province\": \"\",\n" +
-                    "            \"updatedBy\": 1,\n" +
-                    "            \"updatedOn\": 1527747006040\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"active\": 1,\n" +
-                    "            \"address\": \"\",\n" +
-                    "            \"city\": \"\",\n" +
-                    "            \"contactName\": \"\",\n" +
-                    "            \"contactPhone\": \"\",\n" +
-                    "            \"createOn\": 1566867817168,\n" +
-                    "            \"createdBy\": 1,\n" +
-                    "            \"customerType\": \"\",\n" +
-                    "            \"firstparty\": \"\",\n" +
-                    "            \"hasPermission\": 1,\n" +
-                    "            \"id\": 1,\n" +
-                    "            \"parentId\": 1,\n" +
-                    "            \"name\": \"北京宣武四合院\",\n" +
-                    "            \"projectType\": \"\",\n" +
-                    "            \"province\": \"北京市\",\n" +
-                    "            \"updatedBy\": 1,\n" +
-                    "            \"updatedOn\": 1566867817168\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"active\": 1,\n" +
-                    "            \"address\": \"\",\n" +
-                    "            \"city\": \"\",\n" +
-                    "            \"contactName\": \"\",\n" +
-                    "            \"contactPhone\": \"\",\n" +
-                    "            \"createOn\": \"\",\n" +
-                    "            \"createdBy\": 1,\n" +
-                    "            \"customerType\": \"\",\n" +
-                    "            \"firstparty\": \"\",\n" +
-                    "            \"hasPermission\": 1,\n" +
-                    "            \"id\": 1,\n" +
-                    "            \"name\": \"北京地区\",\n" +
-                    "            \"projectDesc\": \"\",\n" +
-                    "            \"projectType\": \"\",\n" +
-                    "            \"province\": \"\",\n" +
-                    "            \"updatedBy\": 1,\n" +
-                    "            \"updatedOn\": 1511517887406\n" +
-                    "        }\n" +
-                    "    ]\n" +
-                    "}");
-                console.log(res);
                 if (res && res.status == '100') {
                     cb(res.data);
                 }
@@ -353,7 +277,6 @@ define([
     //获取项目所在地的一些信息，包括天气温度等等
     var getLocation = function () {
         getProjectInfo(cur_projectId, function (res) {
-            console.log(res);
             var long = res.data.longitude || '116.395645';
             var lat = res.data.latitude || '39.929985';
             var location = long + ',' + lat;
@@ -398,9 +321,30 @@ define([
             },
             dataType: 'json',
             success: function (res) {
-                console.log("获取变量组数据")
-                console.log(res);
+                deviceItems = res;
                 callback(res);
+            }
+        })
+    }
+
+    //根绝设备id获取这个设备下面的数据
+    var getVdeviceItemsVal = function (vId,fk) {
+        var items;
+        for (var i = 0; i < deviceItems.data.length; i++){
+            var id = deviceItems.data[i].vdeviceId + '';
+            if(id == vId){
+                items = deviceItems.data[i].dataItem;
+            }
+        }
+        _.each(items, function (p) {
+            if (p.itemName.indexOf(fk) != -1) {
+                var itemName = p.itemName;
+                //遍历实时数据
+                _.each(cur_item_data.data, function (k) {
+                    if(k.itemname == itemName){
+                        return k.val;
+                    }
+                })
             }
         })
     }
@@ -458,6 +402,7 @@ define([
             dataType: 'json',
             success: function (res) {
                 if (res && res.status === '100') {
+                    cur_item_data = res;
                     cb(res);
                 }
             }
@@ -500,7 +445,6 @@ define([
                     btn_fix_screen(ToolBox.screen_width, parseInt(p.val));
                     cur_temperature = p.val;
                     temNum = p.val;
-                    console.log("室内温度:" + temNum);
                     $('#temNum').html(temNum);
                 }
                 if (p.itemname == Strformat(ToolBox.getConstant('Constant-In-Humidity'))) {
@@ -581,6 +525,41 @@ define([
                 if (p.itemname == Strformat(ToolBox.getConstant('Constant-Config-Setting-Temperature-Minus'))) {
                     //当前温度减得值
                     cur_minus_set = parseInt(p.val);
+                }
+                //add by jiangzhiwei
+                if(p.itemname == "Sys_OutTemp"){
+                    cur_out_temp = p.val;
+                    $('#outTemp').html(cur_out_temp);
+                }
+                if(p.itemname == "Sys_InTemp"){
+                    cur_in_temp = p.val;
+                    $('#inTemp').html(cur_in_temp);
+                }
+                if(p.itemname == "Sys_ExtTemp"){
+                    cur_sys_ext_temp = p.val;
+                    $('#extTemp').html(cur_sys_ext_temp);
+                }
+                if(p.itemname == "Sys_RunSet"){
+                    run_status = p.val;
+                    //1是开机 0是关机
+                    if(run_status == 1){
+                        $(".online_status").attr("src", "../assets/image/img/online.png");
+                        $(this).addClass("online")
+                    }else{
+                        $(".online_status").attr("src", "../assets/image/img/offline.png");
+                        $(this).removeClass("online")
+                    }
+                }
+                if(p.itemname == "Sys_ModelSet"){
+                    run_model = p.val;
+                    //1是制热 0是制冷
+                    if(run_model == 0){
+                        $("#cold_model").addClass("color_cold_active")
+                        $("#cold_model").removeClass("color_hot_active")
+                    }else{
+                        $("#cold_model").addClass("color_hot_active")
+                        $("#cold_model").removeClass("color_cold_active")
+                    }
                 }
             })
         })
@@ -887,8 +866,8 @@ define([
             $("#senior").removeClass("active")
             $(this).addClass("active")
             $(".content").html(Layout.host_mode())
-            //显示数据 jiangzhiwei  需要重新加载数
-            $('#temNum').html(temNum);
+            //显示数据 jiangzhiwei 需要重新加载数据
+            init_index_page();
         })
 
         //绑定在线状态切换事件
@@ -951,39 +930,64 @@ define([
             $(".content").html("");
             //加載防控数据 jiangzhiwei
             //jiangzhiwei  获取变量组数据 当点击的时候再去加载数据
-            getVdeviceItems(cur_projectId, function (res) {
-                console.log('-------------变量组是:' + res);
-                // _.each(res.data,function (p) {
-                //     var obj ={
-                //         vname:p.vdeviceName,
-                //         vid:p.vdeviceId
-                //     };
-                //     devices.push(obj);
-                //
-                //
-                //
-                //
-                //
-                // })
-                devices = [];
-                devices.push({name: '客厅', count: 5, room_img: getRoomImg('客厅')});
-                devices.push({name: '主卧', count: 3, room_img: getRoomImg('主卧')});
-                devices.push({name: '次卧一', count: 2, room_img: getRoomImg('次卧')});
-                devices.push({name: '次卧二', count: 1, room_img: getRoomImg('次卧')});
-                devices.push({name: '阁楼', count: 5, room_img: getRoomImg('阁楼')});
-                devices.push({name: '公卫', count: 5, room_img: getRoomImg('公卫')});
+            if(devices.length == 0){
+                getVdeviceItems(cur_projectId, function (res) {
+                    _.each(res.data,function (p,index) {
+                        var a = new Set();
+                        if(index > 0){
+                            console.log('set 获取');
+                            //获取最后一个统计想
+                            var lastitem = p.dataItem[p.dataItem.length-1].itemName;
+                            var firstWeizhi = lastitem.indexOf('_');
+                            var lastWeizhi = lastitem.lastIndexOf('_');
+                            var count = lastitem.substring(firstWeizhi+1,lastWeizhi);
+                            var obj ={
+                                name:p.vdeviceName,
+                                vid:p.vdeviceId,
+                                count:count,
+                                room_img:getRoomImg(p.vdeviceName)
+                            };
+                            devices.push(obj);
+                        }
+
+                    })
+                    init_room_list(devices);
+                })
+            }else{
                 init_room_list(devices);
-            })
+            }
+
 
         })
 
         //初始化房间列表页面  jiangzhiwei
         var init_room_list = function (data) {
             var array = data;
+            $('.content').html("");
             for (var i = 0; i < array.length; i++) {
-                $('.content').append(Layout.room_device(array[i].room_img, array[i].name, array[i].count));
+                $('.content').append(Layout.room_device(array[i].room_img, array[i].name, array[i].count,array[i].vid));
             }
+        }
 
+        //初始化首页
+        var init_index_page = function () {
+            $('#outTemp').html(cur_out_temp);
+            $('#inTemp').html(cur_in_temp);
+            $('#extTemp').html(cur_sys_ext_temp);
+            if(run_status == 1){
+                $(".online_status").attr("src", "../assets/image/img/online.png");
+                $(".online_status").addClass("online")
+            }else{
+                $(".online_status").attr("src", "../assets/image/img/offline.png");
+                $(".online_status").removeClass("online")
+            }
+            if(run_model == 0){
+                $("#cold_model").addClass("color_cold_active")
+                $("#cold_model").removeClass("color_hot_active")
+            }else{
+                $("#cold_model").addClass("color_hot_active")
+                $("#cold_model").removeClass("color_cold_active")
+            }
         }
 
         //根据房间名获取对应图片
@@ -1013,21 +1017,37 @@ define([
             var height = $(window).height();
             //获取当前房间设备的个数
             var count = $(this).attr("count");
+            var vid = $(this).attr("id");
+            var name = $(this).attr("name");
+
             //根据个数来创建设备信息
             //i后期使用装置ID来替换
-            for (var i = 0; i < count; i++) {
+            for (var i = 1; i <= count; i++) {
+                //获取开关 统计项的值
+                var item_onoff = i+'_OnOff';
+                var on_off = getVdeviceItemsVal(vid,item_onoff);
+
+                //模式
+                var item_model = i+'_Model';
+                var modelType = getVdeviceItemsVal(vid,item_model);
+
+                //房控温度
+                var ext_temp = i+'_ExtTemp';
+                var extTemp = getVdeviceItemsVal(vid,ext_temp);
+                var deviceName = name+"房控"+i;
+
                 //暂且认为奇数为制热 35℃ 偶数为制冷  23℃
-                var model = (i % 2 === 0) ? "制冷" : "制热";
-                var modelImg = (i % 2 === 0) ? "fa-snowflake-o" : "fa-sun-o";
-                var preClass = (i % 2 === 0) ? "cold" : "hot"
+                var model = (modelType == '0') ? "制冷" : "制热";
+                var modelImg = (modelType % 2 === 0) ? "fa-snowflake-o" : "fa-sun-o";
+                var preClass = (modelType % 2 === 0) ? "cold" : "hot"
                 var parent = preClass + "_parent";
                 var child = preClass + "_child";
-                var temp = (i % 2 === 0) ? 23 : 35
+                var temp = 0;
                 var wraId = "circle_step" + i;
                 var temId = "temp" + i;
                 //默认均为低速
                 var speed="低速";
-                $(".swiper-wrapper").append(Layout.room_detail_basic_device(wraId, temId, parent, child, model, modelImg, temp,i,speed));
+                $(".swiper-wrapper").append(Layout.room_detail_basic_device(wraId, temId, parent, child, model, modelImg, temp,i,speed,deviceName));
                 var size = $(".parent").width() * 0.8;
                 if (model === "制热") {
                     $('#' + wraId).circleProgress({
@@ -1191,23 +1211,9 @@ define([
             // $(".content").html(Layout.control_mode());
             $(".content").html("");
             //加載防控数据 jiangzhiwei
-            //jiangzhiwei  获取变量组数据 当点击的时候再去加载数据
-            getVdeviceItems(cur_projectId, function (res) {
-                devices = [];
-                devices.push({name: '客厅', count: 5, room_img: getRoomImg('客厅')});
-                devices.push({name: '主卧', count: 3, room_img: getRoomImg('主卧')});
-                devices.push({name: '次卧一', count: 2, room_img: getRoomImg('次卧')});
-                devices.push({name: '次卧二', count: 1, room_img: getRoomImg('次卧')});
-                devices.push({name: '阁楼', count: 5, room_img: getRoomImg('阁楼')});
-                devices.push({name: '公卫', count: 5, room_img: getRoomImg('公卫')});
-                init_room_list(devices);
-            })
-
+            init_room_list(devices);
         })
-
-
         //-------------------------房控end-----------------------------
-
 
         //-----------------------高级start-----------------------------
         //点击高级内容区域发生改变
@@ -1226,7 +1232,6 @@ define([
 
         //返回高级页面
         $('#main').off('tap', '#backBtn').on('tap', '#backBtn', function (e) {
-            console.log(1)
             $("#host").removeClass("active")
             $("#control").removeClass("active")
             $("#senior").addClass("active")
