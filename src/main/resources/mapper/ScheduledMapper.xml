@@ -28,7 +28,7 @@
         update_dttm )
         VALUES
 	(
-	    #{jobId,jdbcType=INTEGER},
+	    nextval('weixin_job_id'),
 	    #{devid,jdbcType=VARCHAR},
 	    #{itemid,jdbcType=VARCHAR},
 	    #{val,jdbcType=VARCHAR},
