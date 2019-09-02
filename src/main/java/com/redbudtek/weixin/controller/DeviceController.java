@@ -1,7 +1,9 @@
 package com.redbudtek.weixin.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.redbudtek.weixin.model.JobEntity;
 import com.redbudtek.weixin.service.DeviceService;
+import com.redbudtek.weixin.service.ScheduledService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author jinxin.zhou
@@ -93,6 +97,36 @@ public class DeviceController {
             }
         }
         return ip;
+    }
+
+    @Autowired
+    ScheduledService scheduledService;
+
+    /**
+     * 添加设备定时开关机
+     * @param
+     * @param request
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "addDeviceJob",method = RequestMethod.GET)
+    public String addDeviceJob(Integer onoff,String devid,String itemid,String time,String val){
+//		JSONObject request = JSONObject.parseObject(payLoad);
+//		Integer onoff = request.getInteger("onoff");//1开 0关
+//		String devid = request.getString("devid");
+//		String itemid = request.getString("itemid");
+//		String time = request.getString("time");
+
+        //根据时间 生成cron表达式
+        JobEntity jobEntity = new JobEntity();
+        jobEntity.setJobId(null);
+        jobEntity.setJobStatus(onoff);
+        jobEntity.setDevid(devid);
+        jobEntity.setItemid(itemid);
+        jobEntity.setCronTime(time);//TODO
+        jobEntity.setVal(val);//TODO
+        scheduledService.addJob(jobEntity);
+        return "success";
     }
 
 }

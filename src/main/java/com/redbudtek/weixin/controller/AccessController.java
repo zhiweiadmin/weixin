@@ -204,36 +204,4 @@ public class AccessController {
 		return jsonObject1.toJSONString();
 	}
 
-	@Autowired
-	ScheduledService scheduledService;
-
-	@ResponseBody
-	@RequestMapping(value = "addDeviceJob",method = RequestMethod.GET,produces = "application/json;charset=UTF-8")
-	public String addDeviceJob(Integer onoff,String devid,String itemid,String startUpTime,String shutdownTime){
-//		Integer onoff = request.getInteger("onoff");//1开 0关
-//		String devid = request.getString("devid");
-//		String itemid = request.getString("itemid");
-//		String startUpTime = request.getString("startUpTime");
-//		String shutdownTime = request.getString("shutdownTime");
-
-
-		//根据时间 生成cron表达式
-		JobEntity jobEntity = new JobEntity();
-		jobEntity.setJobId(null);
-		jobEntity.setJobStatus(onoff);
-		jobEntity.setDevid(devid);
-		jobEntity.setItemid(itemid);
-		jobEntity.setCronTime(startUpTime);//TODO
-		scheduledService.addJob(jobEntity);
-
-		JobEntity jobEntity1 = new JobEntity();
-		jobEntity1.setJobId(null);
-		jobEntity1.setJobStatus(onoff);
-		jobEntity1.setDevid(devid);
-		jobEntity1.setItemid(itemid);
-		jobEntity1.setCronTime(shutdownTime);//TODO
-		scheduledService.addJob(jobEntity1);
-		return "success";
-	}
-
 }
