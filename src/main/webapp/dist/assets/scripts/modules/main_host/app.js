@@ -287,11 +287,11 @@ define([
             })
 
         }
-
-        if (is_req_weather) {
-            locationTimeJob();
-            is_req_weather = false;
-        }
+        //取消日期刷新
+        // if (is_req_weather) {
+        //     locationTimeJob();
+        //     is_req_weather = false;
+        // }
 
     };
 
@@ -928,7 +928,6 @@ define([
             ToolBox.confirm_alert({
                 $container: $('#others'),
                 afterCallback: function () {
-                    debugger;
                     if ($("#host_switch").hasClass('on')) {
                         $("#host_switch").attr("src", "../assets/image/img/switch_off_o.png");
                         $("#host_switch").removeClass("on");
@@ -1262,7 +1261,6 @@ define([
                 afterCallbackHot: function () {
                     //获取当前温度、id信息
                     var id = "#temp"+deviceId;
-                    debugger;
                     var temp=$(id).html();
                     temp=temp.substring(0,temp.indexOf('℃'));
                     var model =  "制热";
@@ -1790,6 +1788,7 @@ define([
             timeJobId = setInterval(function () {
                 //只刷新页面
                 //如果当前是非主页的刷新,则不需要刷新当前页
+                console.log("要刷新页面了")
                 if ($("#cur_choice").is(":visible")) {
                     layout_init();
                 }
