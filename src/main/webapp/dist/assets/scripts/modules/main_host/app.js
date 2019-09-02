@@ -249,10 +249,10 @@ define([
         //取消modal的遮罩
         if (is_req_weather) {
             getLocation();
-            getVdeviceItems(cur_projectId,function(res){
+            getVdeviceItems(cur_projectId, function (res) {
                 var agents = res.data[0].dataItem[0].serialNumber;
-                agentListCondition(agents,function(res1){
-                    if(res1.status == 100){
+                agentListCondition(agents, function (res1) {
+                    if (res1.status == 100) {
                         agent_condition = res1.result.data[0].agentCondition;
                         run_status = agent_condition;
                     }
@@ -270,10 +270,10 @@ define([
             }, 500);
         } else {
             getLocation();
-            getVdeviceItems(cur_projectId,function(res){
+            getVdeviceItems(cur_projectId, function (res) {
                 var agents = res.data[0].dataItem[0].serialNumber;
-                agentListCondition(agents,function(res1){
-                    if(res1.status == 100){
+                agentListCondition(agents, function (res1) {
+                    if (res1.status == 100) {
                         agent_condition = res1.result.data[0].agentCondition;
                         run_status = agent_condition;
                     }
@@ -349,30 +349,30 @@ define([
     }
 
     //获取网关状态信息
-    var agentListCondition = function(agentIds,callback){
+    var agentListCondition = function (agentIds, callback) {
         ToolBox.ajax({
-            type:'get',
-            url:'agentList/pagination',
-            data:{
-                token:ToolBox.getCookie('token'),
-                agentId:agentIds,
-                page:1,
-                perPage:999
+            type: 'get',
+            url: 'agentList/pagination',
+            data: {
+                token: ToolBox.getCookie('token'),
+                agentId: agentIds,
+                page: 1,
+                perPage: 999
             },
-            async:false,
-            dataType:'json',
-            success:function (res) {
+            async: false,
+            dataType: 'json',
+            success: function (res) {
                 callback(res);
             }
         })
     }
 
     //根绝设备id获取这个设备下面的数据
-    function getVdeviceItemsVal(vId,fk) {
+    function getVdeviceItemsVal(vId, fk) {
         var items;
-        for (var i = 0; i < deviceItems.data.length; i++){
+        for (var i = 0; i < deviceItems.data.length; i++) {
             var id = deviceItems.data[i].vdeviceId + '';
-            if(id == vId){
+            if (id == vId) {
                 items = deviceItems.data[i].dataItem;
             }
         }
@@ -382,7 +382,7 @@ define([
                 var itemName = p.itemName;
                 //遍历实时数据
                 _.each(cur_item_data.data, function (k) {
-                    if(k.itemname == itemName){
+                    if (k.itemname == itemName) {
                         itemVal = k.val;
                     }
                 })
@@ -391,11 +391,11 @@ define([
         return itemVal;
     }
 
-    function getVdeviceItemsName(vId,fk) {
+    function getVdeviceItemsName(vId, fk) {
         var items;
-        for (var i = 0; i < deviceItems.data.length; i++){
+        for (var i = 0; i < deviceItems.data.length; i++) {
             var id = deviceItems.data[i].vdeviceId + '';
-            if(id == vId){
+            if (id == vId) {
                 items = deviceItems.data[i].dataItem;
             }
         }
@@ -408,12 +408,12 @@ define([
         return itemName;
     }
 
-    function getVdeviceItemsInfo(vId,fk) {
+    function getVdeviceItemsInfo(vId, fk) {
         var items;
         var item;
-        for (var i = 0; i < deviceItems.data.length; i++){
+        for (var i = 0; i < deviceItems.data.length; i++) {
             var id = deviceItems.data[i].vdeviceId + '';
-            if(id == vId){
+            if (id == vId) {
                 items = deviceItems.data[i].dataItem;
             }
         }
@@ -423,7 +423,7 @@ define([
                 var itemName = p.itemName;
                 //遍历实时数据
                 _.each(cur_item_data.data, function (k) {
-                    if(k.itemname == itemName){
+                    if (k.itemname == itemName) {
                         item = k;
                     }
                 })
@@ -517,43 +517,43 @@ define([
         require(['progress'], function () {
             _.each(cur_all_data, function (p) {
                 //add by jiangzhiwei
-                if(p.itemname == "Sys_OutTemp"){
+                if (p.itemname == "Sys_OutTemp") {
                     cur_out_temp = p.val;
                     $('#outTemp').html(cur_out_temp);
                 }
-                if(p.itemname == "Sys_InTemp"){
+                if (p.itemname == "Sys_InTemp") {
                     cur_in_temp = p.val;
                     $('#inTemp').html(cur_in_temp);
                 }
-                if(p.itemname == "Sys_ExtTemp"){
+                if (p.itemname == "Sys_ExtTemp") {
                     cur_sys_ext_temp = p.val;
                     $('#extTemp').html(cur_sys_ext_temp);
                 }
-                if(p.itemname == "Sys_RunSet"){
+                if (p.itemname == "Sys_RunSet") {
                     cur_power = p.val;
-                    if(cur_power == '0'){
+                    if (cur_power == '0') {
                         $("#host_switch").attr("src", "../assets/image/img/switch_off_o.png");
                         $("#host_switch").removeClass("on");
-                    }else if(cur_power == '1'){
+                    } else if (cur_power == '1') {
                         $("#host_switch").attr("src", "../assets/image/img/switch_on_o.png");
                         $("#host_switch").addClass("on")
                     }
                 }
                 //
-                if(run_status == 1){
+                if (run_status == 1) {
                     $(".online_status").attr("src", "../assets/image/img/online.png");
                     $(this).addClass("online")
-                }else{
+                } else {
                     $(".online_status").attr("src", "../assets/image/img/offline.png");
                     $(this).removeClass("online")
                 }//
-                if(p.itemname == "Sys_ModelSet"){
+                if (p.itemname == "Sys_ModelSet") {
                     run_model = p.val;
                     //1是制热 0是制冷
-                    if(run_model == 0){
+                    if (run_model == 0) {
                         $("#cold_model").addClass("color_cold_active");
                         $("#hot_model").removeClass("color_hot_active");
-                    }else{
+                    } else {
                         $("#hot_model").addClass("color_hot_active")
                         $("#cold_model").removeClass("color_cold_active")
                     }
@@ -632,23 +632,23 @@ define([
     }
 
     //改变选择模式
-    var change_mode = function (mode,val,callback) {
+    var change_mode = function (mode, val, callback) {
         setTimeout(function () {
-            change_cur_choice(mode,val, false, callback);
+            change_cur_choice(mode, val, false, callback);
         }, 200);
     }
 
     //改变当前的选择项
-    var change_cur_choice = function (mode,val,is_show, callback) {
-        var m,r,e;
+    var change_cur_choice = function (mode, val, is_show, callback) {
+        var m, r, e;
         _.each(cur_all_data, function (p) {
             if (p.itemname == "Sys_ModelStus") {
                 //运行模式
                 m = p;
-            }else if(p.itemname == "Sys_RunStus"){
+            } else if (p.itemname == "Sys_RunStus") {
                 //运行状态
                 r = p;
-            }else if(p.itemname == "Sys_ExtTemp"){
+            } else if (p.itemname == "Sys_ExtTemp") {
                 //温度
                 e = p;
             }
@@ -702,7 +702,7 @@ define([
         })
     }
 
-    var send_control_new = function (devid,itemid,val,is_show,callback) {
+    var send_control_new = function (devid, itemid, val, is_show, callback) {
         ToolBox.ajax({
             type: 'put',
             url: 'control?' + $.param({
@@ -716,7 +716,7 @@ define([
             dataType: 'json',
             success: function (res) {
                 if (typeof res.data == 'string') {
-                    getControlResult(devid,itemid, res.data, val, is_show, callback);
+                    getControlResult(devid, itemid, res.data, val, is_show, callback);
                 }
             }
         })
@@ -877,15 +877,15 @@ define([
         })
 
         //绑定在线状态切换事件
-        $("#main").off('tap', ".online_status").on('tap', '.online_status', function (e) {
-            if ($(this).hasClass("online")) {
-                $(this).attr("src", "../assets/image/img/offline.png");
-                $(this).removeClass("online")
-            } else {
-                $(this).attr("src", "../assets/image/img/online.png");
-                $(this).addClass("online")
-            }
-        })
+        // $("#main").off('tap', ".online_status").on('tap', '.online_status', function (e) {
+        //     if ($(this).hasClass("online")) {
+        //         $(this).attr("src", "../assets/image/img/offline.png");
+        //         $(this).removeClass("online")
+        //     } else {
+        //         $(this).attr("src", "../assets/image/img/online.png");
+        //         $(this).addClass("online")
+        //     }
+        // })
 
         //绑定设定温度的增减事件
         $("#main").off('tap', "#minus_temp").on('tap', '#minus_temp', function (e) {
@@ -902,7 +902,7 @@ define([
         $("#main").off('tap', "#cold_model").on('tap', '#cold_model', function (e) {
             $(this).addClass("color_cold_active");
             $("#hot_model").removeClass("color_hot_active");
-            change_mode(0,null,function (res) {
+            change_mode(0, null, function (res) {
                 console.log("请求成功")
             })
         })
@@ -910,8 +910,8 @@ define([
         $("#main").off('tap', "#hot_model").on('tap', '#hot_model', function (e) {
             $(this).addClass("color_hot_active");
             $("#cold_model").removeClass("color_cold_active");
-            change_mode(1,null,function (res) {
-                if(res.status == '100'){
+            change_mode(1, null, function (res) {
+                if (res.status == '100') {
                     console.log("请求成功")
                 }
             })
@@ -920,9 +920,9 @@ define([
         //主界面 开关机  jiangzhiwei
         $("#main").off('tap', "#host_switch").on('tap', '#host_switch', function (e) {
             var msg = '';
-            if(cur_power == '0'){
+            if (cur_power == '0') {
                 msg = '确定开机吗?'
-            }else{
+            } else {
                 msg = '确定关机吗?'
             }
             ToolBox.confirm_alert({
@@ -932,13 +932,13 @@ define([
                         $("#host_switch").attr("src", "../assets/image/img/switch_off_o.png");
                         $("#host_switch").removeClass("on");
 
-                        getValByKey("Sys_RunSet",function (item) {
+                        getValByKey("Sys_RunSet", function (item) {
                             send_control(item, 0, true, function (res) {
                                 console.log(res);
                                 if (res == 'success') {
                                     layout_init();
                                     bindEvents();
-                                }else{
+                                } else {
                                     alert("控制失败");
                                 }
                             })
@@ -946,7 +946,7 @@ define([
                     } else {
                         $("#host_switch").attr("src", "../assets/image/img/switch_on_o.png");
                         $("#host_switch").addClass("on")
-                        getValByKey("Sys_RunSet",function (item) {
+                        getValByKey("Sys_RunSet", function (item) {
                             console.log(item);
                             send_control(item, 1, true, function (res) {
                                 if (res == 'success') {
@@ -984,12 +984,12 @@ define([
             $(".content").html("");
             //加載防控数据 jiangzhiwei
             //jiangzhiwei  获取变量组数据 当点击的时候再去加载数据
-            if(devices.length == 0){
+            if (devices.length == 0) {
                 getVdeviceItems(cur_projectId, function (res) {
-                    if(res.status == 100){
+                    if (res.status == 100) {
                         var agents = res.data[0].dataItem[0].serialNumber;
-                        agentListCondition(agents,function(res1){
-                            if(res1.status == 100){
+                        agentListCondition(agents, function (res1) {
+                            if (res1.status == 100) {
                                 agent_condition = res1.result.data[0].agentCondition;
                                 run_status = agent_condition;
                                 console.log("网关")
@@ -999,19 +999,19 @@ define([
                     }
 
 
-                    _.each(res.data,function (p,index) {
+                    _.each(res.data, function (p, index) {
                         var a = new Set();
-                        if(index > 0){
+                        if (index > 0) {
                             //获取最后一个统计项
-                            var lastitem = p.dataItem[p.dataItem.length-1].itemName;
+                            var lastitem = p.dataItem[p.dataItem.length - 1].itemName;
                             var firstWeizhi = lastitem.indexOf('_');
                             var lastWeizhi = lastitem.lastIndexOf('_');
-                            var count = lastitem.substring(firstWeizhi+1,lastWeizhi);
-                            var obj ={
-                                name:p.vdeviceName,
-                                vid:p.vdeviceId,
-                                count:count,
-                                room_img:getRoomImg(p.vdeviceName)
+                            var count = lastitem.substring(firstWeizhi + 1, lastWeizhi);
+                            var obj = {
+                                name: p.vdeviceName,
+                                vid: p.vdeviceId,
+                                count: count,
+                                room_img: getRoomImg(p.vdeviceName)
                             };
                             devices.push(obj);
                         }
@@ -1019,7 +1019,7 @@ define([
                     })
                     init_room_list(devices);
                 })
-            }else{
+            } else {
                 init_room_list(devices);
             }
 
@@ -1031,7 +1031,7 @@ define([
             var array = data;
             $('.content').html("");
             for (var i = 0; i < array.length; i++) {
-                $('.content').append(Layout.room_device(array[i].room_img, array[i].name, array[i].count,array[i].vid));
+                $('.content').append(Layout.room_device(array[i].room_img, array[i].name, array[i].count, array[i].vid));
             }
         }
 
@@ -1040,24 +1040,24 @@ define([
             $('#outTemp').html(cur_out_temp);
             $('#inTemp').html(cur_in_temp);
             $('#extTemp').html(cur_sys_ext_temp);
-            if(run_status == 1){
+            if (run_status == 1) {
                 $(".online_status").attr("src", "../assets/image/img/online.png");
                 $(".online_status").addClass("online")
-            }else{
+            } else {
                 $(".online_status").attr("src", "../assets/image/img/offline.png");
                 $(".online_status").removeClass("online")
             }
-            if(run_model == 0){
+            if (run_model == 0) {
                 $("#cold_model").addClass("color_cold_active")
                 $("#cold_model").removeClass("color_hot_active")
-            }else{
+            } else {
                 $("#cold_model").addClass("color_hot_active")
                 $("#cold_model").removeClass("color_cold_active")
             }
-            if(cur_power == '0'){
+            if (cur_power == '0') {
                 $("#host_switch").attr("src", "../assets/image/img/switch_off_o.png");
                 $("#host_switch").removeClass("on");
-            }else if(cur_power == '1'){
+            } else if (cur_power == '1') {
                 $("#host_switch").attr("src", "../assets/image/img/switch_on_o.png");
                 $("#host_switch").addClass("on")
             }
@@ -1097,24 +1097,24 @@ define([
             //i后期使用装置ID来替换
             for (var i = 1; i <= count; i++) {
 
-                var deviceId = vdeviceId +"_"+i;
+                var deviceId = vdeviceId + "_" + i;
                 //获取开关 统计项的值
-                var item_onoff = i+'_OnOff';
-                var onoff = getVdeviceItemsVal(vdeviceId,item_onoff);
-                var itemname_onoff = getVdeviceItemsName(vdeviceId,item_onoff);
+                var item_onoff = i + '_OnOff';
+                var onoff = getVdeviceItemsVal(vdeviceId, item_onoff);
+                var itemname_onoff = getVdeviceItemsName(vdeviceId, item_onoff);
 
                 //模式
-                var item_model = i+'_Model';
-                var modelType = getVdeviceItemsVal(vdeviceId,item_model);
-                var itemname_model = getVdeviceItemsName(vdeviceId,item_model);
+                var item_model = i + '_Model';
+                var modelType = getVdeviceItemsVal(vdeviceId, item_model);
+                var itemname_model = getVdeviceItemsName(vdeviceId, item_model);
 
                 //获取Fk_1 前缀
-                var item_pre = itemname_model.substring(0,itemname_model.lastIndexOf('_'));
+                var item_pre = itemname_model.substring(0, itemname_model.lastIndexOf('_'));
 
                 //房控温度
-                var ext_temp = i+'_ExtTemp';
-                var extTemp = getVdeviceItemsVal(vdeviceId,ext_temp);
-                var deviceName = name+"房控"+i;
+                var ext_temp = i + '_ExtTemp';
+                var extTemp = getVdeviceItemsVal(vdeviceId, ext_temp);
+                var deviceName = name + "房控" + i;
 
                 //暂且认为奇数为制热 35℃ 偶数为制冷  23℃
                 var model = (modelType == '0') ? "制冷" : "制热";
@@ -1123,11 +1123,11 @@ define([
                 var parent = preClass + "_parent";
                 var child = preClass + "_child";
                 var temp = 0;
-                var wraId = "circle_step" + i;
-                var temId = "temp" + i;
+                var wraId = "circle_step" + deviceId;
+                var temId = "temp" + deviceId;
                 //默认均为低速
-                var speed="低速";
-                $(".swiper-wrapper").append(Layout.room_detail_basic_device(wraId, temId, parent, child, model, modelImg, temp,deviceId,speed,deviceName,itemname_onoff,itemname_model,item_pre));
+                var speed = "低速";
+                $(".swiper-wrapper").append(Layout.room_detail_basic_device(wraId, temId, parent, child, model, modelImg, temp, deviceId, speed, deviceName, itemname_onoff, itemname_model, item_pre));
                 var size = $(".parent").width() * 0.8;
                 if (model === "制热") {
                     $('#' + wraId).circleProgress({
@@ -1158,9 +1158,9 @@ define([
             $(".parent").css("height", height * 0.6);
             $(".child").css("padding-top", height * 0.6 * 0.2);
             $(".control_temp").css("margin-top", -(height * 0.6 * 0.4));
-            if(onoff == '1'){
+            if (onoff == '1') {
                 $(".device_switch").addClass("on");
-            }else{
+            } else {
                 $(".device_switch").removeClass("on");
             }
             var swiper = new Swiper('.swiper-container');
@@ -1169,28 +1169,28 @@ define([
         //房控里面的切换 jiangzhiwei
         //装置开关
         $("#main").off('tap', ".device_switch").on('tap', '.device_switch', function (e) {
-            var itemname=$(this).attr("itemname");
-            var deviceId=$(this).attr("deviceId");
-            var vId = deviceId.substring(0,deviceId.indexOf('_'));
-            var item = getVdeviceItemsInfo(vId,itemname)
-            var $dom=$(this);
-            if($dom.hasClass("on")){
+            var itemname = $(this).attr("itemname");
+            var deviceId = $(this).attr("deviceId");
+            var vId = deviceId.substring(0, deviceId.indexOf('_'));
+            var item = getVdeviceItemsInfo(vId, itemname)
+            var $dom = $(this);
+            if ($dom.hasClass("on")) {
                 //当前为开机状态，提供关机功能
                 ToolBox.device_on({
                     $container: $('#others'),
                     afterCallback: function () {
-                            $dom.removeClass("on");
-                            $dom.siblings().removeClass("onColor");
-                            $dom.siblings().addClass("offColor");
-                            send_control(item.devid,item.itemid,0,false,function (res) {
-                                console.log(res);
-                            })
+                        $dom.removeClass("on");
+                        $dom.siblings().removeClass("onColor");
+                        $dom.siblings().addClass("offColor");
+                        send_control(item.devid, item.itemid, 0, false, function (res) {
+                            console.log(res);
+                        })
 
                     },
                     msg: ToolBox.getConstant('Constant-turn-down-msg')
                 })
 
-            }else{
+            } else {
                 //当前为关机状态，提供开机功能
                 ToolBox.device_on({
                     $container: $('#others'),
@@ -1198,8 +1198,8 @@ define([
                         $dom.addClass("on")
                         $dom.siblings().addClass("onColor");
                         $dom.siblings().removeClass("offColor");
-                        send_control_new(item.devid,item.itemid,1,false,function (res) {
-                            if(res == "success"){
+                        send_control_new(item.devid, item.itemid, 1, false, function (res) {
+                            if (res == "success") {
                                 alert(res.msg);
                             }
                         })
@@ -1211,30 +1211,30 @@ define([
 
         //装置模式
         $("#main").off('tap', ".device_model").on('tap', '.device_model', function (e) {
-            var itemname=$(this).attr("itemname");
+            var itemname = $(this).attr("itemname");
             var deviceId = $(this).attr("deviceId");
-            var vId = deviceId.substring(0,deviceId.indexOf('_'));
-            deviceId = deviceId.substring(deviceId.indexOf('_')+1,deviceId.length);
-            var item = getVdeviceItemsInfo(vId,itemname);
-            console.log("itemName模式切换"+itemname);
-            var $dom=$(this);
+            var vId = deviceId.substring(0, deviceId.indexOf('_'));
+            var item = getVdeviceItemsInfo(vId, itemname);
+            console.log("itemName模式切换" + itemname);
+            var item_pre = itemname.substring(0, itemname.lastIndexOf('_'));
+            var $dom = $(this);
             //当前为开机状态，提供关机功能
             ToolBox.device_model({
                 $container: $('#others'),
                 afterCallbackCold: function () {
                     //获取当前温度、id信息
-                    var id = "#temp"+deviceId;
-                    var temp=$(id).html().trim();
-                    temp=temp.substring(0,temp.indexOf('℃'));
-                    var model =  "制冷";
-                    var modelImg =  "fa-snowflake-o" ;
+                    var id = "#temp" + deviceId;
+                    var temp = $(id).html().trim();
+                    temp = Number(temp.substring(0, temp.indexOf('℃')));
+                    var model = "制冷";
+                    var modelImg = "fa-snowflake-o";
                     var preClass = "cold";
                     var parent = preClass + "_parent";
                     var child = preClass + "_child";
                     var wraId = "circle_step" + deviceId;
                     var temId = "temp" + deviceId;
-                    var speed=$dom.siblings(".onColor").html();
-                    $("#swiper"+deviceId).html(Layout.room_detail_basic_device_model(wraId, temId, parent, child, model, modelImg, temp,deviceId,speed));
+                    var speed = $dom.siblings(".onColor").html();
+                    $("#swiper" + deviceId).html(Layout.room_detail_basic_device_model(wraId, temId, parent, child, model, modelImg, temp, deviceId, speed,itemname,itemname,item_pre));
                     var size = $(".parent").width() * 0.8;
                     $('#' + wraId).circleProgress({
                         value: 0.65,
@@ -1251,27 +1251,26 @@ define([
                     $(".parent").css("height", height * 0.6);
                     $(".child").css("padding-top", height * 0.6 * 0.2);
                     $(".control_temp").css("margin-top", -(height * 0.6 * 0.4));
-
-                    send_control_new(item.devid,item.itemid,0,false,function (res) {
-                        if(res != "success"){
+                    send_control_new(item.devid, item.itemid, 0, false, function (res) {
+                        if (res != "success") {
                             alert("控制失败");
                         }
                     })
                 },
                 afterCallbackHot: function () {
                     //获取当前温度、id信息
-                    var id = "#temp"+deviceId;
-                    var temp=$(id).html();
-                    temp=temp.substring(0,temp.indexOf('℃'));
-                    var model =  "制热";
-                    var modelImg =  "fa-sun-o" ;
+                    var id = "#temp" + deviceId;
+                    var temp = $(id).html();
+                    temp = Number(temp.substring(0, temp.indexOf('℃')));
+                    var model = "制热";
+                    var modelImg = "fa-sun-o";
                     var preClass = "hot";
                     var parent = preClass + "_parent";
                     var child = preClass + "_child";
                     var wraId = "circle_step" + deviceId;
                     var temId = "temp" + deviceId;
-                    var speed=$(".device_speed").siblings(".onColor").html();
-                    $("#swiper"+deviceId).html(Layout.room_detail_basic_device_model(wraId, temId, parent, child, model, modelImg, temp,deviceId,speed));
+                    var speed = $(".device_speed").siblings(".onColor").html();
+                    $("#swiper" + deviceId).html(Layout.room_detail_basic_device_model(wraId, temId, parent, child, model, modelImg, temp, deviceId, speed,itemname,itemname,item_pre));
                     var size = $(".parent").width() * 0.8;
                     $('#' + wraId).circleProgress({
                         value: 0.65,
@@ -1288,9 +1287,8 @@ define([
                     $(".parent").css("height", height * 0.6);
                     $(".child").css("padding-top", height * 0.6 * 0.2);
                     $(".control_temp").css("margin-top", -(height * 0.6 * 0.4));
-
-                    send_control_new(item.devid,item.itemid,0,false,function (res) {
-                        if(res != "success"){
+                    send_control_new(item.devid, item.itemid, 0, false, function (res) {
+                        if (res != "success") {
                             alert("控制失败");
                         }
                     })
@@ -1300,49 +1298,96 @@ define([
 
         //风速
         $("#main").off('tap', ".device_speed").on('tap', '.device_speed', function (e) {
-            var deviceId=$(this).attr("deviceId");
-            var vId = deviceId.substring(0,deviceId.indexOf('_'));
+            var deviceId = $(this).attr("deviceId");
+            var vId = deviceId.substring(0, deviceId.indexOf('_'));
             var itemPre = $(this).attr("itemPre");
-            var $dom=$(this);
-            var speed=$dom.siblings(".onColor").html();
+            var $dom = $(this);
+            var speed = $dom.siblings(".onColor").html();
             //当前为开机状态，提供关机功能
             ToolBox.device_speed({
                 $container: $('#others'),
                 afterCallback: function (data) {
                     $dom.siblings(".onColor").html(data);
-                    if(data == '低速'){
-                        var itemname = itemPre+'_Lwinds';
-                        var item = getVdeviceItemsInfo(vId,itemname);
-                        console.log("item : "+item);
-                        send_control_new(item.devid,item.itemid,1,false,function (res) {
-                            if(res != "success"){
+                    if (data == '低速') {
+                        var itemname = itemPre + '_Lwinds';
+                        var item = getVdeviceItemsInfo(vId, itemname);
+                        console.log("item : " + item);
+                        send_control_new(item.devid, item.itemid, 1, false, function (res) {
+                            if (res != "success") {
                                 alert("控制失败");
                             }
                         });
-                    }else if(data == '高速'){
-                        itemname = itemPre+'_Hwinds';
-                        var item = getVdeviceItemsInfo(vId,itemname);
-                        console.log("item : "+item);
-                        send_control_new(item.devid,item.itemid,1,false,function (res) {
-                            if(res != "success"){
+                    } else if (data == '高速') {
+                        itemname = itemPre + '_Hwinds';
+                        var item = getVdeviceItemsInfo(vId, itemname);
+                        console.log("item : " + item);
+                        send_control_new(item.devid, item.itemid, 1, false, function (res) {
+                            if (res != "success") {
                                 alert("控制失败");
                             }
                         });
-                    }else if(data == '中速'){
-                        itemname = itemPre+'_Mwinds';
-                        var item = getVdeviceItemsInfo(vId,itemname);
-                        console.log("item : "+item);
-                        send_control_new(item.devid,item.itemid,1,false,function (res) {
-                            if(res != "success"){
+                    } else if (data == '中速') {
+                        itemname = itemPre + '_Mwinds';
+                        var item = getVdeviceItemsInfo(vId, itemname);
+                        console.log("item : " + item);
+                        send_control_new(item.devid, item.itemid, 1, false, function (res) {
+                            if (res != "success") {
                                 alert("控制失败");
                             }
                         });
                     }
                 },
-                flag:speed
+                flag: speed
             })
         })
 
+        //定时
+        $("#main").off('tap', ".device_time").on('tap', '.device_time', function (e) {
+
+            //需要根据天气提供页面图片
+            var air_img = getImgUrl(weather);
+            $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img));
+
+            //移除所有按钮的激活class，并激活当前按钮
+            $("#host").removeClass("active")
+            $("#control").removeClass("active")
+            $("#senior").addClass("active")
+            $(".content").html(Layout.senior_mode())
+
+            getValByKey("Sys_RunSet", function (item) {
+                var devid = item.devid;
+                var itemid = item.itemid;
+                $.ajax({
+                    type: 'get',
+                    url: '/device/getDeviceJob',
+                    data: {
+                        devid: devid,
+                        itemid: itemid,
+                    },
+                    dataType:"json",
+                    success: function (res) {
+                        $(".content").html(Layout.time_swtich());
+                        //服务端结束处理后，重置状态
+                        if(res.data.length>0){
+                            for (var step=0;step<res.data.length;step++){
+                                var cronTime=res.data[step].cronTime;
+                                var arra=cronTime.split(" ");
+                                var min=Number(arra[1])<10?'0'+Number(arra[1]):Number(arra[1]);
+                                var time=arra[2]+":"+min;
+                                if(Number(res.data[step].val)===1){
+                                    //开机时间
+                                    $("#open_time_t").html(time);
+                                }else{
+                                    //关机时间
+                                    $("#close_time_t").html(time);
+                                }
+                            }
+                        }
+
+                    }
+                })
+            })
+        })
 
         //点击房控内部返回按钮
         $("#main").off('tap', ".control_top_icon").on('tap', '.control_top_icon', function (e) {
@@ -1457,16 +1502,51 @@ define([
 
         //定时开关
         $("#main").off('tap', '.time_control i').on('tap', '.time_control i', function (e) {
-            $(".content").html(Layout.time_swtich());
+            //定时开关页面需要更新开机时间和关机时间
+                getValByKey("Sys_RunSet", function (item) {
+                    var devid = item.devid;
+                    var itemid = item.itemid;
+                    $.ajax({
+                        type: 'get',
+                        url: '/device/getDeviceJob',
+                        data: {
+                            devid: devid,
+                            itemid: itemid,
+                        },
+                        dataType:"json",
+                        success: function (res) {
+                            $(".content").html(Layout.time_swtich());
+                            //服务端结束处理后，重置状态
+                            if(res.data.length>0){
+                                for (var step=0;step<res.data.length;step++){
+                                    var cronTime=res.data[step].cronTime;
+                                    var arra=cronTime.split(" ");
+                                    var min=Number(arra[1])<10?'0'+Number(arra[1]):Number(arra[1]);
+                                    var time=arra[2]+":"+min;
+                                    if(Number(res.data[step].val)===1){
+                                        //开机时间
+                                        $("#open_time_t").html(time);
+                                    }else{
+                                        //关机时间
+                                        $("#close_time_t").html(time);
+                                    }
+                                }
+                            }
+
+                        }
+                    })
+                })
+
+
         })
 
 
         //定时开关的switch
         $("#main").off('tap', '#time_switch').on('tap', '#time_switch', function (e) {
-            if($(this).hasClass("on")){
+            if ($(this).hasClass("on")) {
                 $(this).removeClass("on")
                 $(this).attr("src", "../assets/image/img/switch_off_full.png");
-            }else{
+            } else {
                 $(this).addClass("on")
                 $(this).attr("src", "../assets/image/img/switch_on_full.png");
             }
@@ -1474,10 +1554,10 @@ define([
 
         //权限控制的开关
         $("#main").off('tap', '#control_role_switch').on('tap', '#control_role_switch', function (e) {
-            if($(this).hasClass("on")){
+            if ($(this).hasClass("on")) {
                 $(this).removeClass("on")
                 $(this).attr("src", "../assets/image/img/switch_off_full.png");
-            }else{
+            } else {
                 $(this).addClass("on")
                 $(this).attr("src", "../assets/image/img/switch_on_full.png");
             }
@@ -1486,10 +1566,10 @@ define([
 
         //主机权限
         $("#main").off('tap', '#host_role_switch').on('tap', '#host_role_switch', function (e) {
-            if($(this).hasClass("on")){
+            if ($(this).hasClass("on")) {
                 $(this).removeClass("on")
                 $(this).attr("src", "../assets/image/img/switch_off_full.png");
-            }else{
+            } else {
                 $(this).addClass("on")
                 $(this).attr("src", "../assets/image/img/switch_on_full.png");
             }
@@ -1497,15 +1577,77 @@ define([
 
         //房控权限
         $("#main").off('tap', '#room_control_switch').on('tap', '#room_control_switch', function (e) {
-            if($(this).hasClass("on")){
+            if ($(this).hasClass("on")) {
                 $(this).removeClass("on")
                 $(this).attr("src", "../assets/image/img/switch_off_full.png");
-            }else{
+            } else {
                 $(this).addClass("on")
                 $(this).attr("src", "../assets/image/img/switch_on_full.png");
             }
         })
 
+        //开机时间的业务代码控制
+        var onflag = 0, offflag = 0, timeOn, timeOff;
+
+        //开机时间的后台处理
+        function addDeviceJobServiceOpen(token,devid,val,itemid,startUpTime,onoff){
+            $.ajax({
+                type: 'get',
+                url: '/device/addDeviceJob',
+                data: {
+                    token: token,
+                    devid: devid,
+                    val: val,
+                    itemid: itemid,
+                    time: startUpTime,
+                    onoff: onoff
+                },
+                beforeSend: function () {
+                    //发送前置为状态1
+                    onflag = 1;
+                },
+                success: function (res) {
+                    //服务端结束处理后，重置状态
+                    onflag = 0;
+                    console.log(res);
+                },
+                error: function (err) {
+                    //服务端结束处理后，重置状态
+                    onflag = 0;
+                    console.error(err);
+                }
+            })
+        }
+
+        //关机时间的后台处理
+        function addDeviceJobServiceClose(token,devid,val,itemid,shutdownTime,onoff){
+            $.ajax({
+                type: 'get',
+                url: '/device/addDeviceJob',
+                data: {
+                    token:token,
+                    devid: devid,
+                    val: val,
+                    itemid: itemid,
+                    time: shutdownTime,
+                    onoff: onoff
+                },
+                beforeSend: function () {
+                    //发送前置为状态1
+                    offflag = 1;
+                },
+                success: function (res) {
+                    //服务端结束处理后，重置状态
+                    offflag = 0;
+                    console.log(res);
+                },
+                error: function (err) {
+                    //服务端结束处理后，重置状态
+                    offflag = 0;
+                    console.error(err);
+                }
+            })
+        }
 
         $("#main").off('tap', '#open_time_t,#open_time_i').on('tap', '#open_time_t,#open_time_i', function (e) {
             $("#open_time_t,#open_time_i").mobiscroll().time({
@@ -1519,40 +1661,35 @@ define([
                 onBeforeShow: function (event, inst) {
                 },
                 onSelect: function (textVale, inst) { //选中时触发事件
-                    //if($('#time_switch').hasClass("on")){
-                        $("#open_time_t").html(textVale);
-                        var startUpTime = textVale;
-                        var val = 1;//1是开机
-                        var onoff = 0;//0是关
-                        if($('#time_switch').hasClass("on")){
-                            onoff = 1;
+                    $("#open_time_t").html(textVale);
+                    var startUpTime = textVale;
+                    var val = 1;//1是开机
+                    var onoff = 0;//0是关
+                    if ($('#time_switch').hasClass("on")) {
+                        onoff = 1;
+                    }
+                    getValByKey("Sys_RunSet", function (item) {
+                        var devid = item.devid;
+                        var itemid = item.itemid;
+                        var token = ToolBox.getCookie("token");
+                        //发送前判断业务代码状态
+                        if (onflag === 0) {
+                            //还没发送业务请求，先清空，再请求
+                            clearTimeout(timeOn);
+                            timeOn = setTimeout(function () {
+                                addDeviceJobServiceOpen(token,devid,val,itemid,startUpTime,onoff)
+                            }, 5000);
+                        } else {
+                            //已经发送业务请求，将用户当前改动请求后台
+                            timeOn = setTimeout(function () {
+                                addDeviceJobServiceOpen(token,devid,val,itemid,startUpTime,onoff)
+                            }, 5000);
                         }
-                        getValByKey("Sys_RunSet",function (item) {
-                            var devid = item.devid;
-                            var itemid = item.itemid;
-                            $.ajax({
-                                type:'get',
-                                url:'/device/addDeviceJob',
-                                data:{
-                                    token:ToolBox.getCookie("token"),
-                                    devid: devid,
-                                    val:val,
-                                    itemid:itemid,
-                                    time:startUpTime,
-                                    onoff:onoff
-                                },
-                                success:function (res) {
-                                    console.log(res);
-                                },
-                                error:function (err) {
-                                    console.error(err);
-                                }
-                            })
-                        })
-                    //}
+                    })
                 }
             });
         })
+
 
         $("#main").off('tap', '#close_time_t,#close_time_i').on('tap', '#close_time_t,#close_time_i', function (e) {
             $("#close_time_t,#close_time_i").mobiscroll().time({
@@ -1567,39 +1704,36 @@ define([
                 },
                 onSelect: function (textVale, inst) { //选中时触发事件
                     $("#close_time_t").html(textVale);
-                    //if($('#time_switch').hasClass("on")){
-                        var shutdownTime = textVale;
-                        var val = 0;//0是关机
-                        var onoff = 0;//0是关
-                        if($('#time_switch').hasClass("on")){
-                            onoff = 1;
+                    var shutdownTime = textVale;
+                    var val = 0;//0是关机
+                    var onoff = 0;//0是关
+                    if ($('#time_switch').hasClass("on")) {
+                        onoff = 1;
+                    }
+                    getValByKey("Sys_RunSet", function (item) {
+                        var devid = item.devid;
+                        var itemid = item.itemid;
+                        var token = ToolBox.getCookie("token");
+                        //发送前判断业务代码状态
+                        if (offflag === 0) {
+                            //还没发送业务请求，先清空，再请求
+                            clearTimeout(timeOff);
+                            timeOff = setTimeout(function () {
+                                addDeviceJobServiceClose(token,devid,val,itemid,shutdownTime,onoff);
+                            }, 5000)
+
+                        } else {
+                            //已经发送业务请求，将用户当前改动请求后台
+                            timeOff = setTimeout(function () {
+                                addDeviceJobServiceClose(token,devid,val,itemid,shutdownTime,onoff);
+                            }, 5000)
                         }
-                        getValByKey("Sys_RunSet",function (item) {
-                            var devid = item.devid;
-                            var itemid = item.itemid;
-                            $.ajax({
-                                type:'get',
-                                url:'/device/addDeviceJob',
-                                data:{
-                                    token:ToolBox.getCookie("token"),
-                                    devid: devid,
-                                    val:val,
-                                    itemid:itemid,
-                                    time:shutdownTime,
-                                    onoff:onoff
-                                },
-                                success:function (res) {
-                                    console.log(res);
-                                },
-                                error:function (err) {
-                                    console.error(err);
-                                }
-                            })
-                        })
-                    //}
+                    })
                 }
             });
         })
+
+
 
         //我要报修，重新绘制content元素
         $("#main").off('tap', '#need_repair').on('tap', '#need_repair', function (e) {
@@ -1611,9 +1745,9 @@ define([
         //点击＋
         $('#main').off('tap', '#add_temp').on('tap', '#add_temp', function (e) {
             console.log("点击了+号");
-            var setVal=1;
-            change_mode(5,setVal,function (res) {
-                if(res == 'success'){
+            var setVal = 1;
+            change_mode(5, setVal, function (res) {
+                if (res == 'success') {
                     cur_sys_ext_temp = parseInt(cur_sys_ext_temp) + 1;
                     $('#extTemp').html(cur_sys_ext_temp);
                 }
@@ -1623,9 +1757,9 @@ define([
         //点击减号
         $('#main').off('tap', '#minus_temp').on('tap', '#minus_temp', function (e) {
             console.log("点击了-号");
-            var setVal=-1;
-            change_mode(6,setVal,function (res) {
-                if(res == 'success'){
+            var setVal = -1;
+            change_mode(6, setVal, function (res) {
+                if (res == 'success') {
                     cur_sys_ext_temp = parseInt(cur_sys_ext_temp) - 1;
                     $('#extTemp').html(cur_sys_ext_temp);
                 }

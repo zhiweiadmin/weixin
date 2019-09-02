@@ -518,7 +518,7 @@
     <div>
         <div class="col-xs-3 control_bottom_menu">
             <div class="mt25 device_switch on" deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>">
-                <img class="control_icon_img" src="../assets/image/img/control_switch.png">
+                <img class="control_icon_img" deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>" src="../assets/image/img/control_switch.png">
             </div>
             <div class="onColor">
                 开关
@@ -534,17 +534,17 @@
         </div>
         <div class="col-xs-3 control_bottom_menu">
             <div class="mt25 device_speed" deviceId="<%=deviceId%>" itemPre="<%=item_pre%>">
-                <img class="control_icon_img" src="../assets/image/img/control_speed.png">
+                <img class="control_icon_img" deviceId="<%=deviceId%>" itemPre="<%=item_pre%>" src="../assets/image/img/control_speed.png">
             </div>
             <div class="onColor">
                 <%=speed%>
             </div>
         </div>
         <div class="col-xs-3 control_bottom_menu">
-            <div class="mt25">
+            <div class="mt25 device_time">
                 <img class="control_icon_img" src="../assets/image/img/control_time.png">
             </div>
-            <div>
+            <div class="onColor">
                 定时
             </div>
         </div>
@@ -572,15 +572,15 @@
 </div>
 <div>
     <div class="col-xs-3 control_bottom_menu">
-        <div class="mt25 device_switch on" deviceId="<%=deviceId%>" >
-            <img class="control_icon_img" src="../assets/image/img/control_switch.png">
+        <div class="mt25 device_switch on"  deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>" >
+            <img class="control_icon_img"  deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>" src="../assets/image/img/control_switch.png">
         </div>
         <div class="onColor">
             开关
         </div>
     </div>
     <div class="col-xs-3 control_bottom_menu">
-        <div class="mt25 device_model cold_model" deviceId="<%=deviceId%>">
+        <div class="mt25 device_model cold_model" deviceId="<%=deviceId%>"  itemname="<%=itemname_model%>">
             <img class="control_icon_img" src="../assets/image/img/control_model.png">
         </div>
         <div class="onColor">
@@ -588,18 +588,18 @@
         </div>
     </div>
     <div class="col-xs-3 control_bottom_menu">
-        <div class="mt25 device_speed" deviceId="<%=deviceId%>">
-            <img class="control_icon_img" src="../assets/image/img/control_speed.png">
+        <div class="mt25 device_speed" deviceId="<%=deviceId%>" itemPre="<%=item_pre%>">
+            <img class="control_icon_img" deviceId="<%=deviceId%>" itemPre="<%=item_pre%>" src="../assets/image/img/control_speed.png">
         </div>
         <div class="onColor">
              <%=speed%>
         </div>
     </div>
     <div class="col-xs-3 control_bottom_menu">
-        <div class="mt25">
+        <div class="mt25 device_time">
             <img class="control_icon_img" src="../assets/image/img/control_time.png">
         </div>
-        <div>
+        <div class="onColor">
             定时
         </div>
     </div>
