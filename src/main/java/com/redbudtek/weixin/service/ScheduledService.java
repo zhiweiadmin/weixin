@@ -21,4 +21,8 @@ public class ScheduledService {
         return scheduledMapper.selectJobByFields(param);
     }
 
+    public void addJob(JobEntity jobEntity){
+        scheduledMapper.insert(jobEntity);
+    }
+
 }

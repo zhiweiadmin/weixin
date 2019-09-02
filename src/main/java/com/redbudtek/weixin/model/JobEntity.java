@@ -6,11 +6,11 @@ public class JobEntity {
 
     private Long jobId;
 
-    private Long projectId;
+    private String devid;
 
-    private Long deviceId;
+    private String itemid;
 
-    private Integer powerStatus;
+    private String val;
 
     private String cronTime;
 
@@ -28,36 +28,20 @@ public class JobEntity {
         this.jobId = jobId;
     }
 
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
-    public Long getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(Long deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public Integer getPowerStatus() {
-        return powerStatus;
-    }
-
-    public void setPowerStatus(Integer powerStatus) {
-        this.powerStatus = powerStatus;
-    }
-
     public String getCronTime() {
         return cronTime;
     }
 
     public void setCronTime(String cronTime) {
         this.cronTime = cronTime;
+    }
+
+    public Integer getJobStatus() {
+        return jobStatus;
+    }
+
+    public void setJobStatus(Integer jobStatus) {
+        this.jobStatus = jobStatus;
     }
 
     public Date getCreateDttm() {
@@ -76,12 +60,27 @@ public class JobEntity {
         this.updateDttm = updateDttm;
     }
 
-    public Integer getJobStatus() {
-        return jobStatus;
+    public String getDevid() {
+        return devid;
     }
 
-    public void setJobStatus(Integer jobStatus) {
-        this.jobStatus = jobStatus;
+    public void setDevid(String devid) {
+        this.devid = devid;
     }
 
+    public String getItemid() {
+        return itemid;
+    }
+
+    public void setItemid(String itemid) {
+        this.itemid = itemid;
+    }
+
+    public String getVal() {
+        return val;
+    }
+
+    public void setVal(String val) {
+        this.val = val;
+    }
 }
