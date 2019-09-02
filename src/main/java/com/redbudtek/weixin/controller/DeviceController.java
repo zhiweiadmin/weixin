@@ -1,6 +1,7 @@
 package com.redbudtek.weixin.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.redbudtek.weixin.model.JobEntity;
 import com.redbudtek.weixin.quartz.QuartzManager;
@@ -16,10 +17,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author jinxin.zhou
@@ -155,8 +153,9 @@ public class DeviceController {
     @ResponseBody
     @RequestMapping(value = "getDeviceJob",method = RequestMethod.GET)
     public String getDeviceJob(String devid,String itemid){
-        JobEntity jobEntity = scheduledService.getJob(devid,itemid);
-        JSONObject jsonObject = (JSONObject) JSON.toJSON(jobEntity);
+        List<JobEntity> jobEntityList = scheduledService.getJob(devid,itemid);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("data",jobEntityList);
         return jsonObject.toJSONString();
     }
 
