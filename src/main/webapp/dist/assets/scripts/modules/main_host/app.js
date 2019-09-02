@@ -1345,7 +1345,6 @@ define([
         $("#main").off('tap', ".device_time").on('tap', '.device_time', function (e) {
 
             var itemname = $(this).attr("itemname");
-            alert(itemname);
             //需要根据天气提供页面图片
             var air_img = getImgUrl(weather);
             $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img));
