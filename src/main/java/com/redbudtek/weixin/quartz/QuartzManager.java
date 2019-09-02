@@ -21,7 +21,7 @@ public class QuartzManager {
         String jobKey = jobEntity.getDevid()+"_"+jobEntity.getItemid()+"_"+jobEntity.getVal();
         String jobName = "JOB_NAME_"+jobKey;
         String triName = "TRI_NAME_"+jobKey;
-        addJob(jobName,triName,DynamicJobQuartz.class,Integer.parseInt(jobEntity.getVal()),jobEntity.getCronTime());
+        addJob(jobName,triName,DynamicJobQuartz.class,jobEntity);
     }
 
     public void updateJob(JobEntity jobEntity){
@@ -36,16 +36,18 @@ public class QuartzManager {
      * @param jobName 任务名 同组中的任务名不能重复
      * @param triggerName 触发器名 同组中的触发器名不能重复
      * @param jobClass  任务
-     * @param cron   时间设置，参考quartz说明文档
+     * @param ，参考quartz说明文档
      * val 开关机状态
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void addJob(String jobName, String triggerName,Class jobClass,Integer val,String cron) {
+    public void addJob(String jobName, String triggerName,Class jobClass,JobEntity jobEntity) {
         try {
             Scheduler scheduled = schedulerFactory.getScheduler();
             // 任务名，任务组，任务执行类
             JobDetail jobDetail= JobBuilder.newJob(jobClass).withIdentity(jobName, Constants.JOB_GROUP_NAME).build();
-            jobDetail.getJobDataMap().put("val",val);
+            jobDetail.getJobDataMap().put("val",jobEntity.getVal());
+            jobDetail.getJobDataMap().put("itemid",jobEntity.getItemid());
+            jobDetail.getJobDataMap().put("devid",jobEntity.getDevid());
             // 触发器
             TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger();
             // 触发器名,触发器组
@@ -53,7 +55,7 @@ public class QuartzManager {
             //使用这句可以防止定时器弥补
             triggerBuilder.startNow();
             // 触发器时间设定,不触发立即执行,等待下次Cron触发频率到达时刻开始按照Cron频率依次执行
-            triggerBuilder.withSchedule(CronScheduleBuilder.cronSchedule(cron).withMisfireHandlingInstructionDoNothing());
+            triggerBuilder.withSchedule(CronScheduleBuilder.cronSchedule(jobEntity.getCronTime()).withMisfireHandlingInstructionDoNothing());
             // 创建Trigger对象
             CronTrigger trigger = (CronTrigger) triggerBuilder.build();
             // 调度容器设置JobDetail和Trigger
