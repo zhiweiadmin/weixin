@@ -38,6 +38,19 @@
 	    now() )
   </insert>
 
+    <update id="update" parameterType="com.redbudtek.weixin.model.JobEntity">
+        update
+            t_device_schedule_job
+        set
+            job_status = #{jobStatus,jdbcType=INTEGER},
+            cron_time = #{cronTime,jdbcType=VARCHAR},
+            update_dttm = now()
+	    where
+	        devid = #{devid,jdbcType=VARCHAR}
+	        and itemid = #{itemid,jdbcType=VARCHAR}
+	        and val = #{val,jdbcType=VARCHAR}
+  </update>
+
     <select id="selectJobByFields" resultMap="BaseResultMap">
         SELECT
             <include refid="Base_Column_List"/>
@@ -47,6 +60,15 @@
             1 = 1
             <if test="jobStatus != null">
                 and job_status = #{jobStatus,jdbcType=INTEGER}
+            </if>
+            <if test="itemid != null">
+                and itemid = #{itemid,jdbcType=VARCHAR}
+            </if>
+            <if test="devid != null">
+                and devid = #{devid,jdbcType=VARCHAR}
+            </if>
+            <if test="val != null">
+                and val = #{val,jdbcType=VARCHAR}
             </if>
     </select>
 

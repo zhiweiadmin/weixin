@@ -1,5 +1,6 @@
 package com.redbudtek.weixin.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.redbudtek.weixin.model.JobEntity;
 import com.redbudtek.weixin.service.DeviceService;
@@ -12,6 +13,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -104,29 +109,49 @@ public class DeviceController {
 
     /**
      * 添加设备定时开关机
-     * @param
-     * @param request
      * @return
      */
     @ResponseBody
     @RequestMapping(value = "addDeviceJob",method = RequestMethod.GET)
-    public String addDeviceJob(Integer onoff,String devid,String itemid,String time,String val){
-//		JSONObject request = JSONObject.parseObject(payLoad);
-//		Integer onoff = request.getInteger("onoff");//1开 0关
-//		String devid = request.getString("devid");
-//		String itemid = request.getString("itemid");
-//		String time = request.getString("time");
-
+    public String addDeviceJob(Integer onoff,String devid,String itemid,String time,String val) throws ParseException {
+        if(onoff == null){
+            onoff = 0;
+        }
         //根据时间 生成cron表达式
         JobEntity jobEntity = new JobEntity();
         jobEntity.setJobId(null);
         jobEntity.setJobStatus(onoff);
         jobEntity.setDevid(devid);
         jobEntity.setItemid(itemid);
-        jobEntity.setCronTime(time);//TODO
-        jobEntity.setVal(val);//TODO
-        scheduledService.addJob(jobEntity);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String date = sdf.format(new Date());
+
+        String newDate = date + " " + time;
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(sdf1.parse(newDate));
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int min = calendar.get(Calendar.MINUTE);
+
+        String cronTime = "0 "+min+" "+hour+" * * ? *";
+        jobEntity.setCronTime(cronTime);
+        jobEntity.setVal(val);
+        if(scheduledService.checkIfExists(devid,itemid,val)){
+            scheduledService.addJob(jobEntity);
+        }else{
+            scheduledService.updateJob(jobEntity);
+        }
+
         return "success";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "getDeviceJob",method = RequestMethod.GET)
+    public String getDeviceJob(String devid,String itemid){
+        JobEntity jobEntity = scheduledService.getJob(devid,itemid);
+        JSONObject jsonObject = (JSONObject) JSON.toJSON(jobEntity);
+        return jsonObject.toJSONString();
     }
 
 }

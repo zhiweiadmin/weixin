@@ -1519,10 +1519,14 @@ define([
                 onBeforeShow: function (event, inst) {
                 },
                 onSelect: function (textVale, inst) { //选中时触发事件
-                    if($('#time_switch').hasClass("on")){
+                    //if($('#time_switch').hasClass("on")){
                         $("#open_time_t").html(textVale);
                         var startUpTime = textVale;
                         var val = 1;//1是开机
+                        var onoff = 0;//0是关
+                        if($('#time_switch').hasClass("on")){
+                            onoff = 1;
+                        }
                         getValByKey("Sys_RunSet",function (item) {
                             var devid = item.devid;
                             var itemid = item.itemid;
@@ -1534,7 +1538,8 @@ define([
                                     devid: devid,
                                     val:val,
                                     itemid:itemid,
-                                    time:startUpTime
+                                    time:startUpTime,
+                                    onoff:onoff
                                 },
                                 success:function (res) {
                                     console.log(res);
@@ -1544,7 +1549,7 @@ define([
                                 }
                             })
                         })
-                    }
+                    //}
                 }
             });
         })
@@ -1562,9 +1567,13 @@ define([
                 },
                 onSelect: function (textVale, inst) { //选中时触发事件
                     $("#close_time_t").html(textVale);
-                    if($('#time_switch').hasClass("on")){
+                    //if($('#time_switch').hasClass("on")){
                         var shutdownTime = textVale;
                         var val = 0;//0是关机
+                        var onoff = 0;//0是关
+                        if($('#time_switch').hasClass("on")){
+                            onoff = 1;
+                        }
                         getValByKey("Sys_RunSet",function (item) {
                             var devid = item.devid;
                             var itemid = item.itemid;
@@ -1576,7 +1585,8 @@ define([
                                     devid: devid,
                                     val:val,
                                     itemid:itemid,
-                                    time:shutdownTime
+                                    time:shutdownTime,
+                                    onoff:onoff
                                 },
                                 success:function (res) {
                                     console.log(res);
@@ -1586,7 +1596,7 @@ define([
                                 }
                             })
                         })
-                    }
+                    //}
                 }
             });
         })

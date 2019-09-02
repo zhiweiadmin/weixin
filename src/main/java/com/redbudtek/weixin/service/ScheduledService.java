@@ -25,4 +25,32 @@ public class ScheduledService {
         scheduledMapper.insert(jobEntity);
     }
 
+    public void updateJob(JobEntity jobEntity){
+        scheduledMapper.update(jobEntity);
+    }
+
+    public JobEntity getJob(String devid,String itemid){
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("devid",devid);
+        param.put("itemid",itemid);
+        List<JobEntity> list = scheduledMapper.selectJobByFields(param);
+        if(list != null && list.size() > 0){
+            return list.get(0);
+        }else{
+            return new JobEntity();
+        }
+    }
+
+    public boolean checkIfExists(String devid,String itemid,String val){
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("devid",devid);
+        param.put("itemid",itemid);
+        param.put("val",val);
+        List<JobEntity> list = scheduledMapper.selectJobByFields(param);
+        if(list == null && list.size() == 0){
+            return true;
+        }
+        return false;
+    }
+
 }
