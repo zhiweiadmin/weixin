@@ -1,5 +1,6 @@
 package com.redbudtek.weixin.quartz;
 
+import com.redbudtek.weixin.model.JobEntity;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,19 @@ public class QuartzManager {
     @Autowired
     private SchedulerFactory schedulerFactory;
 
+    public void addJob(JobEntity jobEntity){
+        String jobKey = jobEntity.getDevid()+"_"+jobEntity.getItemid()+"_"+jobEntity.getVal();
+        String jobName = "JOB_NAME_"+jobKey;
+        String triName = "TRI_NAME_"+jobKey;
+        addJob(jobName,triName,DynamicJobQuartz.class,Integer.parseInt(jobEntity.getVal()),jobEntity.getCronTime());
+    }
+
+    public void updateJob(JobEntity jobEntity){
+        String jobKey = jobEntity.getDevid()+"_"+jobEntity.getItemid()+"_"+jobEntity.getVal();
+        String triName = "TRI_NAME_"+jobKey;
+        modifyJobTime(triName,jobEntity.getCronTime());
+    }
+
     /**
      * @Description: 添加一个定时任务
      *
@@ -23,14 +37,15 @@ public class QuartzManager {
      * @param triggerName 触发器名 同组中的触发器名不能重复
      * @param jobClass  任务
      * @param cron   时间设置，参考quartz说明文档
+     * val 开关机状态
      */
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void addJob(String jobName, String triggerName,Class jobClass,Integer powerStatus,String cron) {
+    public void addJob(String jobName, String triggerName,Class jobClass,Integer val,String cron) {
         try {
             Scheduler scheduled = schedulerFactory.getScheduler();
             // 任务名，任务组，任务执行类
             JobDetail jobDetail= JobBuilder.newJob(jobClass).withIdentity(jobName, Constants.JOB_GROUP_NAME).build();
-            jobDetail.getJobDataMap().put("powerStatus",powerStatus);
+            jobDetail.getJobDataMap().put("val",val);
             // 触发器
             TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger();
             // 触发器名,触发器组

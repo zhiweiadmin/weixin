@@ -12,10 +12,10 @@ public class DynamicJobQuartz implements Job{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynamicJobQuartz.class);
 
-    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+    public void execute(JobExecutionContext jobExecutionContext){
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
         JobDetail jobDetail = jobExecutionContext.getJobDetail();
-        Integer powerStatus = (Integer) jobDetail.getJobDataMap().get("powerStatus");
+        Integer powerStatus = (Integer) jobDetail.getJobDataMap().get("val");
         if(powerStatus == 1){
             System.out.println(jobDetail.getKey().getName()+"正在定时开机--------");
         }else if(powerStatus == 0){

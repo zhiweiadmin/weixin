@@ -24,17 +24,15 @@ public class InitJobQuartz {
     private static final Integer ACTIVE = 1;
 
     public void execute(){
-//        List<JobEntity> jobList = scheduledService.getActiveJobs(ACTIVE);
-//        for(JobEntity jobEntity : jobList){
-//            try{
-//                String jobName = "JOB_NAME_"+jobEntity.getJobId();
-//                String triName = "TRI_NAME_"+jobEntity.getJobId();
-//                quartzManager.addJob(jobName,triName,DynamicJobQuartz.class,jobEntity.getPowerStatus(),jobEntity.getCronTime());
-//            }catch (Exception e){
-//                LOGGER.error("初始化动态创建定时任务失败",e);
-//                e.printStackTrace();
-//            }
-//        }
+        List<JobEntity> jobList = scheduledService.getActiveJobs(ACTIVE);
+        for(JobEntity jobEntity : jobList){
+            try{
+                quartzManager.addJob(jobEntity);
+            }catch (Exception e){
+                LOGGER.error("初始化动态创建定时任务失败",e);
+                e.printStackTrace();
+            }
+        }
         System.out.println("123");
     }
 

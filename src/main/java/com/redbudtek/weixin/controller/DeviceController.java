@@ -3,6 +3,7 @@ package com.redbudtek.weixin.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.redbudtek.weixin.model.JobEntity;
+import com.redbudtek.weixin.quartz.QuartzManager;
 import com.redbudtek.weixin.service.DeviceService;
 import com.redbudtek.weixin.service.ScheduledService;
 import org.apache.log4j.Logger;
@@ -107,6 +108,9 @@ public class DeviceController {
     @Autowired
     ScheduledService scheduledService;
 
+    @Autowired
+    QuartzManager quartzManager;
+
     /**
      * 添加设备定时开关机
      * @return
@@ -139,8 +143,10 @@ public class DeviceController {
         jobEntity.setVal(val);
         if(scheduledService.checkIfExists(devid,itemid,val)){
             scheduledService.addJob(jobEntity);
+            quartzManager.addJob(jobEntity);
         }else{
             scheduledService.updateJob(jobEntity);
+            quartzManager.updateJob(jobEntity);
         }
 
         return "success";
