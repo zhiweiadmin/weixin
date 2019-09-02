@@ -44,7 +44,7 @@ public class ScheduledController {
     public String addScheduledJob(String jobName,String triggerName,Integer powerStatus) {
         Result result = new Result();
         String cron = "0/5 * * * * ?";
-        quartzManager.addJob("我是前端傳過來的"+jobName, triggerName, DynamicJobQuartz.class, powerStatus,cron);
+        //quartzManager.addJob("我是前端傳過來的"+jobName, triggerName, DynamicJobQuartz.class, powerStatus,cron);
         return "add job success";
     }
 
