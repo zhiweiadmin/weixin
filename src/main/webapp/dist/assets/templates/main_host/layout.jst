@@ -198,7 +198,7 @@
 <!--开关-->
 <div class="col-xs-6 title  padt20 padb20 switch_title" style="padding-left: 28px;">开关</div>
 <div class="col-xs-offset-3 col-xs-3  title textRight  padt20 padb20 padl10 color_active">
-    <img id="host_switch" class="on" src="../assets/image/img/switch_on_o.png">
+    <img id="host_switch" vid class="on" src="../assets/image/img/switch_on_o.png">
 </div>
 <%}else if(tempId=='single_room_device'){%>
 <div class="col-xs-2 padt20 padb20">
@@ -517,7 +517,7 @@
     </div>
     <div>
         <div class="col-xs-3 control_bottom_menu">
-            <div class="mt25 device_switch on" deviceId="<%=deviceId%>">
+            <div class="mt25 device_switch on" deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>">
                 <img class="control_icon_img" src="../assets/image/img/control_switch.png">
             </div>
             <div class="onColor">
@@ -525,7 +525,7 @@
             </div>
         </div>
         <div class="col-xs-3 control_bottom_menu">
-            <div class="mt25 device_model cold_model" deviceId="<%=deviceId%>">
+            <div class="mt25 device_model cold_model" deviceId="<%=deviceId%>" itemname="<%=itemname_model%>">
                 <img class="control_icon_img" src="../assets/image/img/control_model.png">
             </div>
             <div class="onColor">
@@ -533,7 +533,7 @@
             </div>
         </div>
         <div class="col-xs-3 control_bottom_menu">
-            <div class="mt25 device_speed" deviceId="<%=deviceId%>">
+            <div class="mt25 device_speed" deviceId="<%=deviceId%>" itemPre="<%=item_pre%>">
                 <img class="control_icon_img" src="../assets/image/img/control_speed.png">
             </div>
             <div class="onColor">
@@ -572,7 +572,7 @@
 </div>
 <div>
     <div class="col-xs-3 control_bottom_menu">
-        <div class="mt25 device_switch on" deviceId="<%=deviceId%>">
+        <div class="mt25 device_switch on" deviceId="<%=deviceId%>" >
             <img class="control_icon_img" src="../assets/image/img/control_switch.png">
         </div>
         <div class="onColor">
