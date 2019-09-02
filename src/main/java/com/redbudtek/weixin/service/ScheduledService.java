@@ -42,7 +42,7 @@ public class ScheduledService {
         param.put("itemid",itemid);
         param.put("val",val);
         List<JobEntity> list = scheduledMapper.selectJobByFields(param);
-        if(list == null && list.size() == 0){
+        if(list == null || list.size() == 0){
             return true;
         }
         return false;

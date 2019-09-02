@@ -1344,6 +1344,8 @@ define([
         //定时
         $("#main").off('tap', ".device_time").on('tap', '.device_time', function (e) {
 
+            var itemname = $(this).attr("itemname");
+            alert(itemname);
             //需要根据天气提供页面图片
             var air_img = getImgUrl(weather);
             $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img));
@@ -1354,7 +1356,8 @@ define([
             $("#senior").addClass("active")
             $(".content").html(Layout.senior_mode())
 
-            getValByKey("Sys_RunSet", function (item) {
+            getValByKey(itemname, function (item) {
+                debugger;
                 var devid = item.devid;
                 var itemid = item.itemid;
                 $.ajax({
@@ -1367,6 +1370,8 @@ define([
                     dataType:"json",
                     success: function (res) {
                         $(".content").html(Layout.time_swtich());
+                        //添加itemname属性
+                        $("#time_switch").attr('itemname',itemname);
                         //服务端结束处理后，重置状态
                         if(res.data.length>0){
                             for (var step=0;step<res.data.length;step++){
@@ -1381,6 +1386,7 @@ define([
                                     //关机时间
                                     $("#close_time_t").html(time);
                                 }
+
                             }
                         }
 
@@ -1668,7 +1674,13 @@ define([
                     if ($('#time_switch').hasClass("on")) {
                         onoff = 1;
                     }
-                    getValByKey("Sys_RunSet", function (item) {
+                    //判断是否有itemname属性 如果有 说明是房控进来的
+                    var itemname = $('#time_switch').attr('itemname');
+                    if(itemname == 'undefined'){
+                        itemname = 'Sys_RunSet';
+                    }
+                    debugger;
+                    getValByKey(itemname, function (item) {
                         var devid = item.devid;
                         var itemid = item.itemid;
                         var token = ToolBox.getCookie("token");
@@ -1710,7 +1722,13 @@ define([
                     if ($('#time_switch').hasClass("on")) {
                         onoff = 1;
                     }
-                    getValByKey("Sys_RunSet", function (item) {
+                    //判断是否有itemname属性 如果有 说明是房控进来的
+                    var itemname = $('#time_switch').attr('itemname');
+                    if(itemname == 'undefined'){
+                        itemname = 'Sys_RunSet';
+                    }
+                    debugger;
+                    getValByKey(itemname, function (item) {
                         var devid = item.devid;
                         var itemid = item.itemid;
                         var token = ToolBox.getCookie("token");
