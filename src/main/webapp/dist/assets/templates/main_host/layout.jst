@@ -503,7 +503,7 @@
     <div class="parent <%=parent%> mt25">
         <div class="child <%=child%>" id="<%=wraId%>">
             <strong class="control_temp width100 disBlock color_white">
-                <div id="<%=temId%>">
+                <div id="<%=temId%>" itemname="<%=itemname_temp%>" class="device_temp">
                     <%=temp%>℃
                 </div>
             </strong>
@@ -560,15 +560,17 @@
 <div class="parent <%=parent%> mt25">
     <div class="child <%=child%>" id="<%=wraId%>">
         <strong class="control_temp width100 disBlock color_white">
-            <div id="<%=temId%>">
+            <div id="<%=temId%>" itemname="<%=itemname_temp%>" class="device_temp">
                 <%=temp%>℃
             </div>
         </strong>
         <div class="mt25">
-            <span class="color_white font-30 "><i class="fa <%=modelImg%>"></i></span>
+               <span class="color_white font-30 device_minus" deviceId="<%=deviceId%>"><i class="fa fa-minus-circle"></i></span>
+               <span class="color_white font-30 "><i class="fa <%=modelImg%>"></i></span>
+               <span class="color_white font-30 device_plus" deviceId="<%=deviceId%>"><i class="fa fa-plus-circle"></i></span>
         </div>
         <div class="color_white">
-            <%=model%>
+              <%=model%>
         </div>
     </div>
 </div>
@@ -598,7 +600,7 @@
         </div>
     </div>
     <div class="col-xs-3 control_bottom_menu">
-        <div class="mt25 device_time">
+        <div class="mt25 device_time" itemname="<%=itemname_onoff%>">
             <img class="control_icon_img" src="../assets/image/img/control_time.png">
         </div>
         <div class="onColor">

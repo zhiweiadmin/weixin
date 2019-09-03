@@ -78,6 +78,8 @@ define([
     var tempTimeJob;
     var setTemp = 0;//设置的温度结果 如果+5度  -3度  那就是2度
 
+    var tempTimeDeviceJob;
+
     //首先选择项目
     var after_choice = function () {
         getProjectList(function (res) {
@@ -636,6 +638,24 @@ define([
         $('.bottom-menu').css('height', '' + height * 0.1 + 'px');
     }
 
+    //根据统计想名称获取数据 然后去设置温度
+    var change_device_temp = function (itemname,val,callback) {
+        if(tempTimeDeviceJob != 'undefined' ){
+            window.clearTimeout(tempTimeDeviceJob);
+        }
+        tempTimeDeviceJob = setTimeout(function () {
+            console.log('总共点了:'+val+'次');
+            set_device_temp(itemname,val,callback);
+            setTemp = 0;
+        }, 4000)
+    }
+
+    var set_device_temp = function (itemname,val,callback) {
+        getValByKey(itemname,function (item) {
+            send_control(item,val,false,callback);
+        })
+    }
+
     //延迟执行任务 jiangzhiwei
     var change_mode_time = function (mode, val, callback) {
         if(tempTimeJob != 'undefined'){
@@ -1139,6 +1159,7 @@ define([
                 //房控温度
                 var ext_temp = i + '_ExtTemp';
                 var extTemp = getVdeviceItemsVal(vdeviceId, ext_temp);
+                var itemname_temp = getVdeviceItemsName(vdeviceId, ext_temp);
                 var deviceName = name + "房控" + i;
 
                 //暂且认为奇数为制热 35℃ 偶数为制冷  23℃
@@ -1152,7 +1173,7 @@ define([
                 var temId = "temp" + deviceId;
                 //默认均为低速
                 var speed = "低速";
-                $(".swiper-wrapper").append(Layout.room_detail_basic_device(wraId, temId, parent, child, model, modelImg, temp, deviceId, speed, deviceName, itemname_onoff, itemname_model, item_pre));
+                $(".swiper-wrapper").append(Layout.room_detail_basic_device(wraId, temId, parent, child, model, modelImg, temp, deviceId, speed, deviceName,itemname_temp,itemname_onoff, itemname_model, item_pre));
                 var size = $(".parent").width() * 0.8;
                 if (model === "制热") {
                     $('#' + wraId).circleProgress({
@@ -1235,30 +1256,58 @@ define([
 
         //温度减
         $("#main").off('tap', ".device_minus").on('tap', '.device_minus', function (e) {
+            setTemp = setTemp - 1;
             var deviceId = $(this).attr("deviceId");
             var id = "#temp" + deviceId;
             var temp = $(id).html().trim();
-            temp = Number(temp.substring(0, temp.indexOf('℃')));
+            var tempNum = Number(temp.substring(0, temp.indexOf('℃')));
+            tempNum = tempNum - 1;
+            //重新设置页面的温度和环形
+            $(id).html(tempNum+'℃');
+            var wraId = "circle_step" + deviceId;
+            $('#' + wraId).circleProgress({
+                temp: tempNum
+            });
+            //延迟5s进行操作
             console.log("装置："+deviceId+",当前温度为："+temp+"执行减操作")
+            var itemname = $(id).attr("itemname");
+            change_device_temp(itemname,setTemp,function () {
+                console.log('已经执行完操作了')
+            })
         })
         //温度加
         $("#main").off('tap', ".device_plus").on('tap', '.device_plus', function (e) {
+            setTemp = setTemp + 1;
             var deviceId = $(this).attr("deviceId");
             var id = "#temp" + deviceId;
             var temp = $(id).html().trim();
-            temp = Number(temp.substring(0, temp.indexOf('℃')));
-            console.log("装置："+deviceId+",当前温度为："+temp+"执行加操作")
+            var tempNum = Number(temp.substring(0, temp.indexOf('℃')));
+            tempNum = tempNum + 1;
+            //重新设置页面的温度和环形
+            $(id).html(tempNum+'℃');
+            var wraId = "circle_step" + deviceId;
+            $('#' + wraId).circleProgress({
+                temp: tempNum
+            });
+            //延迟5s进行操作
+            console.log("装置："+deviceId+",当前温度为："+temp+"执行加操作");
+            var itemname = $(id).attr("itemname");
+            change_device_temp(itemname,setTemp,function () {
+                console.log('已经执行完操作了')
+            })
         })
 
         //装置模式
         $("#main").off('tap', ".device_model").on('tap', '.device_model', function (e) {
-            var itemname = $(this).attr("itemname");
+            var itemname_temp = $(".device_temp").attr("itemname");
+            var itemname_onoff = $(".device_switch").attr("itemname");
+            var itemname_model = $(this).attr("itemname");
+            var itemname_speed = $(".device_speed").attr("itempre");
+            var itemname_time = $(".device_time").attr("itemname");
             var deviceId = $(this).attr("deviceId");
             var vId = deviceId.substring(0, deviceId.indexOf('_'));
-            var item = getVdeviceItemsInfo(vId, itemname);
-            console.log("itemName模式切换" + itemname);
-            var item_pre = itemname.substring(0, itemname.lastIndexOf('_'));
             var $dom = $(this);
+            var item = getVdeviceItemsInfo(vId, itemname_model);
             //当前为开机状态，提供关机功能
             ToolBox.device_model({
                 $container: $('#others'),
@@ -1275,7 +1324,7 @@ define([
                     var wraId = "circle_step" + deviceId;
                     var temId = "temp" + deviceId;
                     var speed = $dom.siblings(".onColor").html();
-                    $("#swiper" + deviceId).html(Layout.room_detail_basic_device_model(wraId, temId, parent, child, model, modelImg, temp, deviceId, speed,itemname,itemname,item_pre));
+                    $("#swiper" + deviceId).html(Layout.room_detail_basic_device_model(wraId, temId, parent, child, model, modelImg, temp, deviceId, speed,itemname_temp,itemname_onoff,itemname_model,itemname_speed,itemname_time));
                     var size = $(".parent").width() * 0.8;
                     $('#' + wraId).circleProgress({
                         value: 0.65,
@@ -1311,7 +1360,7 @@ define([
                     var wraId = "circle_step" + deviceId;
                     var temId = "temp" + deviceId;
                     var speed = $(".device_speed").siblings(".onColor").html();
-                    $("#swiper" + deviceId).html(Layout.room_detail_basic_device_model(wraId, temId, parent, child, model, modelImg, temp, deviceId, speed,itemname,itemname,item_pre));
+                    $("#swiper" + deviceId).html(Layout.room_detail_basic_device_model(wraId, temId, parent, child, model, modelImg, temp, deviceId, speed,itemname_temp,itemname_onoff,itemname_model,itemname_speed,itemname_time));
                     var size = $(".parent").width() * 0.8;
                     $('#' + wraId).circleProgress({
                         value: 0.65,
