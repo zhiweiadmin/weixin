@@ -842,7 +842,7 @@ define([
                             }
                             break;
                     }
-                    if (count > 15) {
+                    if (count > 8) {
                         //控制结果不明
                         clearInterval(timer);
                         callback('unknown');
@@ -920,7 +920,11 @@ define([
             $(this).addClass("color_cold_active");
             $("#hot_model").removeClass("color_hot_active");
             change_mode(0, null, function (res) {
-                console.log("请求成功")
+                if(res != 'success'){
+                    alert('控制模式失败!')
+                    $("#hot_model").addClass("color_hot_active");
+                    $("#cold_model").removeClass("color_cold_active");
+                }
             })
         })
 
@@ -928,8 +932,10 @@ define([
             $(this).addClass("color_hot_active");
             $("#cold_model").removeClass("color_cold_active");
             change_mode(1, null, function (res) {
-                if (res.status == '100') {
-                    console.log("请求成功")
+                if(res != 'success'){
+                    alert('控制模式失败!')
+                    $('#hot_model').removeClass("color_hot_active");
+                    $("#cold_model").addClass("color_cold_active");
                 }
             })
         })
@@ -951,12 +957,12 @@ define([
 
                         getValByKey("Sys_RunSet", function (item) {
                             send_control(item, 0, true, function (res) {
-                                console.log(res);
                                 if (res == 'success') {
                                     layout_init();
                                     bindEvents();
                                 } else {
-                                    alert("控制失败");
+                                    alert("关机控制失败");
+                                    $("#host_switch").addClass('on')
                                 }
                             })
                         })
@@ -974,7 +980,9 @@ define([
                                         bindEvents();
                                         init_index_page();
                                     }, 800);
-
+                                }else{
+                                    alert("开机控制失败");
+                                    $("#host_switch").removeClass('on')
                                 }
                             })
                         })
