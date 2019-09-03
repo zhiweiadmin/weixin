@@ -73,6 +73,11 @@ define([
     var cur_power_itemId = 0;
     //是否重复请求天气接口  由于调用天气的接口每天调用有限制,所以要设置请求次数
     var is_req_weather = true;
+
+    //定时温度设置任务
+    var tempTimeJob;
+    var setTemp = 0;//设置的温度结果 如果+5度  -3度  那就是2度
+
     //首先选择项目
     var after_choice = function () {
         getProjectList(function (res) {
@@ -629,6 +634,18 @@ define([
         })
         var height = ToolBox.screen_height;
         $('.bottom-menu').css('height', '' + height * 0.1 + 'px');
+    }
+
+    //延迟执行任务 jiangzhiwei
+    var change_mode_time = function (mode, val, callback) {
+        if(tempTimeJob != 'undefined'){
+            window.clearTimeout(tempTimeJob);
+        }
+        tempTimeJob = setTimeout(function () {
+            console.log('总共点了:'+val+'次');
+            change_mode(mode,val,callback);
+            setTemp = 0;
+        }, 4000)
     }
 
     //改变选择模式
@@ -1755,24 +1772,32 @@ define([
 
         //点击＋
         $('#main').off('tap', '#add_temp').on('tap', '#add_temp', function (e) {
-            console.log("点击了+号");
-            var setVal = 1;
-            change_mode(5, setVal, function (res) {
-                if (res == 'success') {
-                    cur_sys_ext_temp = parseInt(cur_sys_ext_temp) + 1;
-                    $('#extTemp').html(cur_sys_ext_temp);
+            setTemp = setTemp + 1;
+            console.log("点了一次+");
+            cur_sys_ext_temp = parseInt(cur_sys_ext_temp) + 1;
+            $('#extTemp').html(cur_sys_ext_temp);
+            change_mode_time(5,setTemp,function (res) {
+                if(res != 'success'){
+                    alert('控制失败!');
+                    getValByKey('Sys_ExtTemp',function (res) {
+                        $('#extTemp').html(res.val);
+                    })
                 }
             })
         })
 
         //点击减号
         $('#main').off('tap', '#minus_temp').on('tap', '#minus_temp', function (e) {
-            console.log("点击了-号");
-            var setVal = -1;
-            change_mode(6, setVal, function (res) {
-                if (res == 'success') {
-                    cur_sys_ext_temp = parseInt(cur_sys_ext_temp) - 1;
-                    $('#extTemp').html(cur_sys_ext_temp);
+            setTemp = setTemp - 1;
+            console.log("点了一次-");
+            cur_sys_ext_temp = parseInt(cur_sys_ext_temp) - 1;
+            $('#extTemp').html(cur_sys_ext_temp);
+            change_mode_time(6,setTemp,function (res) {
+                if(res != 'success'){
+                    alert('控制失败!');
+                    getValByKey('Sys_ExtTemp',function (res) {
+                        $('#extTemp').html(res.val);
+                    })
                 }
             })
         })
