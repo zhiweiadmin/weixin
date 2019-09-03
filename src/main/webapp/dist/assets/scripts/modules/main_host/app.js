@@ -1185,7 +1185,6 @@ define([
                         send_control(item.devid, item.itemid, 0, false, function (res) {
                             console.log(res);
                         })
-
                     },
                     msg: ToolBox.getConstant('Constant-turn-down-msg')
                 })
@@ -1343,20 +1342,16 @@ define([
 
         //定时
         $("#main").off('tap', ".device_time").on('tap', '.device_time', function (e) {
-
             var itemname = $(this).attr("itemname");
             //需要根据天气提供页面图片
             var air_img = getImgUrl(weather);
             $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img));
-
             //移除所有按钮的激活class，并激活当前按钮
             $("#host").removeClass("active")
             $("#control").removeClass("active")
             $("#senior").addClass("active")
-            $(".content").html(Layout.senior_mode())
-
+            // $(".content").html(Layout.senior_mode())
             getValByKey(itemname, function (item) {
-                debugger;
                 var devid = item.devid;
                 var itemid = item.itemid;
                 $.ajax({
@@ -1675,10 +1670,10 @@ define([
                     }
                     //判断是否有itemname属性 如果有 说明是房控进来的
                     var itemname = $('#time_switch').attr('itemname');
-                    if(itemname == 'undefined'){
+                    if(itemname === 'undefined'|itemname===undefined){
                         itemname = 'Sys_RunSet';
                     }
-                    debugger;
+                    
                     getValByKey(itemname, function (item) {
                         var devid = item.devid;
                         var itemid = item.itemid;
@@ -1723,10 +1718,9 @@ define([
                     }
                     //判断是否有itemname属性 如果有 说明是房控进来的
                     var itemname = $('#time_switch').attr('itemname');
-                    if(itemname == 'undefined'){
+                    if(itemname === 'undefined'|itemname===undefined){
                         itemname = 'Sys_RunSet';
                     }
-                    debugger;
                     getValByKey(itemname, function (item) {
                         var devid = item.devid;
                         var itemid = item.itemid;
