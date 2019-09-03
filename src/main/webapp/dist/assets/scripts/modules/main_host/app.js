@@ -1233,6 +1233,23 @@ define([
             }
         })
 
+        //温度减
+        $("#main").off('tap', ".device_minus").on('tap', '.device_minus', function (e) {
+            var deviceId = $(this).attr("deviceId");
+            var id = "#temp" + deviceId;
+            var temp = $(id).html().trim();
+            temp = Number(temp.substring(0, temp.indexOf('℃')));
+            console.log("装置："+deviceId+",当前温度为："+temp+"执行减操作")
+        })
+        //温度加
+        $("#main").off('tap', ".device_plus").on('tap', '.device_plus', function (e) {
+            var deviceId = $(this).attr("deviceId");
+            var id = "#temp" + deviceId;
+            var temp = $(id).html().trim();
+            temp = Number(temp.substring(0, temp.indexOf('℃')));
+            console.log("装置："+deviceId+",当前温度为："+temp+"执行加操作")
+        })
+
         //装置模式
         $("#main").off('tap', ".device_model").on('tap', '.device_model', function (e) {
             var itemname = $(this).attr("itemname");

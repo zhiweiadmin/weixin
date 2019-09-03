@@ -490,6 +490,16 @@ body{
     color:grey;
 }
 
+.device_minus,.device_plus{
+    position: absolute;
+}
+.device_minus{
+    left:20%
+}
+.device_plus{
+    right: 20%;
+}
+
 /*高级设置*/
 
 #repair_submit {
