@@ -76,7 +76,8 @@ define([
 
     //定时温度设置任务
     var tempTimeJob;
-    var setTemp = 0;//设置的温度结果 如果+5度  -3度  那就是2度
+    //溫度設置多少就value就是多少
+    var setTemp = 0;//不再使用 设置的温度结果 如果+5度  -3度  那就是2度
 
     var tempTimeDeviceJob;
 
@@ -644,9 +645,8 @@ define([
             window.clearTimeout(tempTimeDeviceJob);
         }
         tempTimeDeviceJob = setTimeout(function () {
-            console.log('总共点了:'+val+'次');
+            console.log('当前设置的温度是:'+val);
             set_device_temp(itemname,val,callback);
-            setTemp = 0;
         }, 4000)
     }
 
@@ -1256,7 +1256,6 @@ define([
 
         //温度减
         $("#main").off('tap', ".device_minus").on('tap', '.device_minus', function (e) {
-            setTemp = setTemp - 1;
             var deviceId = $(this).attr("deviceId");
             var id = "#temp" + deviceId;
             var temp = $(id).html().trim();
@@ -1271,13 +1270,12 @@ define([
             //延迟5s进行操作
             console.log("装置："+deviceId+",当前温度为："+temp+"执行减操作")
             var itemname = $(id).attr("itemname");
-            change_device_temp(itemname,setTemp,function () {
+            change_device_temp(itemname,tempNum,function () {
                 console.log('已经执行完操作了')
             })
         })
         //温度加
         $("#main").off('tap', ".device_plus").on('tap', '.device_plus', function (e) {
-            setTemp = setTemp + 1;
             var deviceId = $(this).attr("deviceId");
             var id = "#temp" + deviceId;
             var temp = $(id).html().trim();
@@ -1292,7 +1290,7 @@ define([
             //延迟5s进行操作
             console.log("装置："+deviceId+",当前温度为："+temp+"执行加操作");
             var itemname = $(id).attr("itemname");
-            change_device_temp(itemname,setTemp,function () {
+            change_device_temp(itemname,tempNum,function () {
                 console.log('已经执行完操作了')
             })
         })
@@ -1846,11 +1844,10 @@ define([
 
         //点击＋
         $('#main').off('tap', '#add_temp').on('tap', '#add_temp', function (e) {
-            setTemp = setTemp + 1;
-            console.log("点了一次+");
+            console.log("点了一次+号");
             cur_sys_ext_temp = parseInt(cur_sys_ext_temp) + 1;
             $('#extTemp').html(cur_sys_ext_temp);
-            change_mode_time(5,setTemp,function (res) {
+            change_mode_time(5,cur_sys_ext_temp,function (res) {
                 if(res != 'success'){
                     alert('控制失败!');
                     getValByKey('Sys_ExtTemp',function (res) {
@@ -1862,11 +1859,10 @@ define([
 
         //点击减号
         $('#main').off('tap', '#minus_temp').on('tap', '#minus_temp', function (e) {
-            setTemp = setTemp - 1;
-            console.log("点了一次-");
+            console.log("点了一次-号");
             cur_sys_ext_temp = parseInt(cur_sys_ext_temp) - 1;
             $('#extTemp').html(cur_sys_ext_temp);
-            change_mode_time(6,setTemp,function (res) {
+            change_mode_time(6,cur_sys_ext_temp,function (res) {
                 if(res != 'success'){
                     alert('控制失败!');
                     getValByKey('Sys_ExtTemp',function (res) {
