@@ -33,7 +33,7 @@ public class InitJobQuartz {
                 e.printStackTrace();
             }
         }
-        System.out.println("123");
+        System.out.println("初始化动态创建定时任务");
     }
 
 }
