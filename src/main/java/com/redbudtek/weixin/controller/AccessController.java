@@ -82,16 +82,10 @@ public class AccessController {
 	@ResponseBody
 	@RequestMapping(value = "webAuth", method = RequestMethod.GET)
 	public String getWebAuth(@RequestParam(value="code") String code){
-//		Map<String, Object> map = new LinkedHashMap<String, Object>();
-//		logger.info("[code]:" + code);
-//		map.put("status", ResultStatus.SUCCESS.toString());
-//		map.put("data", weixinService.getOpenId(code));
-//		logger.info("retrun str:" + map.toString());
-//		return JSON.toJSONString(map);
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		logger.info("[code]:" + code);
-		map.put("status", 100);
-		map.put("data", "123456");
+		map.put("status", ResultStatus.SUCCESS.toString());
+		map.put("data", weixinService.getOpenId(code));
 		logger.info("retrun str:" + map.toString());
 		return JSON.toJSONString(map);
 	}

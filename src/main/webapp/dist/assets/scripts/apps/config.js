@@ -1,16 +1,14 @@
 /*版本号*/
 var version = "0.1.0";
 /*微信域名*/
-var domain = "https://jcm.anylink.io";
+var domain = "http://goldcontrol.link";
 /*
 *
 * */
 /*云平台API地址*/
-//var apiUrl = "https://jcm-api.anylink.io/";
 var apiUrl = "http://112.126.98.10:8600/";
 //jiangzhiwei 有效期600分钟
 var token_get = "613399db-4a4f-451f-b4d4-33710a6537b0";
-// var apiUrl = "http://jcm.anylinkcloud.com/";
 /*机型*/
 var device_type = [
     {
