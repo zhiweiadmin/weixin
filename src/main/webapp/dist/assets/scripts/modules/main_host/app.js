@@ -1160,7 +1160,7 @@ define([
                 var ext_temp = i + '_ExtTemp';
                 var extTemp = getVdeviceItemsVal(vdeviceId, ext_temp);
                 var itemname_temp = getVdeviceItemsName(vdeviceId, ext_temp);
-                var deviceName = name + "房控" + i;
+                var deviceName = name + i;
 
                 //暂且认为奇数为制热 35℃ 偶数为制冷  23℃
                 var model = (modelType == '0') ? "制冷" : "制热";
@@ -1509,12 +1509,22 @@ define([
         })
 
         //获取项目列表
-        $("#main").off('tap', '#project_list').on('tap', '#project_list', function (e) {
+        $("#main").off('tap', '.project_list').on('tap', '.project_list', function (e) {
             after_choice();
         })
 
         //返回高级页面
-        $('#main').off('tap', '#backBtn').on('tap', '#backBtn', function (e) {
+        $('#main').off('tap', '.role_header').on('tap', '.role_header', function (e) {
+            $("#host").removeClass("active")
+            $("#control").removeClass("active")
+            $("#senior").addClass("active")
+            setTimeout(function () {
+                $(".content").html(Layout.senior_mode())
+            }, 100)
+        })
+
+        //返回高级页面
+        $('#main').off('tap', '.repair_title').on('tap', '.repair_title', function (e) {
             $("#host").removeClass("active")
             $("#control").removeClass("active")
             $("#senior").addClass("active")
@@ -1524,7 +1534,7 @@ define([
         })
 
         //返回权限设置页面
-        $('#main').off('tap', '#backRoleBtn').on('tap', '#backRoleBtn', function (e) {
+        $('#main').off('tap', '.backRoleBtn').on('tap', '.backRoleBtn', function (e) {
             setTimeout(function () {
                 $(".content").html(Layout.role_setting_mode())
             }, 100)
@@ -1532,7 +1542,7 @@ define([
         })
 
         //注销
-        $("#main").off('tap', '#logout').on('tap', '#logout', function (e) {
+        $("#main").off('tap', '.logout').on('tap', '.logout', function (e) {
             ToolBox.confirm_alert({
                 $container: $('#others'),
                 afterCallback: function () {
@@ -1565,7 +1575,7 @@ define([
 
 
         //用户权限
-        $("#main").off('tap', '#user_role').on('tap', '#user_role', function (e) {
+        $("#main").off('tap', '.user_role').on('tap', '.user_role', function (e) {
             if ($("#user_role i").hasClass("fa-angle-right")) {
                 $("#user_role i").removeClass("fa-angle-right");
                 $("#user_role i").addClass("fa-angle-down");
@@ -1579,20 +1589,20 @@ define([
 
 
         //项目权限
-        $("#main").off('tap', '#project_role i').on('tap', '#project_role i', function (e) {
-            if ($(this).hasClass("fa-angle-right")) {
-                $(this).removeClass("fa-angle-right");
-                $(this).addClass("fa-angle-down");
+        $("#main").off('tap', '.project_role_1').on('tap', '.project_role_1', function (e) {
+            if ($("#project_role i").hasClass("fa-angle-right")) {
+                $("#project_role i").removeClass("fa-angle-right");
+                $("#project_role i").addClass("fa-angle-down");
                 $(".project_sub").removeClass("disNone")
             } else {
-                $(this).removeClass("fa-angle-down");
-                $(this).addClass("fa-angle-right");
+                $("#project_role i").removeClass("fa-angle-down");
+                $("#project_role i").addClass("fa-angle-right");
                 $(".project_sub").addClass("disNone")
             }
         })
 
         //定时开关
-        $("#main").off('tap', '.time_control i').on('tap', '.time_control i', function (e) {
+        $("#main").off('tap', '.time_control_1').on('tap', '.time_control_1', function (e) {
             //定时开关页面需要更新开机时间和关机时间
                 getValByKey("Sys_RunSet", function (item) {
                     var devid = item.devid;
@@ -1838,8 +1848,13 @@ define([
 
 
         //我要报修，重新绘制content元素
-        $("#main").off('tap', '#need_repair').on('tap', '#need_repair', function (e) {
+        $("#main").off('tap', '.need_repair').on('tap', '.need_repair', function (e) {
             $(".content").html(Layout.need_repair())
+        })
+
+        //联系我们
+        $("#main").off('tap', '.contact_us').on('tap', '.contact_us', function (e) {
+            $(".content").html(Layout.contact_us())
         })
 
         //-----------------------高级end-----------------------------

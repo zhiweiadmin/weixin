@@ -91,6 +91,10 @@ define([
         return template({'tempId':'need_repair'});
     }
 
+    var contact_us=function () {
+        return template({'tempId':'contact_us'});
+    }
+
     return {
         before_choice:before_choice,
         basic_frame: basic_frame,
@@ -104,6 +108,7 @@ define([
         senior_mode:senior_mode,
         role_setting_mode:role_setting_mode,
         need_repair:need_repair,
+        contact_us:contact_us,
         time_swtich:time_swtich,
 
         //jiangzhiwei 添加房间模板
