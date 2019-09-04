@@ -1228,8 +1228,10 @@ define([
                         $dom.removeClass("on");
                         $dom.siblings().removeClass("onColor");
                         $dom.siblings().addClass("offColor");
-                        send_control(item.devid, item.itemid, 0, false, function (res) {
-                            console.log(res);
+                        send_control_new(item.devid, item.itemid, 0, false, function (res) {
+                            if (res != "success") {
+                                alert("控制失败");
+                            }
                         })
                     },
                     msg: ToolBox.getConstant('Constant-turn-down-msg')
@@ -1244,8 +1246,8 @@ define([
                         $dom.siblings().addClass("onColor");
                         $dom.siblings().removeClass("offColor");
                         send_control_new(item.devid, item.itemid, 1, false, function (res) {
-                            if (res == "success") {
-                                alert(res.msg);
+                            if (res != "success") {
+                                alert("控制失败");
                             }
                         })
                     },
