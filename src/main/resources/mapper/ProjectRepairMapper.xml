@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.redbudtek.weixin.mapper.ProjectRepairMapper">
+  <resultMap id="BaseResultMap" type="com.redbudtek.weixin.model.ProjectRepair">
+    <id column="repair_id" jdbcType="INTEGER" property="repairId" />
+    <result column="project_id" jdbcType="VARCHAR" property="projectId" />
+    <result column="weixin_id" jdbcType="VARCHAR" property="weixinId" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="reason" jdbcType="VARCHAR" property="reason" />
+    <result column="repair_desc" jdbcType="VARCHAR" property="repairDesc" />
+    <result column="create_dttm" jdbcType="TIMESTAMP" property="createDttm" />
+    <result column="update_dttm" jdbcType="TIMESTAMP" property="updateDttm" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    repair_id, project_id, weixin_id, phone, user_name, reason, repair_desc, create_dttm, update_dttm
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_project_repair
+    where repair_id = #{repairId,jdbcType=INTEGER}
+  </select>
+  <select id="selectByFields" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_project_repair
+    where
+        1 = 1
+        <if test="weixinId != null">
+          and weixin_id = #{weixinId,jdbcType=VARCHAR}
+        </if>
+
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_project_repair
+    where repair_id = #{repairId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.redbudtek.weixin.model.ProjectRepair">
+    insert into t_project_repair (repair_id, project_id, weixin_id, 
+      phone, user_name, reason, repair_desc,
+      create_dttm, update_dttm
+      )
+    values (#{repairId,jdbcType=INTEGER}, #{projectId,jdbcType=VARCHAR}, #{weixinId,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, #{repairDesc,jdbcType=VARCHAR},
+      #{createDttm,jdbcType=TIMESTAMP}, #{updateDttm,jdbcType=TIMESTAMP}
+      )
+  </insert>
+
+</mapper>

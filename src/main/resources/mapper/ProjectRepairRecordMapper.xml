@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.redbudtek.weixin.mapper.ProjectRepairRecordMapper">
+  <resultMap id="BaseResultMap" type="com.redbudtek.weixin.model.ProjectRepairRecord">
+    <id column="record_id" jdbcType="INTEGER" property="recordId" />
+    <result column="repair_id" jdbcType="INTEGER" property="repairId" />
+    <result column="user_type" jdbcType="INTEGER" property="userType" />
+    <result column="weixin_id" jdbcType="VARCHAR" property="weixinId" />
+    <result column="msg" jdbcType="VARCHAR" property="msg" />
+    <result column="create_dttm" jdbcType="TIMESTAMP" property="createDttm" />
+    <result column="update_dttm" jdbcType="TIMESTAMP" property="updateDttm" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    record_id, repair_id, user_type, weixin_id, msg, create_dttm, update_dttm
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_project_repair_record
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByFields" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_project_repair_record
+    where
+        1 = 1
+        <if test="repairId != null">
+            and repair_id = #{repairId,jdbcType=INTEGER}
+        </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_project_repair_record
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.redbudtek.weixin.model.ProjectRepairRecord">
+    insert into t_project_repair_record (record_id, repair_id, user_type, 
+      weixin_id, msg, create_dttm, 
+      update_dttm)
+    values (#{recordId,jdbcType=INTEGER}, #{repairId,jdbcType=INTEGER}, #{userType,jdbcType=INTEGER}, 
+      #{weixinId,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR}, #{createDttm,jdbcType=TIMESTAMP}, 
+      #{updateDttm,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.redbudtek.weixin.model.ProjectRepairRecord">
+    insert into t_project_repair_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="recordId != null">
+        record_id,
+      </if>
+      <if test="repairId != null">
+        repair_id,
+      </if>
+      <if test="userType != null">
+        user_type,
+      </if>
+      <if test="weixinId != null">
+        weixin_id,
+      </if>
+      <if test="msg != null">
+        msg,
+      </if>
+      <if test="createDttm != null">
+        create_dttm,
+      </if>
+      <if test="updateDttm != null">
+        update_dttm,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="recordId != null">
+        #{recordId,jdbcType=INTEGER},
+      </if>
+      <if test="repairId != null">
+        #{repairId,jdbcType=INTEGER},
+      </if>
+      <if test="userType != null">
+        #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="weixinId != null">
+        #{weixinId,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null">
+        #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="createDttm != null">
+        #{createDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDttm != null">
+        #{updateDttm,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.redbudtek.weixin.model.ProjectRepairRecord">
+    update t_project_repair_record
+    <set>
+      <if test="repairId != null">
+        repair_id = #{repairId,jdbcType=INTEGER},
+      </if>
+      <if test="userType != null">
+        user_type = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="weixinId != null">
+        weixin_id = #{weixinId,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null">
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="createDttm != null">
+        create_dttm = #{createDttm,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDttm != null">
+        update_dttm = #{updateDttm,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.redbudtek.weixin.model.ProjectRepairRecord">
+    update t_project_repair_record
+    set repair_id = #{repairId,jdbcType=INTEGER},
+      user_type = #{userType,jdbcType=INTEGER},
+      weixin_id = #{weixinId,jdbcType=VARCHAR},
+      msg = #{msg,jdbcType=VARCHAR},
+      create_dttm = #{createDttm,jdbcType=TIMESTAMP},
+      update_dttm = #{updateDttm,jdbcType=TIMESTAMP}
+    where record_id = #{recordId,jdbcType=INTEGER}
+  </update>
+</mapper>
