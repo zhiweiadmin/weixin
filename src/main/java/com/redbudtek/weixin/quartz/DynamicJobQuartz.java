@@ -37,34 +37,25 @@ public class DynamicJobQuartz implements Job{
             }
             if("1".equals(val.toString())){
                 LOGGER.info(now + " 执行了一次开机");
-                System.out.println(now + " 执行了一次开机");
                 String token = getAuthToken();
-                System.out.println("token为:"+token);
                 if(token != null && !"".equals(token)){
-                    Map<String, Object> param = new HashMap<String, Object>();
-                    param.put("token",token);
-                    param.put("hash","test");
-                    param.put("devid",devid);
-                    param.put("itemid",itemid);
-                    param.put("value",1);
-                    HttpUtil.put(ConstantUtil.api_url+"control",JSONObject.toJSONString(param));
+                    String url = ConstantUtil.api_url+"control?"+"token="+token+"&hash=test&devid="+devid+"&itemid="+itemid+"&value=1";
+                    String result = HttpUtil.put2(url);
+                    System.out.println(result);
+                    LOGGER.info(result);
                 }else{
                     LOGGER.error("token获取失败");
                 }
 
             }else if("0".equals(val.toString())){
                 LOGGER.info(now + " 执行了一次关机");
-                System.out.println(now + " 执行了一次关机");
                 String token = getAuthToken();
                 System.out.println("token为:"+token);
                 if(token != null && !"".equals(token)){
-                    Map<String, Object> param = new HashMap<String, Object>();
-                    param.put("token",token);
-                    param.put("hash","test");
-                    param.put("devid",devid);
-                    param.put("itemid",itemid);
-                    param.put("value",0);
-                    HttpUtil.put(ConstantUtil.api_url+"control",JSONObject.toJSONString(param));
+                    String url = ConstantUtil.api_url+"control?"+"token="+token+"&hash=test&devid="+devid+"&itemid="+itemid+"&value=0";
+                    String result = HttpUtil.put2(url);
+                    System.out.println(result);
+                    LOGGER.info(result);
                 }else{
                     LOGGER.error("token获取失败");
                 }
@@ -80,10 +71,6 @@ public class DynamicJobQuartz implements Job{
     public String getAuthToken(){
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("weixin_id", "123456");
-        param.put("tenantEname", "bmyulin");
-        param.put("userName","admin");
-        param.put("password","bmyulin2019");
-        param.put("hash","test");
         String result = HttpUtil.post(ConstantUtil.api_url+"weixin/associatedLogin", JSONObject.toJSONString(param));
         JSONObject jsonObject = JSONObject.parseObject(result);
         if(jsonObject != null && "100".equals(jsonObject.getString("status"))){
