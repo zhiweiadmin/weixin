@@ -1200,16 +1200,21 @@ define([
                         }
                     });
                 }
+                if (onoff == '0'){
+                    $(".device_switch").removeClass("on");
+                    $("#"+deviceId).css('background','grey');
+                }else{
+                    $(".device_switch").addClass("on");
+                    $("#"+deviceId).css('background','#00BA9B');
+                }
+
+                $(".parent").css("height", height * 0.6);
+                $(".child").css("padding-top", height * 0.6 * 0.2);
+                $(".control_temp").css("margin-top", -(height * 0.6 * 0.4));
+
+                var swiper = new Swiper('.swiper-container');
             }
-            $(".parent").css("height", height * 0.6);
-            $(".child").css("padding-top", height * 0.6 * 0.2);
-            $(".control_temp").css("margin-top", -(height * 0.6 * 0.4));
-            if (onoff == '1') {
-                $(".device_switch").addClass("on");
-            } else {
-                $(".device_switch").removeClass("on");
-            }
-            var swiper = new Swiper('.swiper-container');
+
         })
 
         //房控里面的切换 jiangzhiwei
@@ -1232,10 +1237,12 @@ define([
                             if (res != "success") {
                                 alert("控制失败");
                             }else{
-                               //修改背景颜色
-                                $(".device_switch").parentsUntil("#swaper"+deviceId).find(".parent").addClass("close_parent")
-                                $(".device_switch").parentsUntil("#swaper"+deviceId).find(".child").addClass("close_child")
-
+                                //修改背景颜色
+                                $("#"+deviceId).css('background','grey');
+                                //刷新数据
+                                getCurrentDataByProject(cur_projectId,function () {
+                                    console.log("刷新数据成功")
+                                });
                             }
                         })
                     },
@@ -1255,14 +1262,18 @@ define([
                                 alert("控制失败");
                             }else{
                                 //修改背景颜色
-                                $(".device_switch").parentsUntil("#swaper"+deviceId).find(".parent").removeClass("close_parent")
-                                $(".device_switch").parentsUntil("#swaper"+deviceId).find(".child").removeClass("close_child")
+                                $("#"+deviceId).css('background','#00BA9B');
+                                //刷新数据
+                                getCurrentDataByProject(cur_projectId,function () {
+                                    console.log("刷新数据成功")
+                                });
                             }
                         })
                     },
                     msg: ToolBox.getConstant('Constant-turn-on-msg')
                 })
             }
+
         })
 
         //温度减
@@ -1282,7 +1293,10 @@ define([
             console.log("装置："+deviceId+",当前温度为："+temp+"执行减操作")
             var itemname = $(id).attr("itemname");
             change_device_temp(itemname,tempNum,function () {
-                console.log('已经执行完操作了')
+                console.log('已经执行完操作了');
+                getCurrentDataByProject(cur_projectId,function () {
+                    console.log("刷新数据成功")
+                });
             })
         })
         //温度加
@@ -1303,6 +1317,9 @@ define([
             var itemname = $(id).attr("itemname");
             change_device_temp(itemname,tempNum,function () {
                 console.log('已经执行完操作了')
+                getCurrentDataByProject(cur_projectId,function () {
+                    console.log("刷新数据成功")
+                });
             })
         })
 
@@ -1353,6 +1370,10 @@ define([
                     send_control_new(item.devid, item.itemid, 0, false, function (res) {
                         if (res != "success") {
                             alert("控制失败");
+                        }else{
+                            getCurrentDataByProject(cur_projectId,function () {
+                                console.log("刷新数据成功")
+                            });
                         }
                     })
                 },
@@ -1389,6 +1410,10 @@ define([
                     send_control_new(item.devid, item.itemid, 0, false, function (res) {
                         if (res != "success") {
                             alert("控制失败");
+                        }else{
+                            getCurrentDataByProject(cur_projectId,function () {
+                                console.log("刷新数据成功")
+                            });
                         }
                     })
                 }
@@ -1414,6 +1439,10 @@ define([
                         send_control_new(item.devid, item.itemid, 1, false, function (res) {
                             if (res != "success") {
                                 alert("控制失败");
+                            }else{
+                                getCurrentDataByProject(cur_projectId,function () {
+                                    console.log("刷新数据成功")
+                                });
                             }
                         });
                     } else if (data == '高速') {
@@ -1423,6 +1452,10 @@ define([
                         send_control_new(item.devid, item.itemid, 1, false, function (res) {
                             if (res != "success") {
                                 alert("控制失败");
+                            }else{
+                                getCurrentDataByProject(cur_projectId,function () {
+                                    console.log("刷新数据成功")
+                                });
                             }
                         });
                     } else if (data == '中速') {
@@ -1432,6 +1465,10 @@ define([
                         send_control_new(item.devid, item.itemid, 1, false, function (res) {
                             if (res != "success") {
                                 alert("控制失败");
+                            }else{
+                                getCurrentDataByProject(cur_projectId,function () {
+                                    console.log("刷新数据成功")
+                                });
                             }
                         });
                     }

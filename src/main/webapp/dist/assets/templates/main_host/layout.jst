@@ -537,7 +537,7 @@
         <div><img class='control_top_icon' src="../assets/image/img/woshi-o.png" style="width: 80px"></div>
         <div class="color_white font-25"><%=deviceName%></div>
     </div>
-    <div class="parent <%=parent%> mt25">
+    <div class="parent <%=parent%> mt25" id="<%=deviceId%>">
         <div class="child <%=child%>" id="<%=wraId%>">
             <strong class="control_temp width100 disBlock color_white">
                 <div id="<%=temId%>" itemname="<%=itemname_temp%>" class="device_temp">
@@ -556,7 +556,7 @@
     </div>
     <div>
         <div class="col-xs-3 control_bottom_menu">
-            <div class="mt25 device_switch on" deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>">
+            <div class="mt25 device_switch on <%=deviceId%>" deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>">
                 <img class="control_icon_img" deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>" src="../assets/image/img/control_switch.png">
             </div>
             <div class="onColor">
@@ -594,7 +594,7 @@
     <div><img class='control_top_icon' src="../assets/image/img/woshi-o.png" style="width: 80px"></div>
     <div class="color_white font-25">主卧房控</div>
 </div>
-<div class="parent <%=parent%> mt25">
+<div class="parent <%=parent%> mt25" id="<%=deviceId%>">
     <div class="child <%=child%>" id="<%=wraId%>">
         <strong class="control_temp width100 disBlock color_white">
             <div id="<%=temId%>" itemname="<%=itemname_temp%>" class="device_temp">
