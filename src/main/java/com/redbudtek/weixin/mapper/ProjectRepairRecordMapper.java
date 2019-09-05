@@ -19,7 +19,7 @@ public interface ProjectRepairRecordMapper {
 
     ProjectRepairRecord selectByPrimaryKey(Integer recordId);
 
-    List<ProjectRepairRecord> selectByFields(Map<String,Object> param);
+    List<ProjectRepairRecord> selectByRepairId(Integer repairId);
 
     int updateByPrimaryKeySelective(ProjectRepairRecord record);
 

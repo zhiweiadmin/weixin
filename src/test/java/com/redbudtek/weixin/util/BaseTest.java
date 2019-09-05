@@ -7,7 +7,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/spring.xml","classpath:spring/spring-ds-test.xml"})
-@ActiveProfiles("local")
+@ActiveProfiles("prod")
 public class BaseTest {
 
 }

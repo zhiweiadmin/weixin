@@ -20,15 +20,13 @@
     where record_id = #{recordId,jdbcType=INTEGER}
   </select>
 
-  <select id="selectByFields" parameterType="java.util.Map" resultMap="BaseResultMap">
+  <select id="selectByRepairId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List" />
+        <include refid="Base_Column_List" />
     from t_project_repair_record
     where
         1 = 1
-        <if test="repairId != null">
-            and repair_id = #{repairId,jdbcType=INTEGER}
-        </if>
+        and repair_id = #{repairId,jdbcType=INTEGER}
   </select>
 
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -36,10 +34,10 @@
     where record_id = #{recordId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.redbudtek.weixin.model.ProjectRepairRecord">
-    insert into t_project_repair_record (nextval('weixin_record_id'), repair_id, user_type,
+    insert into t_project_repair_record (record_id, repair_id, user_type,
       weixin_id, msg, create_dttm, 
       update_dttm)
-    values (#{recordId,jdbcType=INTEGER}, #{repairId,jdbcType=INTEGER}, #{userType,jdbcType=INTEGER}, 
+    values (nextval('weixin_record_id'), #{repairId,jdbcType=INTEGER}, #{userType,jdbcType=INTEGER},
       #{weixinId,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR}, #{createDttm,jdbcType=TIMESTAMP}, 
       #{updateDttm,jdbcType=TIMESTAMP})
   </insert>

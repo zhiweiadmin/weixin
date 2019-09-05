@@ -70,9 +70,7 @@ public class UserTest extends BaseTest{
 
     @Test
     public void select(){
-        Map<String,Object> param = new HashMap<String, Object>();
-        param.put("repairId",1);
-        List<ProjectRepairRecord> list = projectRepairRecordMapper.selectByFields(param);
+        List<ProjectRepairRecord> list = projectRepairRecordMapper.selectByRepairId(1);
         System.out.println(list);
     }
 
