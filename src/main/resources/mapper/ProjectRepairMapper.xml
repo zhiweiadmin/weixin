@@ -41,7 +41,7 @@
       phone, user_name, reason, repair_desc,
       create_dttm, update_dttm
       )
-    values (#{repairId,jdbcType=INTEGER}, #{projectId,jdbcType=VARCHAR}, #{weixinId,jdbcType=VARCHAR}, 
+    values (nextval('weixin_repair_id'), #{projectId,jdbcType=VARCHAR}, #{weixinId,jdbcType=VARCHAR},
       #{phone,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, #{repairDesc,jdbcType=VARCHAR},
       #{createDttm,jdbcType=TIMESTAMP}, #{updateDttm,jdbcType=TIMESTAMP}
       )

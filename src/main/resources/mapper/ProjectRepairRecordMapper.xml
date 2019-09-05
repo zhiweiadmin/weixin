@@ -36,7 +36,7 @@
     where record_id = #{recordId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.redbudtek.weixin.model.ProjectRepairRecord">
-    insert into t_project_repair_record (record_id, repair_id, user_type, 
+    insert into t_project_repair_record (nextval('weixin_record_id'), repair_id, user_type,
       weixin_id, msg, create_dttm, 
       update_dttm)
     values (#{recordId,jdbcType=INTEGER}, #{repairId,jdbcType=INTEGER}, #{userType,jdbcType=INTEGER}, 
