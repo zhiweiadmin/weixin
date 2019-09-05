@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.redbudtek.weixin.model.JobEntity;
+import com.redbudtek.weixin.model.ProjectRepair;
 import com.redbudtek.weixin.quartz.QuartzManager;
 import com.redbudtek.weixin.service.DeviceService;
+import com.redbudtek.weixin.service.RepairService;
 import com.redbudtek.weixin.service.ScheduledService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class DeviceController {
     private DeviceService deviceService;
     @Autowired
     private HttpServletRequest request;
+
+    @Autowired
+    RepairService repairService;
 
     /**
      * 获取设备信息列表
@@ -158,5 +163,46 @@ public class DeviceController {
         jsonObject.put("data",jobEntityList);
         return jsonObject.toJSONString();
     }
+
+    /**
+     * 添加报修
+     * @param payLoad
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "addProjectRepair",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    public String addProjectRepair(@RequestBody String payLoad){
+        try{
+            ProjectRepair projectRepair = JSONObject.parseObject(payLoad,ProjectRepair.class);
+            repairService.addRepair(projectRepair);
+            return "success";
+        }catch (Exception e){
+            logger.error("addProjectRepair",e);
+            return "fail";
+        }
+    }
+
+    /**
+     * 获取用户填报的维修记录
+     * @param openId
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "getUserRepairs", method = RequestMethod.GET)
+    public String getUserRepairs(@RequestParam String openId){
+        JSONObject jsonObject = repairService.getUserRepairs(openId);
+        if(jsonObject == null){
+            jsonObject = new JSONObject();
+        }
+        return jsonObject.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "getRepairRecord", method = RequestMethod.GET)
+    public String getRepairRecord(@RequestParam Integer repairdId){
+        JSONObject jsonObject = repairService.getRepairRecord(repairdId);
+        return jsonObject.toJSONString();
+    }
+
 
 }
