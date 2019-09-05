@@ -1037,8 +1037,6 @@ define([
                             if (res1.status == 100) {
                                 agent_condition = res1.result.data[0].agentCondition;
                                 run_status = agent_condition;
-                                console.log("网关")
-                                console.log(agent_condition)
                             }
                         })
                     }
@@ -1115,6 +1113,8 @@ define([
                     return '../assets/image/img/keting.png';
                 case '主卧':
                     return '../assets/image/img/zhuwo.png';
+                case '卧室':
+                    return '../assets/image/img/zhuwo.png';
                 case '次卧':
                     return '../assets/image/img/ciwo.png';
                 case '阁楼':
@@ -1127,7 +1127,7 @@ define([
         }
 
         //点击房控方向键,显示房间内细节
-        $("#main").off('tap', '.control_sub_right').on('tap', '.control_sub_right', function (e) {
+        $("#main").off('tap', '.control_sub_right,.controle_row').on('tap', '.control_sub_right,.controle_row', function (e) {
             var air_img = getImgUrl(weather);
             //初始化页面
             $("#main").html(Layout.room_detail_basic(weather, humidity, temperature, wind, air_img));
@@ -1231,6 +1231,11 @@ define([
                         send_control_new(item.devid, item.itemid, 0, false, function (res) {
                             if (res != "success") {
                                 alert("控制失败");
+                            }else{
+                               //修改背景颜色
+                                $(".device_switch").parentsUntil("#swaper"+deviceId).find(".parent").addClass("close_parent")
+                                $(".device_switch").parentsUntil("#swaper"+deviceId).find(".child").addClass("close_child")
+
                             }
                         })
                     },
@@ -1248,6 +1253,10 @@ define([
                         send_control_new(item.devid, item.itemid, 1, false, function (res) {
                             if (res != "success") {
                                 alert("控制失败");
+                            }else{
+                                //修改背景颜色
+                                $(".device_switch").parentsUntil("#swaper"+deviceId).find(".parent").removeClass("close_parent")
+                                $(".device_switch").parentsUntil("#swaper"+deviceId).find(".child").removeClass("close_child")
                             }
                         })
                     },
@@ -1484,17 +1493,19 @@ define([
         $("#main").off('tap', ".control_top_icon").on('tap', '.control_top_icon', function (e) {
             //需要根据天气提供页面图片
             var air_img = getImgUrl(weather);
-            $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img));
-            //移除所有按钮的激活class，并激活当前按钮
-            $("#host").removeClass("active")
-            $("#control").removeClass("active")
-            $("#senior").removeClass("active")
-            $("#control").addClass("active")
-            //先清空content的内容，补充各个单独房间样式
-            // $(".content").html(Layout.control_mode());
-            $(".content").html("");
-            //加載防控数据 jiangzhiwei
-            init_room_list(devices);
+            setTimeout(function () {
+                $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img));
+                //移除所有按钮的激活class，并激活当前按钮
+                $("#host").removeClass("active")
+                $("#control").removeClass("active")
+                $("#senior").removeClass("active")
+                $("#control").addClass("active")
+                //先清空content的内容，补充各个单独房间样式
+                // $(".content").html(Layout.control_mode());
+                $(".content").html("");
+                //加載防控数据 jiangzhiwei
+                init_room_list(devices);
+            }, 300)
         })
         //-------------------------房控end-----------------------------
 

@@ -9,6 +9,7 @@ define([
         return template({'tempId': tempId});
     };
 
+
     /*alert*/
     var alert_msg = function(options){
         if(typeof options != 'object'){
@@ -28,6 +29,14 @@ define([
             });   
         }
         $('.modal-backdrop').remove();
+        $('#alert').on('show.bs.modal', function (e) {
+            // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
+            $(this).css('display', 'block');
+            var modalHeight=$(window).height() / 2 - $('#alert .modal-dialog').height() / 2;
+            $(this).find('.modal-dialog').css({
+                'margin-top': modalHeight
+            });
+        });
         $('#alert').modal('show');
     };
 
@@ -56,6 +65,15 @@ define([
             });   
         }
         $('.modal-backdrop').remove();
+        // 将事件监听的事件改成show.bs.modal 即可解决
+        $('#confirm-alert').on('show.bs.modal', function (e) {
+            // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
+            $(this).css('display', 'block');
+            var modalHeight=$(window).height() / 2 - $('#confirm-alert .modal-dialog').height() / 2;
+            $(this).find('.modal-dialog').css({
+                'margin-top': modalHeight
+            });
+        });
         $('#confirm-alert').modal('show');
     };
 
@@ -78,6 +96,14 @@ define([
             });
         }
         $('.modal-backdrop').remove();
+        $('#confirm-alert').on('show.bs.modal', function (e) {
+            // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
+            $(this).css('display', 'block');
+            var modalHeight=$(window).height() / 2 - $('#confirm-alert .modal-dialog').height() / 2;
+            $(this).find('.modal-dialog').css({
+                'margin-top': modalHeight
+            });
+        });
         $('#confirm-alert').modal('show');
     };
 
@@ -105,6 +131,14 @@ define([
             });
         }
         $('.modal-backdrop').remove();
+        $('#confirm-alert').on('show.bs.modal', function (e) {
+            // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
+            $(this).css('display', 'block');
+            var modalHeight=$(window).height() / 2 - $('#confirm-alert .modal-dialog').height() / 2;
+            $(this).find('.modal-dialog').css({
+                'margin-top': modalHeight
+            });
+        });
         $('#confirm-alert').modal('show');
     };
 
@@ -137,6 +171,14 @@ define([
             });
         }
         $('.modal-backdrop').remove();
+        $('#confirm-alert').on('show.bs.modal', function (e) {
+            // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
+            $(this).css('display', 'block');
+            var modalHeight=$(window).height() / 2 - $('#confirm-alert .modal-dialog').height() / 2;
+            $(this).find('.modal-dialog').css({
+                'margin-top': modalHeight
+            });
+        });
         $('#confirm-alert').modal('show');
     };
 

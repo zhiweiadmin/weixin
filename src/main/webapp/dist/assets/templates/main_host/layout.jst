@@ -201,18 +201,20 @@
     <img id="host_switch" vid class="on" src="../assets/image/img/switch_on_o.png">
 </div>
 <%}else if(tempId=='single_room_device'){%>
-<div class="col-xs-2 padt20 padb20">
-    <img class="host_img" src="<%=room_img%>">
-</div>
-<div class="col-xs-4   padt20 padb20">
-    <div class="main_room width100"><%=name%></div>
-    <div class="sub_info"><%=count%>个设备</div>
-</div>
-<div class="col-xs-offset-3 col-xs-3 control_right_div padt20 padb20 padl25 ">
-    <span class="control_sub_right" count='<%=count%>' id='<%=vid%>' name='<%=name%>'>&nbsp;<i class="fa fa-angle-right"></i></span>
-</div>
-<div class="col-xs-12">
-    <div class="acrossbar"></div>
+<div class="controle_row" count='<%=count%>' id='<%=vid%>' name='<%=name%>'>
+    <div class="col-xs-2 padt20 padb20" >
+        <img class="host_img" src="<%=room_img%>">
+    </div>
+    <div class="col-xs-7   padt20 padb20">
+        <div class="main_room width100"><%=name%></div>
+        <div class="sub_info"><%=count%>个设备</div>
+    </div>
+    <div class=" col-xs-3 control_right_div padt20 padb20 padl25 ">
+        <span class="control_sub_right" >&nbsp;<i class="fa fa-angle-right"></i></span>
+    </div>
+    <div class="col-xs-12">
+        <div class="acrossbar"></div>
+    </div>
 </div>
 <%}else if(tempId=='senior_mode'){%>
 <div class="col-xs-12 " style="width:100%;height:50px;margin-top: 13px;">

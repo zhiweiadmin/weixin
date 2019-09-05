@@ -445,7 +445,7 @@ body{
 .cold_child {
     border-radius: 8px;
     display: block;
-    background: #00BA9B;
+    background:transparent;
 }
 
 .hot_parent {
@@ -456,7 +456,22 @@ body{
 .hot_child {
     border-radius: 8px;
     display: block;
-    background: #E8AF00;
+    background:transparent;
+}
+
+.close_parent {
+    /*background: #BEC1C6;*/
+    border-radius: 8px;
+    background: -webkit-linear-gradient(#BEC1C6, #878A8F) no-repeat 100% 100% ; /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(#BEC1C6, #878A8F) no-repeat 100% 100%; /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(#BEC1C6, #878A8F) no-repeat 100% 100%; /* Firefox 3.6 - 15 */
+    background: linear-gradient(#BEC1C6, #878A8F) no-repeat 100% 100%; /* 标准的语法 */
+}
+
+.close_child {
+    border-radius: 8px;
+    display: block;
+    background:transparent;
 }
 
 .control_temp {
