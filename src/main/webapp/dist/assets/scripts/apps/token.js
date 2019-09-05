@@ -36,7 +36,6 @@ define([
 
     //微信openId关联登录云平台
     var checkWeixin = function(){
-        console.log("123123");
         ToolBox.ajax({
             type: 'post',
             url: 'weixin/associatedLogin',
