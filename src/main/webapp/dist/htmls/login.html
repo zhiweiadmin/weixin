@@ -27,12 +27,12 @@
     };
 
     $(function(){
-        var code = getParam("code");
+        //var code = getParam("code");
         //var state = getParam("state");
-        if(typeof code != 'string'){
-            $('body').prepend('<h3>Parameter [code] is error !</h3>');
-            return false;
-        }
+        // if(typeof code != 'string'){
+        //     $('body').prepend('<h3>Parameter [code] is error !</h3>');
+        //     return false;
+        // }
         // if(typeof state != 'string' || state.indexOf('0') < 0){
         //     $('body').prepend('<h3>Parameter [state] is error !</h3>');
         //     return false;
@@ -41,7 +41,7 @@
             type: 'get',
             url: '/access/webAuth',
             data: {
-                code: code
+                code: "123"
             },
             dataType: 'json',
             success: function(res){
