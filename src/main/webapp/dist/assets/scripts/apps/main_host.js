@@ -39,6 +39,9 @@ require.config({
         'mobiscroll': {
             deps: ['jquery']
         },
+        'layer': {
+            deps: ['jquery']
+        },
         'bootstrap': {
             deps: ['css!plugins/bootstrap/css/bootstrap.min','css!plugins/font-awesome/css/font-awesome' ,'css!plugins/animate','jquery']
         },

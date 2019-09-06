@@ -537,111 +537,55 @@
         <div><img class='control_top_icon' src="../assets/image/img/woshi-o.png" style="width: 80px"></div>
         <div class="color_white font-25"><%=deviceName%></div>
     </div>
-    <div class="parent <%=parent%> mt25" id="<%=deviceId%>">
-        <div class="child <%=child%>" id="<%=wraId%>">
+    <div class="parent <%=parent%> mt25" id="parent<%=deviceId%>">
+        <div class="child <%=child%>" id="child<%=deviceId%>">
             <strong class="control_temp width100 disBlock color_white">
-                <div id="<%=temId%>" itemname="<%=itemname_temp%>" class="device_temp">
+                <div id="temp<%=deviceId%>" itemname="<%=itemname_temp%>" class="device_temp">
                     <%=temp%>℃
                 </div>
             </strong>
             <div class="mt25">
                 <span class="color_white font-30 device_minus" deviceId="<%=deviceId%>"><i class="fa fa-minus-circle"></i></span>
-                <span class="color_white font-30 "><i class="fa <%=modelImg%>"></i></span>
+                <span class="color_white font-30 "><i class="fa <%=modelImg%>" id="modelImg<%=deviceId%>"></i></span>
                 <span class="color_white font-30 device_plus" deviceId="<%=deviceId%>"><i class="fa fa-plus-circle"></i></span>
             </div>
-            <div class="color_white">
+            <div class="color_white" id="modelText<%=deviceId%>">
                 <%=model%>
             </div>
         </div>
     </div>
     <div>
         <div class="col-xs-3 control_bottom_menu">
-            <div class="mt25 device_switch on <%=deviceId%>" deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>">
-                <img class="control_icon_img" deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>" src="../assets/image/img/control_switch.png">
+            <div class="mt25 device_switch" deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>" id="switch<%=deviceId%>">
+                <img class="control_icon_img"  src="../assets/image/img/control_switch.png">
             </div>
-            <div class="onColor">
+            <div  id="switchT<%=deviceId%>" class="icon<%=deviceId%>">
                 开关
             </div>
         </div>
         <div class="col-xs-3 control_bottom_menu">
-            <div class="mt25 device_model cold_model" deviceId="<%=deviceId%>" itemname="<%=itemname_model%>">
+            <div class="mt25 device_model cold_model" deviceId="<%=deviceId%>" itemname="<%=itemname_model%>" id="model<%=deviceId%>">
                 <img class="control_icon_img" src="../assets/image/img/control_model.png">
             </div>
-            <div class="onColor">
+            <div  id="modelT<%=deviceId%>" class="icon<%=deviceId%>">
                 模式
             </div>
         </div>
         <div class="col-xs-3 control_bottom_menu">
-            <div class="mt25 device_speed" deviceId="<%=deviceId%>" itemPre="<%=item_pre%>">
-                <img class="control_icon_img" deviceId="<%=deviceId%>" itemPre="<%=item_pre%>" src="../assets/image/img/control_speed.png">
+            <div class="mt25 device_speed" deviceId="<%=deviceId%>" itemPre="<%=item_pre%>" id="speed<%=deviceId%>">
+                <img class="control_icon_img"  src="../assets/image/img/control_speed.png">
             </div>
-            <div class="onColor">
+            <div  id="speedT<%=deviceId%>" class="icon<%=deviceId%>">
                 <%=speed%>
             </div>
         </div>
         <div class="col-xs-3 control_bottom_menu">
-            <div class="mt25 device_time" itemname="<%=itemname_onoff%>">
+            <div class="mt25 device_time" deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>" id="time<%=deviceId%>">
                 <img class="control_icon_img" src="../assets/image/img/control_time.png">
             </div>
-            <div class="onColor">
+            <div  id="timeT<%=deviceId%>" deviceId="<%=deviceId%>" class="icon<%=deviceId%>">
                 定时
             </div>
-        </div>
-    </div>
-</div>
-<%} else if(tempId=='room_detail_basic_device_model'){%>
-<div class="col-xs-12 " style="margin-top: -8px">
-    <div><img class='control_top_icon' src="../assets/image/img/woshi-o.png" style="width: 80px"></div>
-    <div class="color_white font-25">主卧房控</div>
-</div>
-<div class="parent <%=parent%> mt25" id="<%=deviceId%>">
-    <div class="child <%=child%>" id="<%=wraId%>">
-        <strong class="control_temp width100 disBlock color_white">
-            <div id="<%=temId%>" itemname="<%=itemname_temp%>" class="device_temp">
-                <%=temp%>℃
-            </div>
-        </strong>
-        <div class="mt25">
-               <span class="color_white font-30 device_minus" deviceId="<%=deviceId%>"><i class="fa fa-minus-circle"></i></span>
-               <span class="color_white font-30 "><i class="fa <%=modelImg%>"></i></span>
-               <span class="color_white font-30 device_plus" deviceId="<%=deviceId%>"><i class="fa fa-plus-circle"></i></span>
-        </div>
-        <div class="color_white">
-              <%=model%>
-        </div>
-    </div>
-</div>
-<div>
-    <div class="col-xs-3 control_bottom_menu">
-        <div class="mt25 device_switch on"  deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>" >
-            <img class="control_icon_img"  deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>" src="../assets/image/img/control_switch.png">
-        </div>
-        <div class="onColor">
-            开关
-        </div>
-    </div>
-    <div class="col-xs-3 control_bottom_menu">
-        <div class="mt25 device_model cold_model" deviceId="<%=deviceId%>"  itemname="<%=itemname_model%>">
-            <img class="control_icon_img" src="../assets/image/img/control_model.png">
-        </div>
-        <div class="onColor">
-            模式
-        </div>
-    </div>
-    <div class="col-xs-3 control_bottom_menu">
-        <div class="mt25 device_speed" deviceId="<%=deviceId%>" itemPre="<%=item_pre%>">
-            <img class="control_icon_img" deviceId="<%=deviceId%>" itemPre="<%=item_pre%>" src="../assets/image/img/control_speed.png">
-        </div>
-        <div class="onColor">
-             <%=speed%>
-        </div>
-    </div>
-    <div class="col-xs-3 control_bottom_menu">
-        <div class="mt25 device_time" itemname="<%=itemname_onoff%>">
-            <img class="control_icon_img" src="../assets/image/img/control_time.png">
-        </div>
-        <div class="onColor">
-            定时
         </div>
     </div>
 </div>

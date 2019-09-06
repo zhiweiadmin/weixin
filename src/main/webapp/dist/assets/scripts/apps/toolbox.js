@@ -40,6 +40,29 @@ define([
         $('#alert').modal('show');
     };
 
+    /*warn_open*/
+    var warn_open = function(options){
+        if(typeof options != 'object'){
+            return false;
+        }
+        var $container = options['$container'];
+        var msg = options['msg'];
+        $container.html(template({'tempId': 'alert', 'data': msg}));
+        $('.modal-backdrop').remove();
+        $('#alert').on('show.bs.modal', function (e) {
+            // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
+            $(this).css('display', 'block');
+            var modalHeight=$(window).height() / 2 - $('#alert .modal-dialog').height() / 2;
+            $(this).find('.modal-dialog').css({
+                'margin-top': modalHeight
+            });
+        });
+        $('#alert').modal('show');
+    };
+
+
+
+
     /*屏幕宽度*/
     var screen_width = document.documentElement.clientWidth;
 
@@ -524,6 +547,7 @@ define([
         get_pre_data:get_pre_data,
         getConstant: getConstant,
         alert_msg: alert_msg,
+        warn_open:warn_open,
         screen_width: screen_width,
         screen_height: screen_height,
         confirm_alert: confirm_alert,
