@@ -433,7 +433,7 @@ body{
     -webkit-align-items: center;
     font-size: 14px;
     color: grey;
-    height: 80px;
+    height: 53px;
 }
 
 /*房控房间细节*/
@@ -583,4 +583,56 @@ body{
 
 #open_time, #colse_time,#time_day {
     font-size: 14px;
+}
+
+
+.log_text {
+    font-size: 16px;
+    color: grey;
+    height: 65px;
+}
+
+.log_text_row{
+    font-size: 25px;
+    color: grey;
+    height: 65px;
+}
+
+.log_text,.log_text_row {
+    text-align: left;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+}
+
+.host_img{
+    width: 45px;
+}
+
+
+.log_title{
+    font-size: 20px;
+}
+.log_content{
+    background: #fff;
+    border-radius: 10px;
+}
+
+.repair_left_div{
+    font-size: 25px;
+    position: absolute;
+    top: 17px;
+    left: 20px;
+}
+
+.repair_log_img{
+    width:38px
+}
+
+#repaire_content_submit {
+    font-size: 15px;
+    width: 110px;
+    padding: 1px;
+    color: white;
+    background-color: #4AD0B9;
+    border-color: #4AD0B9;
 }

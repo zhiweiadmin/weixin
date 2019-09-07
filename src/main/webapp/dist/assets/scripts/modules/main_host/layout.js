@@ -56,6 +56,7 @@ define([
     }
 
 
+
     //房控页面点击右方向键
     var control_detail=function () {
         return template({'tempId':'control_detail'});
@@ -81,6 +82,21 @@ define([
         return template({'tempId':'need_repair'});
     }
 
+    //维修模板
+    var basic_repair=function (repairTitle,backClass) {
+        return template({'tempId':'basic_repair','repairTitle':repairTitle,'backClass':backClass});
+    }
+
+    //维修列表
+    var repair_list=function (reason,repairId) {
+        return template({'tempId':'repair_list','reason':reason,'repairId':repairId});
+    }
+
+    //维修内容
+    var repair_content=function (username,mobile,time,repairContent,detail) {
+        return template({'tempId':'repair_content','username':username,'mobile':mobile,'time':time,'repairContent':repairContent,'detail':detail});
+    }
+
     var contact_us=function () {
         return template({'tempId':'contact_us'});
     }
@@ -96,6 +112,9 @@ define([
         senior_mode:senior_mode,
         role_setting_mode:role_setting_mode,
         need_repair:need_repair,
+        basic_repair:basic_repair,
+        repair_list:repair_list,
+        repair_content:repair_content,
         contact_us:contact_us,
         time_swtich:time_swtich,
 

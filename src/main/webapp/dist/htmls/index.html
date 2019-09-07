@@ -95,6 +95,9 @@
     var timestamp = (new Date()).getTime();
     document.write('<script type="text/javascript" src="../assets/scripts/apps/config.js?v=' + timestamp +'"><\/script>');
     document.write('<script type="text/javascript" src="../assets/scripts/apps/index.js?v=' + timestamp +'"><\/script>');
+    var height=$(window).height();
+    $("body").css("min-height",height)
+
 </script>
 </body>
 </html>

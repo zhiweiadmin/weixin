@@ -32,6 +32,9 @@
     var timestamp = (new Date()).getTime();
     document.write('<script type="text/javascript" src="../assets/scripts/apps/config.js?v=' + timestamp +'"><\/script>');
     document.write('<script type="text/javascript" src="../assets/scripts/apps/main_host.js?v=' + timestamp +'"><\/script>');
+    var height=$(window).height();
+    $("body").css("min-height",height)
+    $(".log_content").css("min-height",height-70)
 </script>
 </body>
 </html>
