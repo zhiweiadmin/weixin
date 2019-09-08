@@ -1570,52 +1570,31 @@ define([
                 var vId = deviceId.substring(0, deviceId.indexOf('_'));
                 var itemPre = $(this).attr("itemPre");
                 var speed = $("#speedT" + deviceId).html();
-                //当前为开机状态，提供关机功能
                 ToolBox.device_speed({
                     $container: $('#others'),
                     afterCallback: function (data) {
                         $('#confirm-alert').modal('hide');
                         var loading = layer.load(2, {shade: [0.5, '#fff']});
                         $("#speedT" + deviceId).html(data);
-                        if (data == '低速') {
-                            var itemname = itemPre + '_Lwinds';
-                            var item = getVdeviceItemsInfo(vId, itemname);
-                            console.log("item : " + item);
-                            send_control_new(item.devid, item.itemid, 1, false, function (res) {
-                                if (res != "success") {
-                                    alert("控制失败");
-                                } else {
-                                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                        console.log("刷新数据成功")
-                                    });
-                                }
-                            });
-                        } else if (data == '高速') {
-                            itemname = itemPre + '_Hwinds';
-                            var item = getVdeviceItemsInfo(vId, itemname);
-                            console.log("item : " + item);
-                            send_control_new(item.devid, item.itemid, 1, false, function (res) {
-                                if (res != "success") {
-                                    alert("控制失败");
-                                } else {
-                                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                        console.log("刷新数据成功")
-                                    });
-                                }
-                            });
-                        } else if (data == '中速') {
-                            itemname = itemPre + '_Mwinds';
-                            var item = getVdeviceItemsInfo(vId, itemname);
-                            console.log("item : " + item);
-                            send_control_new(item.devid, item.itemid, 1, false, function (res) {
-                                if (res != "success") {
-                                    alert("控制失败");
-                                } else {
-                                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                        console.log("刷新数据成功")
-                                    });
-                                }
-                            });
+                        //分别获取低速、中速、高速的item
+                        var lowItemname = itemPre + '_Lwinds';
+                        var lowItem = getVdeviceItemsInfo(vId, lowItemname);
+                        var midItemname = itemPre + '_Mwinds';
+                        var midItem = getVdeviceItemsInfo(vId, midItemname);
+                        var highItemname = itemPre + '_Hwinds';
+                        var highItem = getVdeviceItemsInfo(vId, highItemname);
+                        if (data === '低速') {
+                            updateLowSpeed(lowItem.devid,lowItem.itemid,1);
+                            updateMidSpeed(midItem.devid,midItem.itemid,0);
+                            updateHighSpeed(highItem.devid,highItem.itemid,0);
+                        } else if (data === '高速') {
+                            updateLowSpeed(lowItem.devid,lowItem.itemid,0);
+                            updateMidSpeed(midItem.devid,midItem.itemid,0);
+                            updateHighSpeed(highItem.devid,highItem.itemid,1);
+                        } else if (data === '中速') {
+                            updateLowSpeed(lowItem.devid,lowItem.itemid,0);
+                            updateMidSpeed(midItem.devid,midItem.itemid,1);
+                            updateHighSpeed(highItem.devid,highItem.itemid,0);
                         }
                         //关闭loading
                         layer.close(loading);
@@ -1626,6 +1605,46 @@ define([
                 singleAlter("Constant-warn-close-msg");
             }
         })
+
+        //修改低速状态值
+        function updateLowSpeed(devid,itemid,val){
+            send_control_new(devid, itemid, val, false, function (res) {
+                if (res != "success") {
+                    alert("控制失败");
+                } else {
+                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                        console.log("刷新数据成功")
+                    });
+                }
+            });
+        }
+
+        //修改中速状态值
+        function updateMidSpeed(devid,itemid,val){
+            send_control_new(devid, itemid, val, false, function (res) {
+                if (res != "success") {
+                    alert("控制失败");
+                } else {
+                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                        console.log("刷新数据成功")
+                    });
+                }
+            });
+        }
+        //修改高速状态值
+        function updateHighSpeed(devid,itemid,val){
+            send_control_new(devid, itemid, val, false, function (res) {
+                if (res != "success") {
+                    alert("控制失败");
+                } else {
+                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                        console.log("刷新数据成功")
+                    });
+                }
+            });
+        }
+
+
 
         //定时
         $("#main").off('tap', ".device_time").on('tap', '.device_time', function (e) {
