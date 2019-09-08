@@ -156,6 +156,23 @@ public class DeviceController {
         return "success";
     }
 
+    /**
+     * 定时开、关机按钮状态改变
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "timeSwtich",method = RequestMethod.GET)
+    public String updateTimeSwtich(Integer onoff,String devid,String itemid) throws ParseException {
+        if(onoff == null){
+            onoff = 0;
+        }
+        scheduledService.updateTimeSwtich(devid,itemid,onoff);
+        return "success";
+    }
+
+
+
+
     @ResponseBody
     @RequestMapping(value = "getDeviceJob",method = RequestMethod.GET)
     public String getDeviceJob(String devid,String itemid){

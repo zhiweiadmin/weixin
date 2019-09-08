@@ -51,6 +51,16 @@
 	        and val = #{val,jdbcType=VARCHAR}
   </update>
 
+    <update id="updateTimeSwtich" >
+        update
+            t_device_schedule_job
+        set
+            job_status = #{onoff,jdbcType=INTEGER}
+	    where
+	        devid = #{devid,jdbcType=VARCHAR}
+	        and itemid = #{itemid,jdbcType=VARCHAR}
+  </update>
+
     <select id="selectJobByFields" resultMap="BaseResultMap">
         SELECT
             <include refid="Base_Column_List"/>

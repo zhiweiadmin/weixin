@@ -407,6 +407,12 @@ define([
         var item_onoff = i + '_OnOff';
         var item_model = i + '_Model';
         var ext_temp = i + '_ExtTemp';
+        console.log(deviceInfos)
+        console.log(cur_item_data)
+        //风速 低速 中速 高速
+        var low = i + '_Lwinds';
+        var mid = i + '_Mwinds';
+        var high = i + '_Hwinds';
         _.each(deviceInfos, function (p) {
             //开关
             if (p.itemName.indexOf(item_onoff) != -1) {
@@ -426,8 +432,41 @@ define([
                 //遍历实时数据
                 device.tempVal = getItemValueByName(device.tempName);
             }
+            //低速
+            if (p.itemName.indexOf(low) != -1) {
+                device.lowName = p.itemName;
+                //遍历实时数据
+                device.lowVal = getItemValueByName(device.lowName);
+            }
+            //中速
+            if (p.itemName.indexOf(mid) != -1) {
+                device.midName = p.itemName;
+                //遍历实时数据
+                device.midVal = getItemValueByName(device.midName);
+            }
+            //高速
+            if (p.itemName.indexOf(high) != -1) {
+                device.highName = p.itemName;
+                //遍历实时数据
+                device.highVal = getItemValueByName(device.highName);
+            }
         })
+        //获取当前速度
+        device.speed = getSpeed(device);
         return device;
+    }
+
+    //获取当前速度
+    function getSpeed(device) {
+        var speed = '低速';
+        if (Number(device.highVal) == 1) {
+            speed = '高速';
+        } else if (Number(device.midVal) == 1) {
+            speed = '中速';
+        } else {
+            speed = '低速';
+        }
+        return speed;
     }
 
     //根据属性名获取对应的值
@@ -549,7 +588,7 @@ define([
                     }
                 }
             })
-        },5000);
+        }, 5000);
     }
 
     //获取某个项目的基本信息，比如东经北纬数值
@@ -1016,8 +1055,8 @@ define([
                     getValByKey('Sys_ExtTemp', function (res) {
                         $('#extTemp').html(res.val);
                     })
-                }else{
-                    refreshCurrentDataByProjectDelay(cur_projectId,function () {
+                } else {
+                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
                         console.log("刷新成功");
                     })
                 }
@@ -1034,8 +1073,8 @@ define([
                     getValByKey('Sys_ExtTemp', function (res) {
                         $('#extTemp').html(res.val);
                     })
-                }else{
-                    refreshCurrentDataByProjectDelay(cur_projectId,function () {
+                } else {
+                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
                         console.log("刷新成功");
                     })
                 }
@@ -1057,7 +1096,7 @@ define([
                 } else {
                     $("#cold_model").addClass("color_cold_active");
                     $("#hot_model").removeClass("color_hot_active");
-                    refreshCurrentDataByProjectDelay(cur_projectId,function () {
+                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
                         console.log("刷新成功");
                     })
                 }
@@ -1078,7 +1117,7 @@ define([
                 } else {
                     $("#hot_model").addClass("color_hot_active");
                     $("#cold_model").removeClass("color_cold_active");
-                    refreshCurrentDataByProjectDelay(cur_projectId,function () {
+                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
                         console.log("刷新成功");
                     })
                 }
@@ -1242,7 +1281,7 @@ define([
                 var child = preClass + "_child";
                 var circleId = "child" + deviceId;
                 //默认均为低速
-                var speed = "低速";
+                var speed = deviceObj.speed;
                 $(".swiper-wrapper").append(Layout.room_detail_basic_device(parent, child, model, modelImg, deviceObj.tempVal, deviceId, speed, name + i, deviceObj.tempName, deviceObj.onoffName, deviceObj.modelName, item_pre));
                 var size = $(".parent").width() * 0.8;
                 if (model === "制热") {
@@ -1634,7 +1673,18 @@ define([
                                         //关机时间
                                         $("#close_time_t").html(time);
                                     }
-
+                                }
+                                //取第一个的定时器的状态
+                                var onoff=Number(res.data[0].jobStatus);
+                                if(onoff===1){
+                                    //开机
+                                    $("#time_switch").removeClass("on");
+                                    $("#time_switch").addClass("on");
+                                    $("#time_switch").attr("src", "../assets/image/img/switch_on_full.png");
+                                }else{
+                                    //关机
+                                    $("#time_switch").removeClass("on");
+                                    $("#time_switch").attr("src", "../assets/image/img/switch_off_full.png");
                                 }
                             }
                             //关闭loading
@@ -1806,6 +1856,18 @@ define([
                                     $("#close_time_t").html(time);
                                 }
                             }
+                            //取第一个的定时器的状态
+                            var onoff=Number(res.data[0].jobStatus);
+                            if(onoff===1){
+                                //开机
+                                $("#time_switch").removeClass("on");
+                                $("#time_switch").addClass("on");
+                                $("#time_switch").attr("src", "../assets/image/img/switch_on_full.png");
+                            }else{
+                                //关机
+                                $("#time_switch").removeClass("on");
+                                $("#time_switch").attr("src", "../assets/image/img/switch_off_full.png");
+                            }
                         }
                         //关闭loading
                         layer.close(loading);
@@ -1816,17 +1878,6 @@ define([
 
         })
 
-
-        //定时开关的switch
-        $("#main").off('tap', '#time_switch').on('tap', '#time_switch', function (e) {
-            if ($(this).hasClass("on")) {
-                $(this).removeClass("on")
-                $(this).attr("src", "../assets/image/img/switch_off_full.png");
-            } else {
-                $(this).addClass("on")
-                $(this).attr("src", "../assets/image/img/switch_on_full.png");
-            }
-        })
 
         //权限控制的开关
         $("#main").off('tap', '#control_role_switch').on('tap', '#control_role_switch', function (e) {
@@ -1861,9 +1912,8 @@ define([
                 $(this).attr("src", "../assets/image/img/switch_on_full.png");
             }
         })
-
         //开机时间的业务代码控制
-        var onflag = 0, offflag = 0, timeOn, timeOff;
+        var onflag = 0, offflag = 0, timeOn, timeOff, switchflag = 0,timeSwitch;
 
         //开机时间的后台处理
         function addDeviceJobServiceOpen(token, devid, val, itemid, startUpTime, onoff) {
@@ -1925,6 +1975,87 @@ define([
             })
         }
 
+        //定时开关是否开启或关闭
+        function addDeviceJobServiceSwtich(devid, itemid, onoff) {
+            $.ajax({
+                type: 'get',
+                url: '/device/timeSwtich',
+                data: {
+                    devid: devid,
+                    itemid: itemid,
+                    onoff: onoff
+                },
+                beforeSend: function () {
+                    //发送前置为状态1
+                    switchflag = 1;
+                },
+                success: function (res) {
+                    //服务端结束处理后，重置状态
+                    switchflag = 0;
+                    console.log(res);
+                },
+                error: function (err) {
+                    //服务端结束处理后，重置状态
+                    switchflag = 0;
+                    console.error(err);
+                }
+            })
+        }
+
+        //定时开关的switch 0 关机 1 开机
+        $("#main").off('tap', '#time_switch').on('tap', '#time_switch', function (e) {
+            if ($(this).hasClass("on")) {
+                //判断是否有itemname属性 如果有 说明是房控进来的
+                var itemname = $(this).attr('itemname');
+                if (itemname === 'undefined' | itemname === undefined) {
+                    itemname = 'Sys_RunSet';
+                }
+                getValByKey(itemname, function (item) {
+                    var devid = item.devid;
+                    var itemid = item.itemid;
+                    //发送前判断业务代码状态
+                    if (switchflag === 0) {
+                        //还没发送业务请求，先清空，再请求
+                        clearTimeout(timeSwitch);
+                        timeSwitch = setTimeout(function () {
+                            addDeviceJobServiceSwtich(devid, itemid, 0)
+                        }, 3000);
+                    } else {
+                        //已经发送业务请求，将用户当前改动请求后台
+                        timeSwitch = setTimeout(function () {
+                            addDeviceJobServiceSwtich(devid, itemid, 0)
+                        }, 3000);
+                    }
+                })
+                $(this).removeClass("on")
+                $(this).attr("src", "../assets/image/img/switch_off_full.png");
+            } else {
+                var itemname = $(this).attr('itemname');
+                if (itemname === 'undefined' | itemname === undefined) {
+                    itemname = 'Sys_RunSet';
+                }
+                getValByKey(itemname, function (item) {
+                    var devid = item.devid;
+                    var itemid = item.itemid;
+                    //发送前判断业务代码状态
+                    if (switchflag === 0) {
+                        //还没发送业务请求，先清空，再请求
+                        clearTimeout(timeSwitch);
+                        timeSwitch = setTimeout(function () {
+                            addDeviceJobServiceSwtich(devid, itemid, 1)
+                        }, 3000);
+                    } else {
+                        //已经发送业务请求，将用户当前改动请求后台
+                        timeSwitch = setTimeout(function () {
+                            addDeviceJobServiceSwtich(devid, itemid, 1)
+                        }, 3000);
+                    }
+                })
+                $(this).addClass("on")
+                $(this).attr("src", "../assets/image/img/switch_on_full.png");
+            }
+        })
+
         $("#main").off('tap', '#open_time_t,#open_time_i').on('tap', '#open_time_t,#open_time_i', function (e) {
             $("#open_time_t,#open_time_i").mobiscroll().time({
                 theme: 'mobiscroll',
@@ -1949,7 +2080,6 @@ define([
                     if (itemname === 'undefined' | itemname === undefined) {
                         itemname = 'Sys_RunSet';
                     }
-
                     getValByKey(itemname, function (item) {
                         var devid = item.devid;
                         var itemid = item.itemid;

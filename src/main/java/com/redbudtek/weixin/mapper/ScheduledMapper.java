@@ -2,6 +2,7 @@ package com.redbudtek.weixin.mapper;
 
 import com.redbudtek.weixin.model.JobEntity;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,4 +18,5 @@ public interface ScheduledMapper {
 
     List<JobEntity> selectJobByFields(Map<String,Object> param);
 
+    void updateTimeSwtich(@Param("devid")String devid, @Param("itemid") String itemid, @Param("onoff")Integer onoff);
 }

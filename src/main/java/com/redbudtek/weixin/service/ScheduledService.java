@@ -48,4 +48,7 @@ public class ScheduledService {
         return false;
     }
 
+    public void updateTimeSwtich(String devid, String itemid, Integer onoff) {
+        scheduledMapper.updateTimeSwtich(devid,itemid,onoff);
+    }
 }
