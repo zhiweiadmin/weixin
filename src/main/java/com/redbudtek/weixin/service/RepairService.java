@@ -58,10 +58,10 @@ public class RepairService {
         StringBuffer msg = new StringBuffer();
         for(ProjectRepairRecord repairRecord : recordList){
             if(repairRecord.getUserType() == 0){
-                String itemMsg = "<span style='color:blue'>"+repairRecord.getMsg()+"</span><br/>";
+                String itemMsg = "<span style='color:blue;word-wrap: break-word;word-break: break-all;overflow: hidden;'>我："+repairRecord.getMsg()+"</span><br/>";
                 msg.append(itemMsg);
             }else{
-                String itemMsg = "<span style='color:red'>"+repairRecord.getMsg()+"</span><br/>";
+                String itemMsg = "<span style='color:red;word-wrap: break-word;word-break: break-all;overflow: hidden;'>客服："+repairRecord.getMsg()+"</span><br/>";
                 msg.append(itemMsg);
             }
         }

@@ -252,16 +252,16 @@ define([
         })
     }
 
-    var getUserProjectInfo = function(){
+    var getUserProjectInfo = function () {
         ToolBox.ajax({
             type: 'get',
             url: 'rolePermission/getPermission',
-            data:{
-                token:ToolBox.getCookie('token'),
-                projectID:cur_projectId
+            data: {
+                token: ToolBox.getCookie('token'),
+                projectID: cur_projectId
             },
-            success: function(res){
-                console.log('getUserInfo'+res);
+            success: function (res) {
+                console.log('getUserInfo' + res);
             }
         });
     };
@@ -980,37 +980,76 @@ define([
         // })
 
         //绑定设定温度的增减事件
-        $("#main").off('tap', "#minus_temp").on('tap', '#minus_temp', function (e) {
-            var temp = Number($("#temNum").html());
-            $("#temNum").html(temp - 1);
-        })
 
-        $("#main").off('tap', "#add_temp").on('tap', '#add_temp', function (e) {
-            var temp = Number($("#temNum").html());
-            $("#temNum").html(temp + 1);
-        })
-
-        //设定模式的动态模式
-        $("#main").off('tap', "#cold_model").on('tap', '#cold_model', function (e) {
-            $(this).addClass("color_cold_active");
-            $("#hot_model").removeClass("color_hot_active");
-            change_mode(0, null, function (res) {
+        //点击＋
+        $('#main').off('tap', '#add_temp').on('tap', '#add_temp', function (e) {
+            var loading = layer.load(2, {shade: [0.5, '#fff']});
+            change_mode_time(5, cur_sys_ext_temp, function (res) {
+                //关闭loading
+                layer.close(loading);
                 if (res != 'success') {
-                    alert('控制模式失败!')
-                    $("#hot_model").addClass("color_hot_active");
-                    $("#cold_model").removeClass("color_cold_active");
+                    alert('控制失败!');
+                    getValByKey('Sys_ExtTemp', function (res) {
+                        $('#extTemp').html(res.val);
+                    })
+                } else {
+                    cur_sys_ext_temp = parseInt(cur_sys_ext_temp) + 1;
+                    $('#extTemp').html(cur_sys_ext_temp);
                 }
             })
         })
 
-        $("#main").off('tap', "#hot_model").on('tap', '#hot_model', function (e) {
-            $(this).addClass("color_hot_active");
-            $("#cold_model").removeClass("color_cold_active");
-            change_mode(1, null, function (res) {
+        //点击减号
+        $('#main').off('tap', '#minus_temp').on('tap', '#minus_temp', function (e) {
+            var loading = layer.load(2, {shade: [0.5, '#fff']});
+            change_mode_time(6, cur_sys_ext_temp, function (res) {
+                //关闭loading
+                layer.close(loading);
                 if (res != 'success') {
+                    alert('控制失败!');
+                    getValByKey('Sys_ExtTemp', function (res) {
+                        $('#extTemp').html(res.val);
+                    })
+                } else {
+                    cur_sys_ext_temp = parseInt(cur_sys_ext_temp) - 1;
+                    $('#extTemp').html(cur_sys_ext_temp);
+                }
+            })
+        })
+
+
+        //设定模式的动态模式
+        $("#main").off('tap', "#cold_model").on('tap', '#cold_model', function (e) {
+            //开启loading
+            var loading = layer.load(2, {shade: [0.5, '#fff']});
+            change_mode(0, null, function (res) {
+                //关闭loading
+                layer.close(loading);
+                if (res !== 'success') {
+                    alert('控制模式失败!')
+                    $("#hot_model").addClass("color_hot_active");
+                    $("#cold_model").removeClass("color_cold_active");
+                } else {
+                    $("#cold_model").addClass("color_cold_active");
+                    $("#hot_model").removeClass("color_hot_active");
+                }
+            })
+        })
+
+
+        $("#main").off('tap', "#hot_model").on('tap', '#hot_model', function (e) {
+            //开启loading
+            var loading = layer.load(2, {shade: [0.5, '#fff']});
+            change_mode(1, null, function (res) {
+                //关闭loading
+                layer.close(loading);
+                if (res !== 'success') {
                     alert('控制模式失败!')
                     $('#hot_model').removeClass("color_hot_active");
                     $("#cold_model").addClass("color_cold_active");
+                } else {
+                    $("#hot_model").addClass("color_hot_active");
+                    $("#cold_model").removeClass("color_cold_active");
                 }
             })
         })
@@ -1349,8 +1388,8 @@ define([
                     });
                 })
             } else {
-                //singleAlter("Constant-warn-close-msg")
-                alert("已关机，请开机后操作")
+                singleAlter("Constant-warn-close-msg")
+                // alert("已关机，请开机后操作")
             }
         })
         //温度加
@@ -1377,8 +1416,8 @@ define([
                     });
                 })
             } else {
-                //singleAlter("Constant-warn-close-msg");
-                alert("已关机，请开机后操作")
+                singleAlter("Constant-warn-close-msg");
+                // alert("已关机，请开机后操作")
             }
         })
         //装置模式
@@ -1968,29 +2007,36 @@ define([
                 singleAlter("Constant-account-describe-msg")
                 return;
             }
+            var loading;
             $.ajax({
                 type: "POST",
                 url: "/device/addProjectRepair",
-                data:JSON.stringify({
-                    projectId:global_projectId,
-                    weixinId:ToolBox.getCookie("openId"),
-                    phone:'15961757187',
-                    userName:'蒋智伟',
-                    reason:reason,
-                    repairDesc:describe
+                data: JSON.stringify({
+                    projectId: global_projectId,
+                    weixinId: ToolBox.getCookie("openId"),
+                    phone: '15961757187',
+                    userName: '蒋智伟',
+                    reason: reason,
+                    repairDesc: describe
                 }),
-                contentType:'application/json',
-                dataType:'json',
-                success: function(res){
-                    if(res.status == 100){
+                beforeSend: function () {
+                    loading = layer.load(2, {shade: [0.5, '#fff']});
+                },
+                contentType: 'application/json',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status == 100) {
                         //成功报修
-                        singleAlterNew("报修成功");
+                        singleAlter("Constant-account-repair-success-msg")
                         $("#repair_reason").val('');
                         $("#repair_describe").val('');
-                    }else{
+                    } else {
                         //报修失败
-                        singleAlterNew("报修失败")
+                        singleAlter("Constant-account-repair-fail-msg")
                     }
+                    //关闭loading
+                    layer.close(loading);
+
                 }
             })
         })
@@ -1999,35 +2045,40 @@ define([
         $("#main").off('tap', '.repair_log').on('tap', '.repair_log', function (e) {
             //首先获取角色
             //根据角色获取报修记录，此次报修记录将用户名、报修时间、报修原因、报修内容、聊天记录、维修记录的索引
-            var repairList=[];
+            //初始化
+            $("#main").html(Layout.basic_repair("报修记录", "repair_list_back"))
+            var repairList = [];
+            var loading;
             $.ajax({
-                type:'get',
-                url:'/device/getUserProjectRepairs',
-                data:{
-                    openId:ToolBox.getCookie("openId"),
-                    projectId:global_projectId
+                type: 'get',
+                url: '/device/getUserProjectRepairs',
+                data: {
+                    openId: ToolBox.getCookie("openId"),
+                    projectId: global_projectId
                 },
-                dataType:'json',
-                success:function (res) {
-                    _.each(res.repairList,function (p) {
+                beforeSend: function () {
+                    loading = layer.load(2, {shade: [0.5, '#fff']});
+                },
+                dataType: 'json',
+                success: function (res) {
+                    _.each(res.repairList, function (p) {
                         var record = {
-                            reason:p.reason,
-                            repairId:p.repairId
+                            reason: p.reason,
+                            repairId: p.repairId
                         }
                         repairList.push(record);
                     })
-                    if(repairList.length>0){
-                        _.each(res.repairList,function (p) {
-                            $(".log_list").prepend(Layout.repair_list(p.reason,p.repairId))
+                    if (repairList.length > 0) {
+                        _.each(res.repairList, function (p) {
+                            $(".log_list").prepend(Layout.repair_list(p.reason, p.repairId))
                         })
                     }
-
+                    //关闭loading
+                    layer.close(loading);
                 }
             })
-            //初始化
-            $("#main").html(Layout.basic_repair("报修记录","repair_list_back"))
             //内容框给最小高度
-            $(".log_content").css("min-height", document.documentElement.clientHeight-70)
+            $(".log_content").css("min-height", document.documentElement.clientHeight - 70)
             //判断是否有维修记录
             $(".log_list").html("");
 
@@ -2057,19 +2108,19 @@ define([
             var repairId = $(this).attr('id');
 
             $.ajax({
-                type:'get',
-                url:'/device/getRepairRecord',
-                data:{
-                    repairId:repairId
+                type: 'get',
+                url: '/device/getRepairRecord',
+                data: {
+                    repairId: repairId
                 },
-                dataType:'json',
+                dataType: 'json',
                 contentType: "application/json;charset=utf-8",
-                success:function (res) {
+                success: function (res) {
                     console.log(res);
                     //初始化
-                    $("#main").html(Layout.basic_repair("报修内容","repair_content_back"))
+                    $("#main").html(Layout.basic_repair("报修内容", "repair_content_back"))
                     $(".log_list").html("");
-                    $(".log_list").prepend(Layout.repair_content(repairId,res.username,res.phone,res.time,res.desc,res.detail,res.msg))
+                    $(".log_list").prepend(Layout.repair_content(repairId, res.username, res.phone, res.time, res.desc, res.detail, res.msg))
                 }
             })
 
@@ -2079,37 +2130,37 @@ define([
         //报修内容点击返回到报修记录页面
         $("#main").off('tap', '.repair_content_back').on('tap', '.repair_content_back', function (e) {
             setTimeout(function () {
-                var repairList=[];
+                var repairList = [];
                 $.ajax({
-                    type:'get',
-                    url:'/device/getUserProjectRepairs',
-                    data:{
-                        openId:ToolBox.getCookie("openId"),
-                        projectId:global_projectId
+                    type: 'get',
+                    url: '/device/getUserProjectRepairs',
+                    data: {
+                        openId: ToolBox.getCookie("openId"),
+                        projectId: global_projectId
                     },
-                    dataType:'json',
-                    success:function (res) {
-                        _.each(res.repairList,function (p) {
+                    dataType: 'json',
+                    success: function (res) {
+                        _.each(res.repairList, function (p) {
                             var record = {
-                                reason:p.reason,
-                                repairId:p.repairId
+                                reason: p.reason,
+                                repairId: p.repairId
                             }
                             repairList.push(record);
                         })
-                        if(repairList.length>0){
-                            _.each(res.repairList,function (p) {
-                                $(".log_list").prepend(Layout.repair_list(p.reason,p.repairId))
+                        if (repairList.length > 0) {
+                            _.each(res.repairList, function (p) {
+                                $(".log_list").prepend(Layout.repair_list(p.reason, p.repairId))
                             })
                         }
                     }
                 })
                 //初始化
-                $("#main").html(Layout.basic_repair("报修记录","repair_list_back"))
+                $("#main").html(Layout.basic_repair("报修记录", "repair_list_back"))
                 //内容框给最小高度
-                $(".log_content").css("min-height", document.documentElement.clientHeight-70)
+                $(".log_content").css("min-height", document.documentElement.clientHeight - 70)
                 //判断是否有维修记录
                 $(".log_list").html("");
-            },200);
+            }, 200);
         })
 
         //报修内容点击提交
@@ -2118,34 +2169,34 @@ define([
             var reply = $("#reply").val();
             setTimeout(function () {
                 $.ajax({
-                    type:'post',
-                    url:'/device/addRepairRecord',
-                    data:JSON.stringify({
-                        weixinId:ToolBox.getCookie('openId'),
-                        userType:0,
-                        repairId:repairId,
-                        msg:reply
+                    type: 'post',
+                    url: '/device/addRepairRecord',
+                    data: JSON.stringify({
+                        weixinId: ToolBox.getCookie('openId'),
+                        userType: 0,
+                        repairId: repairId,
+                        msg: reply
                     }),
-                    contentType:'application/json',
-                    dataType:'json',
-                    success:function (res) {
-                        if(res.status == 100){
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    success: function (res) {
+                        if (res.status == 100) {
                             $.ajax({
-                                type:'get',
-                                url:'/device/getRepairRecord',
-                                data:{
-                                    repairId:repairId
+                                type: 'get',
+                                url: '/device/getRepairRecord',
+                                data: {
+                                    repairId: repairId
                                 },
-                                dataType:'json',
+                                dataType: 'json',
                                 contentType: "application/json;charset=utf-8",
-                                success:function (res) {
+                                success: function (res) {
                                     $("#detail").html(res.msg);
                                 }
                             })
                         }
                     }
                 })
-            },200);
+            }, 200);
         })
 
 
@@ -2156,35 +2207,6 @@ define([
 
         //-----------------------高级end-----------------------------
 
-        //点击＋
-        $('#main').off('tap', '#add_temp').on('tap', '#add_temp', function (e) {
-            console.log("点了一次+号");
-            cur_sys_ext_temp = parseInt(cur_sys_ext_temp) + 1;
-            $('#extTemp').html(cur_sys_ext_temp);
-            change_mode_time(5, cur_sys_ext_temp, function (res) {
-                if (res != 'success') {
-                    alert('控制失败!');
-                    getValByKey('Sys_ExtTemp', function (res) {
-                        $('#extTemp').html(res.val);
-                    })
-                }
-            })
-        })
-
-        //点击减号
-        $('#main').off('tap', '#minus_temp').on('tap', '#minus_temp', function (e) {
-            console.log("点了一次-号");
-            cur_sys_ext_temp = parseInt(cur_sys_ext_temp) - 1;
-            $('#extTemp').html(cur_sys_ext_temp);
-            change_mode_time(6, cur_sys_ext_temp, function (res) {
-                if (res != 'success') {
-                    alert('控制失败!');
-                    getValByKey('Sys_ExtTemp', function (res) {
-                        $('#extTemp').html(res.val);
-                    })
-                }
-            })
-        })
 
         //设置开关机
         $('#main').off('tap', '#configPowerStatus').on('tap', '#configPowerStatus', function (e) {
@@ -2366,13 +2388,6 @@ define([
         ToolBox.warn_open({
             $container: $('#others'),
             msg: ToolBox.getConstant(msg)
-        })
-    }
-
-    function singleAlterNew(msg) {
-        ToolBox.warn_open({
-            $container: $('#others'),
-            msg: msg
         })
     }
 
