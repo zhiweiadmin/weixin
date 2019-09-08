@@ -93,8 +93,8 @@ define([
     }
 
     //维修内容
-    var repair_content=function (username,mobile,time,repairContent,detail) {
-        return template({'tempId':'repair_content','username':username,'mobile':mobile,'time':time,'repairContent':repairContent,'detail':detail});
+    var repair_content=function (repairId,username,mobile,time,repairContent,detail,msg) {
+        return template({'tempId':'repair_content','repairId':repairId,'username':username,'mobile':mobile,'time':time,'repairContent':repairContent,'detail':detail,'msg':msg});
     }
 
     var contact_us=function () {

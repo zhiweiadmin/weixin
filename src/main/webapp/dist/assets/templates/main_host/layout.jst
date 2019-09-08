@@ -636,6 +636,7 @@ else if(tempId=='repair_list'){%>
 </div>
 <%}
 else if(tempId=='repair_content'){%>
+                     <span id="repairId" hidden><%=repairId%></span>
                      <div class="col-xs-4 padr0 padl35 mt25 mb5"  >用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户:</div>
                      <div class="col-xs-8 padl15 mt25 mb5"  ><%=username%></div>
                      <div class="col-xs-12">
@@ -660,13 +661,13 @@ else if(tempId=='repair_content'){%>
                          详情
                      </div>
                      <div class="col-xs-12 mt10 padl35 padr20 " >
-                        <textarea class="width100" style="border:1px solid grey;height: 110px"></textarea>
+                        <div class="width100" style="border:1px solid grey;height: 110px" id="detail"><%=msg%></div>
                      </div>
                      <div class="col-xs-12 mt10 padl35" >
                          回复
                      </div>
                      <div class="col-xs-12 mt10 padl35 padr20" >
-                        <textarea class="width100" style="border:1px solid grey;height: 110px"></textarea>
+                        <textarea class="width100" style="border:1px solid grey;height: 110px" id="reply"></textarea>
                      </div>
                      <div class="col-xs-12 textCenter padb10">
                          <button type="button" id="repaire_content_submit" class="btn mt10" >

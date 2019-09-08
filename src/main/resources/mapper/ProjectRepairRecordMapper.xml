@@ -38,8 +38,8 @@
       weixin_id, msg, create_dttm, 
       update_dttm)
     values (nextval('weixin_record_id'), #{repairId,jdbcType=INTEGER}, #{userType,jdbcType=INTEGER},
-      #{weixinId,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR}, #{createDttm,jdbcType=TIMESTAMP}, 
-      #{updateDttm,jdbcType=TIMESTAMP})
+      #{weixinId,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR}, now(),
+      now())
   </insert>
   <insert id="insertSelective" parameterType="com.redbudtek.weixin.model.ProjectRepairRecord">
     insert into t_project_repair_record

@@ -30,13 +30,21 @@ public class RepairService {
      * @param weixinId
      * @return
      */
-    public JSONObject getUserRepairs(String weixinId){
+    public JSONObject getUserRepairs(String weixinId,String projectId){
         Map<String,Object> param = new HashMap<String,Object>();
         param.put("weixinId",weixinId);
+        param.put("projectId",projectId);
         List<ProjectRepair> repairList = projectRepairMapper.selectByFields(param);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("repairList",repairList);
         return jsonObject;
+    }
+
+    /**
+     * 回复功能
+     */
+    public void addRepairRecord(ProjectRepairRecord repairRecord){
+        projectRepairRecordMapper.insert(repairRecord);
     }
 
     /**
@@ -47,7 +55,23 @@ public class RepairService {
     public JSONObject getRepairRecord(Integer repairId){
         List<ProjectRepairRecord> recordList = projectRepairRecordMapper.selectByRepairId(repairId);
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("recordList",recordList);
+        StringBuffer msg = new StringBuffer();
+        for(ProjectRepairRecord repairRecord : recordList){
+            if(repairRecord.getUserType() == 0){
+                String itemMsg = "<span style='color:blue'>"+repairRecord.getMsg()+"</span><br/>";
+                msg.append(itemMsg);
+            }else{
+                String itemMsg = "<span style='color:red'>"+repairRecord.getMsg()+"</span><br/>";
+                msg.append(itemMsg);
+            }
+        }
+        jsonObject.put("msg",msg);
+        jsonObject.put("phone","15961757187");
+        jsonObject.put("username","张三");
+        jsonObject.put("reason","原因");
+        jsonObject.put("desc","这里是内容");
+        jsonObject.put("detail","detail");
+        jsonObject.put("time","2019-01-01 12:00:03");
         return jsonObject;
     }
 

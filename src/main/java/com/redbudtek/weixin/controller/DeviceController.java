@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.redbudtek.weixin.model.JobEntity;
 import com.redbudtek.weixin.model.ProjectRepair;
+import com.redbudtek.weixin.model.ProjectRepairRecord;
 import com.redbudtek.weixin.quartz.QuartzManager;
 import com.redbudtek.weixin.service.DeviceService;
 import com.redbudtek.weixin.service.RepairService;
@@ -172,13 +173,16 @@ public class DeviceController {
     @ResponseBody
     @RequestMapping(value = "addProjectRepair",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
     public String addProjectRepair(@RequestBody String payLoad){
+        JSONObject result = new JSONObject();
         try{
             ProjectRepair projectRepair = JSONObject.parseObject(payLoad,ProjectRepair.class);
             repairService.addRepair(projectRepair);
-            return "success";
+            result.put("status",100);
+            return result.toJSONString();
         }catch (Exception e){
             logger.error("addProjectRepair",e);
-            return "fail";
+            result.put("status",200);
+            return result.toJSONString();
         }
     }
 
@@ -188,19 +192,36 @@ public class DeviceController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "getUserRepairs", method = RequestMethod.GET)
-    public String getUserRepairs(@RequestParam String openId){
-        JSONObject jsonObject = repairService.getUserRepairs(openId);
-        if(jsonObject == null){
-            jsonObject = new JSONObject();
-        }
+    @RequestMapping(value = "getUserProjectRepairs", method = RequestMethod.GET,produces = "application/json;charset=UTF-8")
+    public String getUserProjectRepairs(@RequestParam String openId,@RequestParam String projectId){
+        JSONObject jsonObject = repairService.getUserRepairs(openId,projectId);
         return jsonObject.toJSONString();
     }
 
+    /**
+     * 回复功能
+     * @param payLoad
+     * @return
+     */
     @ResponseBody
-    @RequestMapping(value = "getRepairRecord", method = RequestMethod.GET)
-    public String getRepairRecord(@RequestParam Integer repairdId){
-        JSONObject jsonObject = repairService.getRepairRecord(repairdId);
+    @RequestMapping(value = "addRepairRecord", method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    public String addRepairRecord(@RequestBody String payLoad){
+        JSONObject result = new JSONObject();
+        try{
+            ProjectRepairRecord record = JSONObject.parseObject(payLoad,ProjectRepairRecord.class);
+            repairService.addRepairRecord(record);
+            result.put("status",100);
+        }catch (Exception e){
+            logger.error("addRepairRecord error",e);
+            result.put("status",200);
+        }
+        return result.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "getRepairRecord", method = RequestMethod.GET,produces = "application/json;charset=UTF-8")
+    public String getRepairRecord(@RequestParam Integer repairId){
+        JSONObject jsonObject = repairService.getRepairRecord(repairId);
         return jsonObject.toJSONString();
     }
 

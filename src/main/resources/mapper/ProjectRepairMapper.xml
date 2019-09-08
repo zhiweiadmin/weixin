@@ -30,7 +30,9 @@
         <if test="weixinId != null">
           and weixin_id = #{weixinId,jdbcType=VARCHAR}
         </if>
-
+        <if test="projectId != null">
+          and project_id = #{projectId,jdbcType=VARCHAR}
+        </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from t_project_repair
@@ -43,7 +45,7 @@
       )
     values (nextval('weixin_repair_id'), #{projectId,jdbcType=VARCHAR}, #{weixinId,jdbcType=VARCHAR},
       #{phone,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, #{repairDesc,jdbcType=VARCHAR},
-      #{createDttm,jdbcType=TIMESTAMP}, #{updateDttm,jdbcType=TIMESTAMP}
+      now(), now()
       )
   </insert>
 

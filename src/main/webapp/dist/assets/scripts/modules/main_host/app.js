@@ -252,6 +252,20 @@ define([
         })
     }
 
+    var getUserProjectInfo = function(){
+        ToolBox.ajax({
+            type: 'get',
+            url: 'rolePermission/getPermission',
+            data:{
+                token:ToolBox.getCookie('token'),
+                projectID:cur_projectId
+            },
+            success: function(res){
+                console.log('getUserInfo'+res);
+            }
+        });
+    };
+
     /*frame*/
     var layout_init = function () {
         //取消modal的遮罩
@@ -300,7 +314,7 @@ define([
         //     locationTimeJob();
         //     is_req_weather = false;
         // }
-
+        getUserProjectInfo();
     };
 
     //获取项目所在地的一些信息，包括天气温度等等
@@ -1335,7 +1349,8 @@ define([
                     });
                 })
             } else {
-                singleAlter("Constant-warn-close-msg")
+                //singleAlter("Constant-warn-close-msg")
+                alert("已关机，请开机后操作")
             }
         })
         //温度加
@@ -1362,7 +1377,8 @@ define([
                     });
                 })
             } else {
-                singleAlter("Constant-warn-close-msg");
+                //singleAlter("Constant-warn-close-msg");
+                alert("已关机，请开机后操作")
             }
         })
         //装置模式
@@ -1943,9 +1959,7 @@ define([
         //提交我要报修
         $('#main').off('tap', '#repair_submit').on('tap', '#repair_submit', function (e) {
             var reason = $("#repair_reason").val().replace(/(^\s*)|(\s*$)/g, '');
-            ;
             var describe = $("#repair_describe").val().replace(/(^\s*)|(\s*$)/g, '');
-            ;
             if (reason == "") {
                 singleAlter("Constant-account-reason-msg")
                 return;
@@ -1956,15 +1970,27 @@ define([
             }
             $.ajax({
                 type: "POST",
-                url: "",
-                dataType: "json",
-                data: {
-                },
-                success: function (data) {
-                    //成功报修
-                    singleAlter("Constant-account-success-msg")
-                    //报修失败
-                    singleAlter("Constant-account-fail-msg")
+                url: "/device/addProjectRepair",
+                data:JSON.stringify({
+                    projectId:global_projectId,
+                    weixinId:ToolBox.getCookie("openId"),
+                    phone:'15961757187',
+                    userName:'蒋智伟',
+                    reason:reason,
+                    repairDesc:describe
+                }),
+                contentType:'application/json',
+                dataType:'json',
+                success: function(res){
+                    if(res.status == 100){
+                        //成功报修
+                        singleAlterNew("报修成功");
+                        $("#repair_reason").val('');
+                        $("#repair_describe").val('');
+                    }else{
+                        //报修失败
+                        singleAlterNew("报修失败")
+                    }
                 }
             })
         })
@@ -1972,30 +1998,39 @@ define([
         //报修记录，重新绘制content元素
         $("#main").off('tap', '.repair_log').on('tap', '.repair_log', function (e) {
             //首先获取角色
-            //todo...
             //根据角色获取报修记录，此次报修记录将用户名、报修时间、报修原因、报修内容、聊天记录、维修记录的索引
             var repairList=[];
-            var repair1={};
-            repair1.reason="无法开机";
-            repair1.repairId="101";
-            repairList.push(repair1);
-            var repair2={};
-            repair2.reason="报故障";
-            repair2.repairId="102";
-            repairList.push(repair2);
+            $.ajax({
+                type:'get',
+                url:'/device/getUserProjectRepairs',
+                data:{
+                    openId:ToolBox.getCookie("openId"),
+                    projectId:global_projectId
+                },
+                dataType:'json',
+                success:function (res) {
+                    _.each(res.repairList,function (p) {
+                        var record = {
+                            reason:p.reason,
+                            repairId:p.repairId
+                        }
+                        repairList.push(record);
+                    })
+                    if(repairList.length>0){
+                        _.each(res.repairList,function (p) {
+                            $(".log_list").prepend(Layout.repair_list(p.reason,p.repairId))
+                        })
+                    }
+
+                }
+            })
             //初始化
             $("#main").html(Layout.basic_repair("报修记录","repair_list_back"))
             //内容框给最小高度
             $(".log_content").css("min-height", document.documentElement.clientHeight-70)
             //判断是否有维修记录
             $(".log_list").html("");
-            if(repairList.length>0){
-               for(var item=0;item<repairList.length;item++){
-                   $(".log_list").prepend(Layout.repair_list(repairList[item].reason,repairList[item].repairId))
-               }
-            }else{
 
-            }
 
         })
 
@@ -2019,47 +2054,97 @@ define([
 
         //点击某维修记录
         $("#main").off('tap', '.repair_list_row').on('tap', '.repair_list_row', function (e) {
-            //根据用户openid/维修记录id去后台查找信息回显
-            var repairDetail={};
-            repairDetail.username="admin";
-            repairDetail.mobile="15151951758";
-            repairDetail.time="2019-05-12 12:35:56";
-            repairDetail.repairContent="不管咋样就是无法开机";
-            repairDetail.detail="";
-            //初始化
-            $("#main").html(Layout.basic_repair("报修内容","repair_content_back"))
-            $(".log_list").html("");
-            $(".log_list").prepend(Layout.repair_content(repairDetail.username,repairDetail.mobile,repairDetail.time,repairDetail.repairContent,repairDetail.detail))
+            var repairId = $(this).attr('id');
+
+            $.ajax({
+                type:'get',
+                url:'/device/getRepairRecord',
+                data:{
+                    repairId:repairId
+                },
+                dataType:'json',
+                contentType: "application/json;charset=utf-8",
+                success:function (res) {
+                    console.log(res);
+                    //初始化
+                    $("#main").html(Layout.basic_repair("报修内容","repair_content_back"))
+                    $(".log_list").html("");
+                    $(".log_list").prepend(Layout.repair_content(repairId,res.username,res.phone,res.time,res.desc,res.detail,res.msg))
+                }
+            })
+
+
         })
 
         //报修内容点击返回到报修记录页面
         $("#main").off('tap', '.repair_content_back').on('tap', '.repair_content_back', function (e) {
             setTimeout(function () {
-                //首先获取角色
-                //todo...
-                //根据角色获取报修记录，此次报修记录将用户名、报修时间、报修原因、报修内容、聊天记录、维修记录的索引
                 var repairList=[];
-                var repair1={};
-                repair1.reason="无法开机";
-                repair1.repairId="101";
-                repairList.push(repair1);
-                var repair2={};
-                repair2.reason="报故障";
-                repair2.repairId="102";
-                repairList.push(repair2);
+                $.ajax({
+                    type:'get',
+                    url:'/device/getUserProjectRepairs',
+                    data:{
+                        openId:ToolBox.getCookie("openId"),
+                        projectId:global_projectId
+                    },
+                    dataType:'json',
+                    success:function (res) {
+                        _.each(res.repairList,function (p) {
+                            var record = {
+                                reason:p.reason,
+                                repairId:p.repairId
+                            }
+                            repairList.push(record);
+                        })
+                        if(repairList.length>0){
+                            _.each(res.repairList,function (p) {
+                                $(".log_list").prepend(Layout.repair_list(p.reason,p.repairId))
+                            })
+                        }
+                    }
+                })
                 //初始化
                 $("#main").html(Layout.basic_repair("报修记录","repair_list_back"))
                 //内容框给最小高度
                 $(".log_content").css("min-height", document.documentElement.clientHeight-70)
                 //判断是否有维修记录
                 $(".log_list").html("");
-                if(repairList.length>0){
-                    for(var item=0;item<repairList.length;item++){
-                        $(".log_list").prepend(Layout.repair_list(repairList[item].reason,repairList[item].repairId))
-                    }
-                }else{
+            },200);
+        })
 
-                }
+        //报修内容点击提交
+        $("#main").off('tap', '#repaire_content_submit').on('tap', '#repaire_content_submit', function (e) {
+            var repairId = $("#repairId").html();
+            var reply = $("#reply").val();
+            setTimeout(function () {
+                $.ajax({
+                    type:'post',
+                    url:'/device/addRepairRecord',
+                    data:JSON.stringify({
+                        weixinId:ToolBox.getCookie('openId'),
+                        userType:0,
+                        repairId:repairId,
+                        msg:reply
+                    }),
+                    contentType:'application/json',
+                    dataType:'json',
+                    success:function (res) {
+                        if(res.status == 100){
+                            $.ajax({
+                                type:'get',
+                                url:'/device/getRepairRecord',
+                                data:{
+                                    repairId:repairId
+                                },
+                                dataType:'json',
+                                contentType: "application/json;charset=utf-8",
+                                success:function (res) {
+                                    $("#detail").html(res.msg);
+                                }
+                            })
+                        }
+                    }
+                })
             },200);
         })
 
@@ -2281,6 +2366,13 @@ define([
         ToolBox.warn_open({
             $container: $('#others'),
             msg: ToolBox.getConstant(msg)
+        })
+    }
+
+    function singleAlterNew(msg) {
+        ToolBox.warn_open({
+            $container: $('#others'),
+            msg: msg
         })
     }
 
