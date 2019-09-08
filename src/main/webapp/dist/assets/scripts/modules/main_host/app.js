@@ -688,10 +688,11 @@ define([
             window.clearTimeout(tempTimeJob);
         }
         tempTimeJob = setTimeout(function () {
-            console.log('总共点了:' + val + '次');
+            var loading = layer.load(2, {shade: [0.5, '#fff']});
             change_mode(mode, val, callback);
-            setTemp = 0;
-        }, 4000)
+            layer.close(loading);
+        }, 2000);
+
     }
 
     //改变选择模式
@@ -705,7 +706,7 @@ define([
     var change_cur_choice = function (mode, val, is_show, callback) {
         var m, r, e;
         _.each(cur_all_data, function (p) {
-            if (p.itemname == "Sys_ModelStus") {
+            if (p.itemname == "Sys_ModelSet") {
                 //运行模式
                 m = p;
             } else if (p.itemname == "Sys_RunStus") {
@@ -983,36 +984,36 @@ define([
 
         //点击＋
         $('#main').off('tap', '#add_temp').on('tap', '#add_temp', function (e) {
-            var loading = layer.load(2, {shade: [0.5, '#fff']});
+            cur_sys_ext_temp = parseInt(cur_sys_ext_temp) + 1;
+            $('#extTemp').html(cur_sys_ext_temp);
             change_mode_time(5, cur_sys_ext_temp, function (res) {
-                //关闭loading
-                layer.close(loading);
                 if (res != 'success') {
                     alert('控制失败!');
                     getValByKey('Sys_ExtTemp', function (res) {
                         $('#extTemp').html(res.val);
                     })
-                } else {
-                    cur_sys_ext_temp = parseInt(cur_sys_ext_temp) + 1;
-                    $('#extTemp').html(cur_sys_ext_temp);
+                }else{
+                    getCurrentDataByProject(cur_projectId,function () {
+                        console.log("刷新成功");
+                    })
                 }
             })
         })
 
         //点击减号
         $('#main').off('tap', '#minus_temp').on('tap', '#minus_temp', function (e) {
-            var loading = layer.load(2, {shade: [0.5, '#fff']});
+            cur_sys_ext_temp = parseInt(cur_sys_ext_temp) - 1;
+            $('#extTemp').html(cur_sys_ext_temp);
             change_mode_time(6, cur_sys_ext_temp, function (res) {
-                //关闭loading
-                layer.close(loading);
                 if (res != 'success') {
                     alert('控制失败!');
                     getValByKey('Sys_ExtTemp', function (res) {
                         $('#extTemp').html(res.val);
                     })
-                } else {
-                    cur_sys_ext_temp = parseInt(cur_sys_ext_temp) - 1;
-                    $('#extTemp').html(cur_sys_ext_temp);
+                }else{
+                    getCurrentDataByProject(cur_projectId,function () {
+                        console.log("刷新成功");
+                    })
                 }
             })
         })
@@ -1032,6 +1033,9 @@ define([
                 } else {
                     $("#cold_model").addClass("color_cold_active");
                     $("#hot_model").removeClass("color_hot_active");
+                    getCurrentDataByProject(cur_projectId,function () {
+                        console.log("刷新成功");
+                    })
                 }
             })
         })
@@ -1050,6 +1054,9 @@ define([
                 } else {
                     $("#hot_model").addClass("color_hot_active");
                     $("#cold_model").removeClass("color_cold_active");
+                    getCurrentDataByProject(cur_projectId,function () {
+                        console.log("刷新成功");
+                    })
                 }
             })
         })
