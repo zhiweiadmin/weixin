@@ -527,6 +527,30 @@ define([
         })
     }
 
+    /**
+     * 延迟2s刷新数据
+     * @param projectId
+     * @param cb
+     */
+    var refreshCurrentDataByProjectDelay = function (projectId, cb) {
+        var job = setTimeout(function () {
+            ToolBox.ajax({
+                type: 'get',
+                url: 'project/getProjectCurrentItemData',
+                data: {
+                    token: ToolBox.getCookie('token'),
+                    projectID: projectId
+                },
+                dataType: 'json',
+                success: function (res) {
+                    if (res && res.status === '100') {
+                        cur_item_data = res;
+                        cb(res);
+                    }
+                }
+            })
+        },5000);
+    }
 
     //获取某个项目的基本信息，比如东经北纬数值
     var getProjectInfo = function (projectId, callback) {
@@ -993,7 +1017,7 @@ define([
                         $('#extTemp').html(res.val);
                     })
                 }else{
-                    getCurrentDataByProject(cur_projectId,function () {
+                    refreshCurrentDataByProjectDelay(cur_projectId,function () {
                         console.log("刷新成功");
                     })
                 }
@@ -1011,7 +1035,7 @@ define([
                         $('#extTemp').html(res.val);
                     })
                 }else{
-                    getCurrentDataByProject(cur_projectId,function () {
+                    refreshCurrentDataByProjectDelay(cur_projectId,function () {
                         console.log("刷新成功");
                     })
                 }
@@ -1033,7 +1057,7 @@ define([
                 } else {
                     $("#cold_model").addClass("color_cold_active");
                     $("#hot_model").removeClass("color_hot_active");
-                    getCurrentDataByProject(cur_projectId,function () {
+                    refreshCurrentDataByProjectDelay(cur_projectId,function () {
                         console.log("刷新成功");
                     })
                 }
@@ -1054,7 +1078,7 @@ define([
                 } else {
                     $("#hot_model").addClass("color_hot_active");
                     $("#cold_model").removeClass("color_cold_active");
-                    getCurrentDataByProject(cur_projectId,function () {
+                    refreshCurrentDataByProjectDelay(cur_projectId,function () {
                         console.log("刷新成功");
                     })
                 }
@@ -1317,12 +1341,12 @@ define([
                         var loading = layer.load(2, {shade: [0.5, '#fff']});
                         send_control_new(item.devid, item.itemid, 0, false, function (res) {
                             renderClose(deviceId);
-                            //刷新数据
-                            getCurrentDataByProject(cur_projectId, function () {
-                                console.log("刷新数据成功")
-                            });
                             //关闭loading
                             layer.close(loading);
+                            //刷新数据
+                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                console.log("刷新数据成功")
+                            });
                             // if (res.status != "100") {
                             //     alert("控制失败");
                             // }else{
@@ -1348,12 +1372,13 @@ define([
                         var loading = layer.load(2, {shade: [0.5, '#fff']});
                         send_control_new(item.devid, item.itemid, 1, false, function (res) {
                             renderOpen(deviceId);
-                            //刷新数据
-                            getCurrentDataByProject(cur_projectId, function () {
-                                console.log("刷新数据成功")
-                            });
                             //关闭loading
                             layer.close(loading);
+                            //刷新数据
+                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                console.log("刷新数据成功")
+                            });
+
                             // if (res.status != "100") {
                             //     alert("控制失败");
                             // }else{
@@ -1390,7 +1415,7 @@ define([
                 var itemname = $(id).attr("itemname");
                 change_device_temp(itemname, tempNum, function () {
                     console.log('已经执行完操作了');
-                    getCurrentDataByProject(cur_projectId, function () {
+                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
                         console.log("刷新数据成功")
                     });
                 })
@@ -1418,7 +1443,7 @@ define([
                 var itemname = $(id).attr("itemname");
                 change_device_temp(itemname, tempNum, function () {
                     console.log('已经执行完操作了')
-                    getCurrentDataByProject(cur_projectId, function () {
+                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
                         console.log("刷新数据成功")
                     });
                 })
@@ -1428,7 +1453,7 @@ define([
             }
         })
         //装置模式
-        $("#main").off('tap', ".device_model").on('tap', '.device_model', function (e) {
+        $("#main").off('tap', ". ").on('tap', '.device_model', function (e) {
             var deviceId = $(this).attr("deviceId");
             if ($("#switch" + deviceId).hasClass("on")) {
                 var itemname_model = $(this).attr("itemname");
@@ -1457,7 +1482,7 @@ define([
                             if (res != "success") {
                                 alert("控制失败");
                             } else {
-                                getCurrentDataByProject(cur_projectId, function () {
+                                refreshCurrentDataByProjectDelay(cur_projectId, function () {
                                     console.log("刷新数据成功")
                                 });
                             }
@@ -1468,7 +1493,7 @@ define([
                     afterCallbackHot: function () {
                         $('#confirm-alert').modal('hide');
                         var loading = layer.load(2, {shade: [0.5, '#fff']});
-                        send_control_new(item.devid, item.itemid, 0, false, function (res) {
+                        send_control_new(item.devid, item.itemid, 1, false, function (res) {
                             //修改环形颜色和背景颜色
                             $('#child' + deviceId).circleProgress({
                                 fill: {
@@ -1485,7 +1510,7 @@ define([
                             if (res != "success") {
                                 alert("控制失败");
                             } else {
-                                getCurrentDataByProject(cur_projectId, function () {
+                                refreshCurrentDataByProjectDelay(cur_projectId, function () {
                                     console.log("刷新数据成功")
                                 });
                             }
@@ -1521,7 +1546,7 @@ define([
                                 if (res != "success") {
                                     alert("控制失败");
                                 } else {
-                                    getCurrentDataByProject(cur_projectId, function () {
+                                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
                                         console.log("刷新数据成功")
                                     });
                                 }
@@ -1534,7 +1559,7 @@ define([
                                 if (res != "success") {
                                     alert("控制失败");
                                 } else {
-                                    getCurrentDataByProject(cur_projectId, function () {
+                                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
                                         console.log("刷新数据成功")
                                     });
                                 }
@@ -1547,7 +1572,7 @@ define([
                                 if (res != "success") {
                                     alert("控制失败");
                                 } else {
-                                    getCurrentDataByProject(cur_projectId, function () {
+                                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
                                         console.log("刷新数据成功")
                                     });
                                 }
