@@ -261,7 +261,15 @@ define([
                 projectID: cur_projectId
             },
             success: function (res) {
-                console.log('getUserInfo' + res);
+                if(res.data.length > 0){
+                    var roleName = res.data[0].roleName;
+                    var roleId = res.data[0].role_id;
+                    ToolBox.setCookie('roleName', roleName, 1);
+                    ToolBox.setCookie('roleId', roleId, 1);
+                }else{
+                    ToolBox.setCookie('roleId', 1, 1);
+                }
+
             }
         });
     };
@@ -1744,7 +1752,14 @@ define([
             $("#host").removeClass("active")
             $("#control").removeClass("active")
             $(this).addClass("active")
-            $(".content").html(Layout.senior_mode())
+            var roleId = ToolBox.getCookie("roleId");
+            if(roleId != "2"){
+                $(".content").html(Layout.senior_mode())
+            }else{
+                $(".content").html(Layout.senior_mode_common())
+            }
+
+
         })
 
         //获取项目列表
@@ -1758,7 +1773,12 @@ define([
             $("#control").removeClass("active")
             $("#senior").addClass("active")
             setTimeout(function () {
-                $(".content").html(Layout.senior_mode())
+                var roleId = ToolBox.getCookie("roleId");
+                if(roleId != "2"){
+                    $(".content").html(Layout.senior_mode())
+                }else{
+                    $(".content").html(Layout.senior_mode_common())
+                }
             }, 100)
         })
 
@@ -1768,7 +1788,12 @@ define([
             $("#control").removeClass("active")
             $("#senior").addClass("active")
             setTimeout(function () {
-                $(".content").html(Layout.senior_mode())
+                var roleId = ToolBox.getCookie("roleId");
+                if(roleId != "2"){
+                    $(".content").html(Layout.senior_mode())
+                }else{
+                    $(".content").html(Layout.senior_mode_common())
+                }
             }, 100)
         })
 
@@ -2188,6 +2213,7 @@ define([
                 singleAlter("Constant-account-describe-msg")
                 return;
             }
+
             var loading;
             $.ajax({
                 type: "POST",
@@ -2198,7 +2224,8 @@ define([
                     phone: '15961757187',
                     userName: '蒋智伟',
                     reason: reason,
-                    repairDesc: describe
+                    repairDesc: describe,
+                    userType:userType
                 }),
                 beforeSend: function () {
                     loading = layer.load(2, {shade: [0.5, '#fff']});
@@ -2225,6 +2252,7 @@ define([
         //报修记录，重新绘制content元素
         $("#main").off('tap', '.repair_log').on('tap', '.repair_log', function (e) {
             //首先获取角色
+            var roleId = ToolBox.getCookie("roleId");
             //根据角色获取报修记录，此次报修记录将用户名、报修时间、报修原因、报修内容、聊天记录、维修记录的索引
             //初始化
             $("#main").html(Layout.basic_repair("报修记录", "repair_list_back"))
@@ -2235,7 +2263,8 @@ define([
                 url: '/device/getUserProjectRepairs',
                 data: {
                     openId: ToolBox.getCookie("openId"),
-                    projectId: global_projectId
+                    projectId: global_projectId,
+                    roleId:roleId
                 },
                 beforeSend: function () {
                     loading = layer.load(2, {shade: [0.5, '#fff']});
@@ -2279,7 +2308,12 @@ define([
                 $("#senior").addClass("active")
                 //先清空content的内容，补充各个单独房间样式
                 $(".content").html("");
-                $(".content").html(Layout.senior_mode())
+                var roleId = ToolBox.getCookie("roleId");
+                if(roleId != 2){
+                    $(".content").html(Layout.senior_mode())
+                }else{
+                    $(".content").html(Layout.senior_mode_common())
+                }
             }, 300)
         })
 
@@ -2287,12 +2321,17 @@ define([
         //点击某维修记录
         $("#main").off('tap', '.repair_list_row').on('tap', '.repair_list_row', function (e) {
             var repairId = $(this).attr('id');
-
+            var roleId = ToolBox.getCookie("roleId");
+            var userType = 0;
+            if(roleId != '2'){
+                userType = 1;
+            }
             $.ajax({
                 type: 'get',
                 url: '/device/getRepairRecord',
                 data: {
-                    repairId: repairId
+                    repairId: repairId,
+                    userType:userType
                 },
                 dataType: 'json',
                 contentType: "application/json;charset=utf-8",
@@ -2312,12 +2351,15 @@ define([
         $("#main").off('tap', '.repair_content_back').on('tap', '.repair_content_back', function (e) {
             setTimeout(function () {
                 var repairList = [];
+                //首先获取角色
+                var roleId = ToolBox.getCookie("roleId");
                 $.ajax({
                     type: 'get',
                     url: '/device/getUserProjectRepairs',
                     data: {
                         openId: ToolBox.getCookie("openId"),
-                        projectId: global_projectId
+                        projectId: global_projectId,
+                        roleId:roleId
                     },
                     dataType: 'json',
                     success: function (res) {
@@ -2348,15 +2390,20 @@ define([
         $("#main").off('tap', '#repaire_content_submit').on('tap', '#repaire_content_submit', function (e) {
             var repairId = $("#repairId").html();
             var reply = $("#reply").val();
+            var roleId = ToolBox.getCookie("roleId");
+            var userType = 0;
+            if(roleId != '2'){
+                userType = 1;
+            }
             setTimeout(function () {
                 $.ajax({
                     type: 'post',
                     url: '/device/addRepairRecord',
                     data: JSON.stringify({
                         weixinId: ToolBox.getCookie('openId'),
-                        userType: 0,
+                        userType: userType,
                         repairId: repairId,
-                        msg: reply
+                        msg: reply,
                     }),
                     contentType: 'application/json',
                     dataType: 'json',
@@ -2366,7 +2413,8 @@ define([
                                 type: 'get',
                                 url: '/device/getRepairRecord',
                                 data: {
-                                    repairId: repairId
+                                    repairId: repairId,
+                                    userType:userType
                                 },
                                 dataType: 'json',
                                 contentType: "application/json;charset=utf-8",

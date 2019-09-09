@@ -62,9 +62,14 @@ define([
         return template({'tempId':'control_detail'});
     }
 
-    //高级页面
+    //高级页面(管理员)
     var senior_mode=function () {
         return template({'tempId':'senior_mode'});
+    }
+
+    //高级页面(普通用户)
+    var senior_mode_common=function () {
+        return template({'tempId':'senior_mode_common'});
     }
 
     //权限设置
@@ -110,6 +115,7 @@ define([
         host_mode:host_mode,
         control_detail:control_detail,
         senior_mode:senior_mode,
+        senior_mode_common:senior_mode_common,
         role_setting_mode:role_setting_mode,
         need_repair:need_repair,
         basic_repair:basic_repair,

@@ -30,10 +30,12 @@ public class RepairService {
      * @param weixinId
      * @return
      */
-    public JSONObject getUserRepairs(String weixinId,String projectId){
+    public JSONObject getUserRepairs(String roleId,String weixinId,String projectId){
         Map<String,Object> param = new HashMap<String,Object>();
-        param.put("weixinId",weixinId);
-        param.put("projectId",projectId);
+        if("2".equals(roleId)){
+            param.put("projectId",projectId);
+            param.put("weixinId",weixinId);
+        }
         List<ProjectRepair> repairList = projectRepairMapper.selectByFields(param);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("repairList",repairList);
@@ -52,18 +54,29 @@ public class RepairService {
      * @param repairId
      * @return
      */
-    public JSONObject getRepairRecord(Integer repairId){
+    public JSONObject getRepairRecord(Integer repairId,Integer userType){
         List<ProjectRepairRecord> recordList = projectRepairRecordMapper.selectByRepairId(repairId);
         JSONObject jsonObject = new JSONObject();
         StringBuffer msg = new StringBuffer();
         for(ProjectRepairRecord repairRecord : recordList){
-            if(repairRecord.getUserType() == 0){
-                String itemMsg = "<span style='color:blue;word-wrap: break-word;word-break: break-all;overflow: hidden;'>我："+repairRecord.getMsg()+"</span><br/>";
-                msg.append(itemMsg);
-            }else{
-                String itemMsg = "<span style='color:red;word-wrap: break-word;word-break: break-all;overflow: hidden;'>客服："+repairRecord.getMsg()+"</span><br/>";
-                msg.append(itemMsg);
+            if(userType == 0){//普通用户
+                if(repairRecord.getUserType() == 0){
+                    String itemMsg = "<span style='color:blue;word-wrap: break-word;word-break: break-all;overflow: hidden;'>我:"+repairRecord.getMsg()+"</span><br/>";
+                    msg.append(itemMsg);
+                }else{
+                    String itemMsg = "<span style='color:red;word-wrap: break-word;word-break: break-all;overflow: hidden;'>客服:"+repairRecord.getMsg()+"</span><br/>";
+                    msg.append(itemMsg);
+                }
+            }else{//管理员
+                if(repairRecord.getUserType() == 0){
+                    String itemMsg = "<span style='color:blue;word-wrap: break-word;word-break: break-all;overflow: hidden;'>客户:"+repairRecord.getMsg()+"</span><br/>";
+                    msg.append(itemMsg);
+                }else{
+                    String itemMsg = "<span style='color:red;word-wrap: break-word;word-break: break-all;overflow: hidden;'>管理员:"+repairRecord.getMsg()+"</span><br/>";
+                    msg.append(itemMsg);
+                }
             }
+
         }
         jsonObject.put("msg",msg);
         jsonObject.put("phone","15961757187");

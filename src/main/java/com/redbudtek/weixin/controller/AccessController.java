@@ -84,8 +84,8 @@ public class AccessController {
 	public String getWebAuth(@RequestParam(value="code") String code){
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("status", ResultStatus.SUCCESS.toString());
-		//map.put("data", weixinService.getOpenId(code));
-		map.put("data", "123456");
+		map.put("data", weixinService.getOpenId(code));
+		//map.put("data", "123456");
 		return JSON.toJSONString(map);
 	}
 

@@ -210,8 +210,8 @@ public class DeviceController {
      */
     @ResponseBody
     @RequestMapping(value = "getUserProjectRepairs", method = RequestMethod.GET,produces = "application/json;charset=UTF-8")
-    public String getUserProjectRepairs(@RequestParam String openId,@RequestParam String projectId){
-        JSONObject jsonObject = repairService.getUserRepairs(openId,projectId);
+    public String getUserProjectRepairs(@RequestParam String roleId,@RequestParam String openId,@RequestParam String projectId){
+        JSONObject jsonObject = repairService.getUserRepairs(roleId,openId,projectId);
         return jsonObject.toJSONString();
     }
 
@@ -237,8 +237,8 @@ public class DeviceController {
 
     @ResponseBody
     @RequestMapping(value = "getRepairRecord", method = RequestMethod.GET,produces = "application/json;charset=UTF-8")
-    public String getRepairRecord(@RequestParam Integer repairId){
-        JSONObject jsonObject = repairService.getRepairRecord(repairId);
+    public String getRepairRecord(@RequestParam Integer repairId,@RequestParam Integer userType){
+        JSONObject jsonObject = repairService.getRepairRecord(repairId,userType);
         return jsonObject.toJSONString();
     }
 

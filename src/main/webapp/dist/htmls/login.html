@@ -15,6 +15,7 @@
 <body>
 <div id="main"></div>
 <div id="others"></div>
+
 <script type="text/javascript" src="../assets/plugins/require.min.js"></script>
 <script type="text/javascript" src="../assets/plugins/jquery.min.js"></script>
 <script type="text/javascript">
@@ -29,12 +30,12 @@
     };
 
     $(function(){
-        //var code = getParam("code");
+        var code = getParam("code");
+        if(typeof code != 'string'){
+            $('body').prepend('<h3>Parameter [code] is error !</h3>');
+            return false;
+        }
         //var state = getParam("state");
-        // if(typeof code != 'string'){
-        //     $('body').prepend('<h3>Parameter [code] is error !</h3>');
-        //     return false;
-        // }
         // if(typeof state != 'string' || state.indexOf('0') < 0){
         //     $('body').prepend('<h3>Parameter [state] is error !</h3>');
         //     return false;
@@ -43,7 +44,7 @@
             type: 'get',
             url: '/access/webAuth',
             data: {
-                code: "123"
+                code: code
             },
             dataType: 'json',
             success: function(res){
@@ -59,11 +60,14 @@
                             + ((expiredays == null) ? "" : ";expires="
                                 + exdate.toGMTString());
                     })('openId', openId, 1);
+                    location.href = 'index.html';
+                }else{
+                    location.href = 'error.html?'+'02';
                 }
                 //location.href = 'index.html';
                 //var type = state.substring(0, state.indexOf('0'));
                 //var params = state.substring(state.indexOf('0') + 1);
-                location.href = 'index.html';
+
                 // if(type == '1'){
                 //     //成功
                 //    location.href = 'index.html';
