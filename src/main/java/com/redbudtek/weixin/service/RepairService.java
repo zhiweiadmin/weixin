@@ -8,6 +8,7 @@ import com.redbudtek.weixin.model.ProjectRepairRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,15 +77,16 @@ public class RepairService {
                     msg.append(itemMsg);
                 }
             }
-
         }
+        ProjectRepair projectRepair = projectRepairMapper.selectByPrimaryKey(repairId);
         jsonObject.put("msg",msg);
-        jsonObject.put("phone","15961757187");
-        jsonObject.put("username","张三");
-        jsonObject.put("reason","原因");
-        jsonObject.put("desc","这里是内容");
+        jsonObject.put("phone",projectRepair.getPhone());
+        jsonObject.put("username",projectRepair.getUserName());
+        jsonObject.put("reason",projectRepair.getReason());
+        jsonObject.put("desc",projectRepair.getRepairDesc());
         jsonObject.put("detail","detail");
-        jsonObject.put("time","2019-01-01 12:00:03");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        jsonObject.put("time",sdf.format(projectRepair.getCreateDttm()));
         return jsonObject;
     }
 

@@ -283,8 +283,16 @@ define([
                 var agents = res.data[0].dataItem[0].serialNumber;
                 agentListCondition(agents, function (res1) {
                     if (res1.status == 100) {
-                        agent_condition = res1.result.data[0].agentCondition;
-                        run_status = agent_condition;
+
+                        if(res1.result.data.length > 0){
+                            agent_condition = res1.result.data[0].agentCondition;
+                            if(typeof(agent_condition) == "undefined" || agent_condition === null){
+                                run_status = 0;
+                            }
+                        }else{
+                            run_status = 0;
+                        }
+
                     }
                 })
             })
@@ -1215,9 +1223,12 @@ define([
                         if (index > 0) {
                             //获取最后一个统计项
                             var lastitem = p.dataItem[p.dataItem.length - 1].itemName;
-                            var firstWeizhi = lastitem.indexOf('_');
-                            var lastWeizhi = lastitem.lastIndexOf('_');
-                            var count = lastitem.substring(firstWeizhi + 1, lastWeizhi);
+                            var count = 0;
+                            if(typeof(lastitem) != "undefined"){
+                                var firstWeizhi = lastitem.indexOf('_');
+                                var lastWeizhi = lastitem.lastIndexOf('_');
+                                count = lastitem.substring(firstWeizhi + 1, lastWeizhi);
+                            }
                             var obj = {
                                 name: p.vdeviceName,
                                 vid: p.vdeviceId,
@@ -1266,11 +1277,15 @@ define([
 
         //点击房控方向键,显示房间内细节
         $("#main").off('tap', '.control_sub_right,.controle_row').on('tap', '.control_sub_right,.controle_row', function (e) {
+            //获取当前房间设备的个数
+            var count = $(this).attr("count");
+            if(count == "0" || typeof(count) == "undefined"){
+                return;
+            }
             var air_img = getImgUrl(weather);
             $("#main").html(Layout.room_detail_basic(weather, humidity, temperature, wind, air_img));
             var height = $(window).height();
-            //获取当前房间设备的个数
-            var count = $(this).attr("count");
+
             //房间ID
             var roomId = $(this).attr("id");
             var name = $(this).attr("name");
@@ -2221,11 +2236,11 @@ define([
                 data: JSON.stringify({
                     projectId: global_projectId,
                     weixinId: ToolBox.getCookie("openId"),
-                    phone: '15961757187',
-                    userName: '蒋智伟',
+                    phone: ToolBox.getCookie("phone"),
+                    userName: ToolBox.getCookie("username"),
                     reason: reason,
                     repairDesc: describe,
-                    userType:userType
+                    userType:0
                 }),
                 beforeSend: function () {
                     loading = layer.load(2, {shade: [0.5, '#fff']});

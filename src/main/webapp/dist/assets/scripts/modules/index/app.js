@@ -26,7 +26,6 @@ define([
                 type:'post',
                 url:'weixin/bindAccount',
                 data:JSON.stringify({
-                //    weixin_id:'100',
                     weixin_id:ToolBox.getCookie('openId'),
                     tenantEname:'bmyulin',
                     userName:username,
@@ -35,11 +34,10 @@ define([
                 }),
                 dataType:'json',
                 success:function (res) {
-                    // //jiangzhiwei
-                    // res.status = '100';
                     if(res&&res.status=='100'){
                         var token = res.data;
                         ToolBox.setCookie('token',token,1);
+                        getUserBasicInfo(token,username);
                         Main.start();
                         //jiangzhiwei
                         $("body").css("background-img",'none');
@@ -79,6 +77,23 @@ define([
             }
         });
     }
+    
+    var getUserBasicInfo = function (token,loginName) {
+        ToolBox.ajax({
+            type: 'get',
+            url: 'user/findByUsername',
+            data: {
+                token : token,
+                loginName : loginName
+            },
+            dataType: 'json',
+            success: function(res){
+                ToolBox.setCookie('phone',res.data.cellphone,30);//30天
+                ToolBox.setCookie('userName',res.data.real_name,30);//30天
+            }
+        });
+    }
+    
 //验证token
     var CheckToken=function (callback) {
         ToolBox.ajax({
