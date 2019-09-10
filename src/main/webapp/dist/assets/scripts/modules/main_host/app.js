@@ -81,6 +81,10 @@ define([
 
     var tempTimeDeviceJob;
 
+    //用户权限 默认0
+    var projectHostAuth = 0;
+    var projectFkAuth = 0;
+
     //首先选择项目
     var after_choice = function () {
         getProjectList(function (res) {
@@ -274,6 +278,28 @@ define([
         });
     };
 
+    /**
+     *
+     * 判断的时候首先要判断是不是普通用户 普通用户的roleId  =  2
+     * roleId = 2 && anth = 1 才能点击事件
+     *
+     */
+    var getUserProjectAuth = function () {
+        $.ajax({
+            type: 'GET',
+            url: '/auth/getProjectAuth',
+            data: {
+                projectId: cur_projectId
+            },
+            dataType: 'json',
+            success: function (res) {
+                projectHostAuth = res.hostAuth;
+                projectFkAuth = res.fkAuth;
+            }
+        });
+    };
+
+
     /*frame*/
     var layout_init = function () {
         //取消modal的遮罩
@@ -331,6 +357,7 @@ define([
         //     is_req_weather = false;
         // }
         getUserProjectInfo();
+        getUserProjectAuth();
     };
 
     //获取项目所在地的一些信息，包括天气温度等等

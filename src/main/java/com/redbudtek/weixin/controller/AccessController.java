@@ -179,22 +179,4 @@ public class AccessController {
 		return JSON.toJSONString(map);
 	}
 
-	@ResponseBody
-	@RequestMapping(value = "/weixin/bindAccount", method = RequestMethod.GET)
-	public String bindAccount(@RequestBody JSONObject jsonObject){
-		JSONObject jsonObject1 = new JSONObject();
-		jsonObject1.put("status","100");
-		jsonObject1.put("data","123456");
-		return jsonObject1.toJSONString();
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/weixin/associatedLogin", method = RequestMethod.GET)
-	public String associatedLogin(@RequestBody JSONObject jsonObject){
-		JSONObject jsonObject1 = new JSONObject();
-		jsonObject1.put("status","100");
-		jsonObject1.put("data","123456");
-		return jsonObject1.toJSONString();
-	}
-
 }

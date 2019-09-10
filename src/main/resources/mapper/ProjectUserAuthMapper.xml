@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.redbudtek.weixin.mapper.ProjectUserAuthMapper" >
+    <resultMap id="BaseResultMap" type="com.redbudtek.weixin.model.ProjectUserAuth" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="project_id" property="projectId" jdbcType="VARCHAR" />
+        <result column="user_type" property="userType" jdbcType="INTEGER" />
+        <result column="ctrl_auth" property="ctrlAuth" jdbcType="INTEGER" />
+        <result column="host_auth" property="hostAuth" jdbcType="INTEGER" />
+        <result column="fk_auth" property="fkAuth" jdbcType="INTEGER" />
+        <result column="create_dttm" property="createDttm" jdbcType="TIMESTAMP" />
+        <result column="update_dttm" property="updateDttm" jdbcType="TIMESTAMP"  />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, project_id, user_type,ctrl_auth,host_auth,fk_auth,create_dttm,update_dttm
+    </sql>
+
+    <insert id="insert" parameterType="com.redbudtek.weixin.model.ProjectUserAuth" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO
+        t_project_user_auth
+    (   id,
+        project_id,
+        user_type,
+        ctrl_auth,
+        host_auth,
+        fk_auth,
+        create_dttm,
+        update_dttm )
+        VALUES
+	(
+	    nextval('project_auth_id'),
+	    #{projectId,jdbcType=VARCHAR},
+	    #{userType,jdbcType=INTEGER},
+	    #{ctrlAuth,jdbcType=INTEGER},
+	    #{hostAuth,jdbcType=INTEGER},
+	    #{fkAuth,jdbcType=INTEGER},
+	    now(),
+	    now() )
+  </insert>
+
+    <update id="update" parameterType="com.redbudtek.weixin.model.ProjectUserAuth">
+        update
+            t_project_user_auth
+        set
+            ctrl_auth = #{ctrlAuth,jdbcType=INTEGER},
+            host_auth = #{hostAuth,jdbcType=INTEGER},
+            fk_auth = #{fkAuth,jdbcType=INTEGER},
+            update_dttm = now()
+	    where
+	        project_id = #{projectId,jdbcType=VARCHAR}
+  </update>
+
+    <select id="selectByFields" resultMap="BaseResultMap">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM
+        t_project_user_auth
+        where
+            1 = 1
+            <if test="projectId != null">
+                and project_id = #{projectId,jdbcType=VARCHAR}
+            </if>
+    </select>
+
+</mapper>
