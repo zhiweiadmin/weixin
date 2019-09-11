@@ -54,8 +54,8 @@ define([
     var cur_out_temp;
     var cur_in_temp;
     var cur_sys_ext_temp;
-    var run_status;
-    var run_model;
+    var run_status = 0;
+    var run_model = 0;
     var deviceItems;//变量组数据
     var cur_item_data;//变量组实时数据
     //网关在线/离线
@@ -265,12 +265,12 @@ define([
                 projectID: cur_projectId
             },
             success: function (res) {
-                if(res.data.length > 0){
+                if (res.data.length > 0) {
                     var roleName = res.data[0].roleName;
                     var roleId = res.data[0].role_id;
                     ToolBox.setCookie('roleName', roleName, 1);
                     ToolBox.setCookie('roleId', roleId, 1);
-                }else{
+                } else {
                     ToolBox.setCookie('roleId', 1, 1);
                 }
 
@@ -284,7 +284,7 @@ define([
      * roleId = 2 && anth = 1 才能点击事件
      *
      */
-    var getUserProjectAuth = function () {
+    var getUserProjectAuth = function (callback) {
         $.ajax({
             type: 'GET',
             url: '/auth/getProjectAuth',
@@ -295,6 +295,7 @@ define([
             success: function (res) {
                 projectHostAuth = res.hostAuth;
                 projectFkAuth = res.fkAuth;
+                callback(res);
             }
         });
     };
@@ -306,21 +307,22 @@ define([
         if (is_req_weather) {
             getLocation();
             getVdeviceItems(cur_projectId, function (res) {
-                var agents = res.data[0].dataItem[0].serialNumber;
-                agentListCondition(agents, function (res1) {
-                    if (res1.status == 100) {
-
-                        if(res1.result.data.length > 0){
-                            agent_condition = res1.result.data[0].agentCondition;
-                            if(typeof(agent_condition) == "undefined" || agent_condition === null){
+                if (res.data.length > 0) {
+                    var agents = res.data[0].dataItem[0].serialNumber;
+                    agentListCondition(agents, function (res1) {
+                        if (res1.status === 100) {
+                            if (res1.result.data.length > 0) {
+                                agent_condition = res1.result.data[0].agentCondition;
+                                if (typeof (agent_condition) == "undefined" || agent_condition === null) {
+                                    run_status = 0;
+                                }
+                            } else {
                                 run_status = 0;
                             }
-                        }else{
-                            run_status = 0;
-                        }
 
-                    }
-                })
+                        }
+                    })
+                }
             })
             setTimeout(function () {
                 getCurrentDataByProject(cur_projectId, function (resp) {
@@ -357,7 +359,8 @@ define([
         //     is_req_weather = false;
         // }
         getUserProjectInfo();
-        getUserProjectAuth();
+        getUserProjectAuth(function (res) {
+        });
     };
 
     //获取项目所在地的一些信息，包括天气温度等等
@@ -450,8 +453,6 @@ define([
         var item_onoff = i + '_OnOff';
         var item_model = i + '_Model';
         var ext_temp = i + '_ExtTemp';
-        console.log(deviceInfos)
-        console.log(cur_item_data)
         //风速 低速 中速 高速
         var low = i + '_Lwinds';
         var mid = i + '_Mwinds';
@@ -502,9 +503,9 @@ define([
     //获取当前速度
     function getSpeed(device) {
         var speed = '低速';
-        if (Number(device.highVal) == 1) {
+        if (Number(device.highVal) === 1) {
             speed = '高速';
-        } else if (Number(device.midVal) == 1) {
+        } else if (Number(device.midVal) === 1) {
             speed = '中速';
         } else {
             speed = '低速';
@@ -517,7 +518,7 @@ define([
         var value;
         _.each(cur_item_data.data, function (k) {
             if (k.itemname == name) {
-                console.log("属性名为：" + name + ",数值位：" + k.val)
+                // console.log("属性名为：" + name + ",数值位：" + k.val)
                 value = k.val;
             }
         })
@@ -1051,21 +1052,21 @@ define([
             $('#outTemp').html(cur_out_temp);
             $('#inTemp').html(cur_in_temp);
             $('#extTemp').html(cur_sys_ext_temp);
-            if (run_status == 1) {
+            if (Number(run_status) === 1) {
                 $(".online_status").attr("src", "../assets/image/img/online.png");
                 $(".online_status").addClass("online")
             } else {
                 $(".online_status").attr("src", "../assets/image/img/offline.png");
                 $(".online_status").removeClass("online")
             }
-            if (run_model == 0) {
+            if (Number(run_model) === 0) {
                 $("#cold_model").addClass("color_cold_active")
-                $("#cold_model").removeClass("color_hot_active")
+                $("#hot_model").removeClass("color_hot_active")
             } else {
-                $("#cold_model").addClass("color_hot_active")
+                $("#hot_model").addClass("color_hot_active")
                 $("#cold_model").removeClass("color_cold_active")
             }
-            if (cur_power == '0') {
+            if (Number(cur_power) === 0) {
                 $("#host_switch").attr("src", "../assets/image/img/switch_off_o.png");
                 $("#host_switch").removeClass("on");
             } else if (cur_power == '1') {
@@ -1090,133 +1091,183 @@ define([
 
         //点击＋
         $('#main').off('tap', '#add_temp').on('tap', '#add_temp', function (e) {
-            cur_sys_ext_temp = parseInt(cur_sys_ext_temp) + 1;
-            $('#extTemp').html(cur_sys_ext_temp);
-            change_mode_time(5, cur_sys_ext_temp, function (res) {
-                if (res != 'success') {
-                    alert('控制失败!');
-                    getValByKey('Sys_ExtTemp', function (res) {
-                        $('#extTemp').html(res.val);
-                    })
+            //判断是否有权限
+            getUserProjectAuth(function (res) {
+                var roleId = ToolBox.getCookie("roleId");
+                //作为普通用户没有主机权限
+                if (Number(roleId) === 2 & Number(res.hostAuth) === 0) {
+                    singleAlter("Constant-account-no-permission-msg")
                 } else {
-                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                        console.log("刷新成功");
+                    cur_sys_ext_temp = parseInt(cur_sys_ext_temp) + 1;
+                    $('#extTemp').html(cur_sys_ext_temp);
+                    change_mode_time(5, cur_sys_ext_temp, function (res) {
+                        if (res != 'success') {
+                            alert('控制失败!');
+                            getValByKey('Sys_ExtTemp', function (res) {
+                                $('#extTemp').html(res.val);
+                            })
+                        } else {
+                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                console.log("刷新成功");
+                            })
+                        }
                     })
                 }
-            })
+            });
         })
 
         //点击减号
         $('#main').off('tap', '#minus_temp').on('tap', '#minus_temp', function (e) {
-            cur_sys_ext_temp = parseInt(cur_sys_ext_temp) - 1;
-            $('#extTemp').html(cur_sys_ext_temp);
-            change_mode_time(6, cur_sys_ext_temp, function (res) {
-                if (res != 'success') {
-                    alert('控制失败!');
-                    getValByKey('Sys_ExtTemp', function (res) {
-                        $('#extTemp').html(res.val);
-                    })
+            //判断是否有权限
+            getUserProjectAuth(function (res) {
+                var roleId = ToolBox.getCookie("roleId");
+                //作为普通用户没有主机权限
+                if (Number(roleId) === 2 & Number(res.hostAuth) === 0) {
+                    singleAlter("Constant-account-no-permission-msg")
                 } else {
-                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                        console.log("刷新成功");
+                    cur_sys_ext_temp = parseInt(cur_sys_ext_temp) - 1;
+                    $('#extTemp').html(cur_sys_ext_temp);
+                    change_mode_time(6, cur_sys_ext_temp, function (res) {
+                        if (res != 'success') {
+                            alert('控制失败!');
+                            getValByKey('Sys_ExtTemp', function (res) {
+                                $('#extTemp').html(res.val);
+                            })
+                        } else {
+                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                console.log("刷新成功");
+                            })
+                        }
                     })
                 }
-            })
+            });
         })
 
 
-        //设定模式的动态模式
+        //设定模式的动态模式 开启制冷模式
         $("#main").off('tap', "#cold_model").on('tap', '#cold_model', function (e) {
-            //开启loading
-            var loading = layer.load(2, {shade: [0.5, '#fff']});
-            change_mode(0, null, function (res) {
-                //关闭loading
-                layer.close(loading);
-                if (res !== 'success') {
-                    alert('控制模式失败!')
-                    $("#hot_model").addClass("color_hot_active");
-                    $("#cold_model").removeClass("color_cold_active");
+            //判断是否有权限
+            getUserProjectAuth(function (res) {
+                var roleId = ToolBox.getCookie("roleId");
+                //作为普通用户没有主机权限
+                if (Number(roleId) === 2 & Number(res.hostAuth) === 0) {
+                    singleAlter("Constant-account-no-permission-msg")
                 } else {
-                    $("#cold_model").addClass("color_cold_active");
-                    $("#hot_model").removeClass("color_hot_active");
-                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                        console.log("刷新成功");
+                    //开启loading
+                    var loading = layer.load(2, {shade: [0.5, '#fff']});
+                    change_mode(0, null, function (res) {
+                        //关闭loading
+                        layer.close(loading);
+                        if (res !== 'success') {
+                            alert('控制模式失败!')
+                            $("#hot_model").addClass("color_hot_active");
+                            $("#cold_model").removeClass("color_cold_active");
+                        } else {
+                            $("#cold_model").addClass("color_cold_active");
+                            $("#hot_model").removeClass("color_hot_active");
+                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                console.log("刷新成功");
+                            })
+                        }
                     })
                 }
-            })
+            });
         })
 
-
+        //开机制热模式
         $("#main").off('tap', "#hot_model").on('tap', '#hot_model', function (e) {
-            //开启loading
-            var loading = layer.load(2, {shade: [0.5, '#fff']});
-            change_mode(1, null, function (res) {
-                //关闭loading
-                layer.close(loading);
-                if (res !== 'success') {
-                    alert('控制模式失败!')
-                    $('#hot_model').removeClass("color_hot_active");
-                    $("#cold_model").addClass("color_cold_active");
+            getUserProjectAuth(function (res) {
+                var roleId = ToolBox.getCookie("roleId");
+                //作为普通用户没有主机权限
+                if (Number(roleId) === 2 & Number(res.hostAuth) === 0) {
+                    singleAlter("Constant-account-no-permission-msg")
                 } else {
-                    $("#hot_model").addClass("color_hot_active");
-                    $("#cold_model").removeClass("color_cold_active");
-                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                        console.log("刷新成功");
+                    //开启loading
+                    var loading = layer.load(2, {shade: [0.5, '#fff']});
+                    change_mode(1, null, function (res) {
+                        //关闭loading
+                        layer.close(loading);
+                        if (res !== 'success') {
+                            alert('控制模式失败!')
+                            $('#hot_model').removeClass("color_hot_active");
+                            $("#cold_model").addClass("color_cold_active");
+                        } else {
+                            $("#hot_model").addClass("color_hot_active");
+                            $("#cold_model").removeClass("color_cold_active");
+                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                console.log("刷新成功");
+                            })
+                        }
                     })
                 }
-            })
+            });
+
         })
 
         //主界面 开关机  jiangzhiwei
         $("#main").off('tap', "#host_switch").on('tap', '#host_switch', function (e) {
-            var msg = '';
-            if (cur_power == '0') {
-                msg = '确定开机吗?'
-            } else {
-                msg = '确定关机吗?'
-            }
-            ToolBox.confirm_alert({
-                $container: $('#others'),
-                afterCallback: function () {
-                    if ($("#host_switch").hasClass('on')) {
-                        $("#host_switch").attr("src", "../assets/image/img/switch_off_o.png");
-                        $("#host_switch").removeClass("on");
-
-                        getValByKey("Sys_RunSet", function (item) {
-                            send_control(item, 0, true, function (res) {
-                                if (res == 'success') {
-                                    layout_init();
-                                    bindEvents();
+            getUserProjectAuth(function (res) {
+                var roleId = ToolBox.getCookie("roleId");
+                //作为普通用户没有主机权限
+                if (Number(roleId) === 2 & Number(res.hostAuth) === 0) {
+                    singleAlter("Constant-account-no-permission-msg")
+                } else {
+                    change_mode(0, null, function (res) {
+                        var msg = '';
+                        if (cur_power == '0') {
+                            msg = '确定开机吗?'
+                        } else {
+                            msg = '确定关机吗?'
+                        }
+                        ToolBox.confirm_alert({
+                            $container: $('#others'),
+                            afterCallback: function () {
+                                $('#confirm-alert').modal('hide');
+                                //开启loading
+                                var loading = layer.load(2, {shade: [0.5, '#fff']});
+                                if ($("#host_switch").hasClass('on')) {
+                                    getValByKey("Sys_RunSet", function (item) {
+                                        send_control(item, 0, true, function (res) {
+                                            if (res == 'success') {
+                                                $("#host_switch").attr("src", "../assets/image/img/switch_off_o.png");
+                                                $("#host_switch").removeClass("on");
+                                                layout_init();
+                                                bindEvents();
+                                            } else {
+                                                alert("关机控制失败");
+                                            }
+                                            //关闭loading
+                                            layer.close(loading);
+                                        })
+                                    })
                                 } else {
-                                    alert("关机控制失败");
-                                    $("#host_switch").addClass('on')
+                                    getValByKey("Sys_RunSet", function (item) {
+                                        console.log(item);
+                                        send_control(item, 1, true, function (res) {
+                                            if (res == 'success') {
+                                                $('#msg_control').html('控制成功');
+                                                $('#msg_control').addClass('margin-left-5');
+                                                setTimeout(function () {
+                                                    layout_init();
+                                                    bindEvents();
+                                                    init_index_page();
+                                                }, 800);
+                                                $("#host_switch").attr("src", "../assets/image/img/switch_on_o.png");
+                                                $("#host_switch").addClass("on")
+                                            } else {
+                                                alert("开机控制失败");
+                                            }
+                                            //关闭loading
+                                            layer.close(loading);
+                                        })
+                                    })
                                 }
-                            })
+                            },
+                            msg: msg
                         })
-                    } else {
-                        $("#host_switch").attr("src", "../assets/image/img/switch_on_o.png");
-                        $("#host_switch").addClass("on")
-                        getValByKey("Sys_RunSet", function (item) {
-                            console.log(item);
-                            send_control(item, 1, true, function (res) {
-                                if (res == 'success') {
-                                    $('#msg_control').html('控制成功');
-                                    $('#msg_control').addClass('margin-left-5');
-                                    setTimeout(function () {
-                                        layout_init();
-                                        bindEvents();
-                                        init_index_page();
-                                    }, 800);
-                                } else {
-                                    alert("开机控制失败");
-                                    $("#host_switch").removeClass('on')
-                                }
-                            })
-                        })
-                    }
-                },
-                msg: msg
-            })
+                    })
+                }
+            });
 
         })
 
@@ -1251,7 +1302,7 @@ define([
                             //获取最后一个统计项
                             var lastitem = p.dataItem[p.dataItem.length - 1].itemName;
                             var count = 0;
-                            if(typeof(lastitem) != "undefined"){
+                            if (typeof (lastitem) != "undefined") {
                                 var firstWeizhi = lastitem.indexOf('_');
                                 var lastWeizhi = lastitem.lastIndexOf('_');
                                 count = lastitem.substring(firstWeizhi + 1, lastWeizhi);
@@ -1306,7 +1357,7 @@ define([
         $("#main").off('tap', '.control_sub_right,.controle_row').on('tap', '.control_sub_right,.controle_row', function (e) {
             //获取当前房间设备的个数
             var count = $(this).attr("count");
-            if(count == "0" || typeof(count) == "undefined"){
+            if (count == "0" || typeof (count) == "undefined") {
                 return;
             }
             var air_img = getImgUrl(weather);
@@ -1420,244 +1471,292 @@ define([
             var vId = deviceId.substring(0, deviceId.indexOf('_'));
             var item = getVdeviceItemsInfo(vId, itemname)
             var $dom = $(this);
-            if ($dom.hasClass("on")) {
-                //当前为开机状态，提供关机功能
-                ToolBox.device_on({
-                    $container: $('#others'),
-                    afterCallback: function () {
-                        //开启loading
-                        $('#confirm-alert').modal('hide');
-                        var loading = layer.load(2, {shade: [0.5, '#fff']});
-                        send_control_new(item.devid, item.itemid, 0, false, function (res) {
-                            renderClose(deviceId);
-                            //关闭loading
-                            layer.close(loading);
-                            //刷新数据
-                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                console.log("刷新数据成功")
-                            });
-                            // if (res.status != "100") {
-                            //     alert("控制失败");
-                            // }else{
-                            //     console.log(deviceId)
-                            //     renderClose(deviceId);
-                            //     //刷新数据
-                            //     getCurrentDataByProject(cur_projectId,function () {
-                            //         console.log("刷新数据成功")
-                            //     });
-                            // }
+            //判断是否有权限
+            getUserProjectAuth(function (res) {
+                var roleId = ToolBox.getCookie("roleId");
+                //作为普通用户没有主机权限
+                if (Number(roleId) === 2 & Number(res.fkAuth) === 0) {
+                    singleAlter("Constant-account-no-permission-msg")
+                } else {
+                    if ($dom.hasClass("on")) {
+                        //当前为开机状态，提供关机功能
+                        ToolBox.device_on({
+                            $container: $('#others'),
+                            afterCallback: function () {
+                                //开启loading
+                                $('#confirm-alert').modal('hide');
+                                var loading = layer.load(2, {shade: [0.5, '#fff']});
+                                send_control_new(item.devid, item.itemid, 0, false, function (res) {
+                                    renderClose(deviceId);
+                                    //关闭loading
+                                    layer.close(loading);
+                                    //刷新数据
+                                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                        console.log("刷新数据成功")
+                                    });
+                                    // if (res.status != "100") {
+                                    //     alert("控制失败");
+                                    // }else{
+                                    //     console.log(deviceId)
+                                    //     renderClose(deviceId);
+                                    //     //刷新数据
+                                    //     getCurrentDataByProject(cur_projectId,function () {
+                                    //         console.log("刷新数据成功")
+                                    //     });
+                                    // }
+                                })
+                            },
+                            msg: ToolBox.getConstant('Constant-turn-down-msg')
                         })
-                    },
-                    msg: ToolBox.getConstant('Constant-turn-down-msg')
-                })
 
-            } else {
-                //当前为关机状态，提供开机功能
-                ToolBox.device_on({
-                    $container: $('#others'),
-                    afterCallback: function () {
-                        //开启loading
-                        $('#confirm-alert').modal('hide');
-                        var loading = layer.load(2, {shade: [0.5, '#fff']});
-                        send_control_new(item.devid, item.itemid, 1, false, function (res) {
-                            renderOpen(deviceId);
-                            //关闭loading
-                            layer.close(loading);
-                            //刷新数据
-                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                console.log("刷新数据成功")
-                            });
+                    } else {
+                        //当前为关机状态，提供开机功能
+                        ToolBox.device_on({
+                            $container: $('#others'),
+                            afterCallback: function () {
+                                //开启loading
+                                $('#confirm-alert').modal('hide');
+                                var loading = layer.load(2, {shade: [0.5, '#fff']});
+                                send_control_new(item.devid, item.itemid, 1, false, function (res) {
+                                    renderOpen(deviceId);
+                                    //关闭loading
+                                    layer.close(loading);
+                                    //刷新数据
+                                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                        console.log("刷新数据成功")
+                                    });
 
-                            // if (res.status != "100") {
-                            //     alert("控制失败");
-                            // }else{
-                            //     renderOpen(deviceId);
-                            //     //刷新数据
-                            //     getCurrentDataByProject(cur_projectId,function () {
-                            //         console.log("刷新数据成功")
-                            //     });
-                            // }
+                                    // if (res.status != "100") {
+                                    //     alert("控制失败");
+                                    // }else{
+                                    //     renderOpen(deviceId);
+                                    //     //刷新数据
+                                    //     getCurrentDataByProject(cur_projectId,function () {
+                                    //         console.log("刷新数据成功")
+                                    //     });
+                                    // }
+                                })
+                            },
+                            msg: ToolBox.getConstant('Constant-turn-on-msg')
                         })
-                    },
-                    msg: ToolBox.getConstant('Constant-turn-on-msg')
-                })
-            }
-
+                    }
+                }
+            });
         })
         //温度减
         $("#main").off('tap', ".device_minus").on('tap', '.device_minus', function (e) {
+            //开机状态
             var deviceId = $(this).attr("deviceId");
-            if ($("#switch" + deviceId).hasClass("on")) {
-                //开机状态
-                var id = "#temp" + deviceId;
-                var temp = $(id).html().trim();
-                var tempNum = Number(temp.substring(0, temp.indexOf('℃')));
-                tempNum = tempNum - 1;
-                //重新设置页面的温度和环形
-                $(id).html(tempNum + '℃');
-                var wraId = "circle_step" + deviceId;
-                $('#' + wraId).circleProgress({
-                    temp: tempNum
-                });
-                //延迟5s进行操作
-                console.log("装置：" + deviceId + ",当前温度为：" + temp + "执行减操作")
-                var itemname = $(id).attr("itemname");
-                change_device_temp(itemname, tempNum, function () {
-                    console.log('已经执行完操作了');
-                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                        console.log("刷新数据成功")
-                    });
-                })
-            } else {
-                singleAlter("Constant-warn-close-msg")
-                // alert("已关机，请开机后操作")
-            }
+            //判断是否有权限
+            getUserProjectAuth(function (res) {
+                var roleId = ToolBox.getCookie("roleId");
+                //作为普通用户没有主机权限
+                if (Number(roleId) === 2 & Number(res.fkAuth) === 0) {
+                    singleAlter("Constant-account-no-permission-msg")
+                } else {
+                    if ($("#switch" + deviceId).hasClass("on")) {
+                        //开机状态
+                        var id = "#temp" + deviceId;
+                        var temp = $(id).html().trim();
+                        var tempNum = Number(temp.substring(0, temp.indexOf('℃')));
+                        tempNum = tempNum - 1;
+                        //重新设置页面的温度和环形
+                        $(id).html(tempNum + '℃');
+                        var wraId = "circle_step" + deviceId;
+                        $('#' + wraId).circleProgress({
+                            temp: tempNum
+                        });
+                        //延迟5s进行操作
+                        console.log("装置：" + deviceId + ",当前温度为：" + temp + "执行减操作")
+                        var itemname = $(id).attr("itemname");
+                        change_device_temp(itemname, tempNum, function () {
+                            console.log('已经执行完操作了');
+                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                console.log("刷新数据成功")
+                            });
+                        })
+                    } else {
+                        singleAlter("Constant-warn-close-msg")
+                        // alert("已关机，请开机后操作")
+                    }
+                }
+            });
+
         })
         //温度加
         $("#main").off('tap', ".device_plus").on('tap', '.device_plus', function (e) {
             var deviceId = $(this).attr("deviceId");
-            if ($("#switch" + deviceId).hasClass("on")) {
-                var id = "#temp" + deviceId;
-                var temp = $(id).html().trim();
-                var tempNum = Number(temp.substring(0, temp.indexOf('℃')));
-                tempNum = tempNum + 1;
-                //重新设置页面的温度和环形
-                $(id).html(tempNum + '℃');
-                var wraId = "child" + deviceId;
-                $('#' + wraId).circleProgress({
-                    temp: tempNum,
-                });
-                //延迟5s进行操作
-                console.log("装置：" + deviceId + ",当前温度为：" + temp + "执行加操作");
-                var itemname = $(id).attr("itemname");
-                change_device_temp(itemname, tempNum, function () {
-                    console.log('已经执行完操作了')
-                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                        console.log("刷新数据成功")
-                    });
-                })
-            } else {
-                singleAlter("Constant-warn-close-msg");
-                // alert("已关机，请开机后操作")
-            }
+            //判断是否有权限
+            getUserProjectAuth(function (res) {
+                var roleId = ToolBox.getCookie("roleId");
+                //作为普通用户没有主机权限
+                if (Number(roleId) === 2 & Number(res.fkAuth) === 0) {
+                    singleAlter("Constant-account-no-permission-msg")
+                } else {
+                    if ($("#switch" + deviceId).hasClass("on")) {
+                        var id = "#temp" + deviceId;
+                        var temp = $(id).html().trim();
+                        var tempNum = Number(temp.substring(0, temp.indexOf('℃')));
+                        tempNum = tempNum + 1;
+                        //重新设置页面的温度和环形
+                        $(id).html(tempNum + '℃');
+                        var wraId = "child" + deviceId;
+                        $('#' + wraId).circleProgress({
+                            temp: tempNum,
+                        });
+                        //延迟5s进行操作
+                        console.log("装置：" + deviceId + ",当前温度为：" + temp + "执行加操作");
+                        var itemname = $(id).attr("itemname");
+                        change_device_temp(itemname, tempNum, function () {
+                            console.log('已经执行完操作了')
+                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                console.log("刷新数据成功")
+                            });
+                        })
+                    } else {
+                        singleAlter("Constant-warn-close-msg");
+                        // alert("已关机，请开机后操作")
+                    }
+                }
+            });
+
         })
         //装置模式
         $("#main").off('tap', ". ").on('tap', '.device_model', function (e) {
             var deviceId = $(this).attr("deviceId");
-            if ($("#switch" + deviceId).hasClass("on")) {
-                var itemname_model = $(this).attr("itemname");
-                var vId = deviceId.substring(0, deviceId.indexOf('_'));
-                var item = getVdeviceItemsInfo(vId, itemname_model);
-                //当前为开机状态，提供关机功能
-                ToolBox.device_model({
-                    $container: $('#others'),
-                    afterCallbackCold: function () {
-                        $('#confirm-alert').modal('hide');
-                        var loading = layer.load(2, {shade: [0.5, '#fff']});
-                        send_control_new(item.devid, item.itemid, 0, false, function (res) {
-                            //修改环形颜色和背景颜色
-                            $('#child' + deviceId).circleProgress({
-                                fill: {
-                                    gradient: ["#21BFFE", "#67F7B2"]
-                                }
-                            });
-                            $('#parent' + deviceId).removeClass("hot_parent");
-                            $('#parent' + deviceId).addClass("cold_parent");
-                            $('#child' + deviceId).removeClass("hot_child");
-                            $('#child' + deviceId).addClass("cold_child");
-                            $("#modelImg" + deviceId).removeClass("fa-sun-o");
-                            $("#modelImg" + deviceId).addClass("fa-snowflake-o");
-                            $("#modelText" + deviceId).html("制冷");
-                            if (res != "success") {
-                                alert("控制失败");
-                            } else {
-                                refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                    console.log("刷新数据成功")
-                                });
+            var itemname_model = $(this).attr("itemname");
+            //判断是否有权限
+            getUserProjectAuth(function (res) {
+                var roleId = ToolBox.getCookie("roleId");
+                //作为普通用户没有主机权限
+                if (Number(roleId) === 2 & Number(res.fkAuth) === 0) {
+                    singleAlter("Constant-account-no-permission-msg")
+                } else {
+                    if ($("#switch" + deviceId).hasClass("on")) {
+                        var vId = deviceId.substring(0, deviceId.indexOf('_'));
+                        var item = getVdeviceItemsInfo(vId, itemname_model);
+                        //当前为开机状态，提供关机功能
+                        ToolBox.device_model({
+                            $container: $('#others'),
+                            afterCallbackCold: function () {
+                                $('#confirm-alert').modal('hide');
+                                var loading = layer.load(2, {shade: [0.5, '#fff']});
+                                send_control_new(item.devid, item.itemid, 0, false, function (res) {
+                                    //修改环形颜色和背景颜色
+                                    $('#child' + deviceId).circleProgress({
+                                        fill: {
+                                            gradient: ["#21BFFE", "#67F7B2"]
+                                        }
+                                    });
+                                    $('#parent' + deviceId).removeClass("hot_parent");
+                                    $('#parent' + deviceId).addClass("cold_parent");
+                                    $('#child' + deviceId).removeClass("hot_child");
+                                    $('#child' + deviceId).addClass("cold_child");
+                                    $("#modelImg" + deviceId).removeClass("fa-sun-o");
+                                    $("#modelImg" + deviceId).addClass("fa-snowflake-o");
+                                    $("#modelText" + deviceId).html("制冷");
+                                    if (res != "success") {
+                                        alert("控制失败");
+                                    } else {
+                                        refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                            console.log("刷新数据成功")
+                                        });
+                                    }
+                                    //关闭loading
+                                    layer.close(loading);
+                                })
+                            },
+                            afterCallbackHot: function () {
+                                $('#confirm-alert').modal('hide');
+                                var loading = layer.load(2, {shade: [0.5, '#fff']});
+                                send_control_new(item.devid, item.itemid, 1, false, function (res) {
+                                    //修改环形颜色和背景颜色
+                                    $('#child' + deviceId).circleProgress({
+                                        fill: {
+                                            gradient: ["#2CCBF3", "#B40608"]
+                                        }
+                                    });
+                                    $('#parent' + deviceId).addClass("hot_parent");
+                                    $('#parent' + deviceId).removeClass("cold_parent");
+                                    $('#child' + deviceId).removeClass("cold_child");
+                                    $('#child' + deviceId).addClass("hot_child");
+                                    $("#modelImg" + deviceId).removeClass("fa-snowflake-o");
+                                    $("#modelImg" + deviceId).addClass("fa-sun-o");
+                                    $("#modelText" + deviceId).html("制热");
+                                    if (res != "success") {
+                                        alert("控制失败");
+                                    } else {
+                                        refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                            console.log("刷新数据成功")
+                                        });
+                                    }
+                                    //关闭loading
+                                    layer.close(loading);
+                                })
                             }
-                            //关闭loading
-                            layer.close(loading);
                         })
-                    },
-                    afterCallbackHot: function () {
-                        $('#confirm-alert').modal('hide');
-                        var loading = layer.load(2, {shade: [0.5, '#fff']});
-                        send_control_new(item.devid, item.itemid, 1, false, function (res) {
-                            //修改环形颜色和背景颜色
-                            $('#child' + deviceId).circleProgress({
-                                fill: {
-                                    gradient: ["#2CCBF3", "#B40608"]
-                                }
-                            });
-                            $('#parent' + deviceId).addClass("hot_parent");
-                            $('#parent' + deviceId).removeClass("cold_parent");
-                            $('#child' + deviceId).removeClass("cold_child");
-                            $('#child' + deviceId).addClass("hot_child");
-                            $("#modelImg" + deviceId).removeClass("fa-snowflake-o");
-                            $("#modelImg" + deviceId).addClass("fa-sun-o");
-                            $("#modelText" + deviceId).html("制热");
-                            if (res != "success") {
-                                alert("控制失败");
-                            } else {
-                                refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                    console.log("刷新数据成功")
-                                });
-                            }
-                            //关闭loading
-                            layer.close(loading);
-                        })
+                    } else {
+                        singleAlter("Constant-warn-close-msg");
                     }
-                })
-            } else {
-                singleAlter("Constant-warn-close-msg");
-            }
+                }
+            });
         })
 
         //风速
         $("#main").off('tap', ".device_speed").on('tap', '.device_speed', function (e) {
             var deviceId = $(this).attr("deviceId");
-            if ($("#switch" + deviceId).hasClass("on")) {
-                var vId = deviceId.substring(0, deviceId.indexOf('_'));
-                var itemPre = $(this).attr("itemPre");
-                var speed = $("#speedT" + deviceId).html();
-                ToolBox.device_speed({
-                    $container: $('#others'),
-                    afterCallback: function (data) {
-                        $('#confirm-alert').modal('hide');
-                        var loading = layer.load(2, {shade: [0.5, '#fff']});
-                        $("#speedT" + deviceId).html(data);
-                        //分别获取低速、中速、高速的item
-                        var lowItemname = itemPre + '_Lwinds';
-                        var lowItem = getVdeviceItemsInfo(vId, lowItemname);
-                        var midItemname = itemPre + '_Mwinds';
-                        var midItem = getVdeviceItemsInfo(vId, midItemname);
-                        var highItemname = itemPre + '_Hwinds';
-                        var highItem = getVdeviceItemsInfo(vId, highItemname);
-                        if (data === '低速') {
-                            updateLowSpeed(lowItem.devid,lowItem.itemid,1);
-                            updateMidSpeed(midItem.devid,midItem.itemid,0);
-                            updateHighSpeed(highItem.devid,highItem.itemid,0);
-                        } else if (data === '高速') {
-                            updateLowSpeed(lowItem.devid,lowItem.itemid,0);
-                            updateMidSpeed(midItem.devid,midItem.itemid,0);
-                            updateHighSpeed(highItem.devid,highItem.itemid,1);
-                        } else if (data === '中速') {
-                            updateLowSpeed(lowItem.devid,lowItem.itemid,0);
-                            updateMidSpeed(midItem.devid,midItem.itemid,1);
-                            updateHighSpeed(highItem.devid,highItem.itemid,0);
-                        }
-                        //关闭loading
-                        layer.close(loading);
-                    },
-                    flag: speed
-                })
-            } else {
-                singleAlter("Constant-warn-close-msg");
-            }
+            var itemPre = $(this).attr("itemPre");
+            //判断是否有权限
+            getUserProjectAuth(function (res) {
+                var roleId = ToolBox.getCookie("roleId");
+                //作为普通用户没有主机权限
+                if (Number(roleId) === 2 & Number(res.fkAuth) === 0) {
+                    singleAlter("Constant-account-no-permission-msg")
+                } else {
+                    if ($("#switch" + deviceId).hasClass("on")) {
+                        var vId = deviceId.substring(0, deviceId.indexOf('_'));
+                        var speed = $("#speedT" + deviceId).html();
+                        ToolBox.device_speed({
+                            $container: $('#others'),
+                            afterCallback: function (data) {
+                                $('#confirm-alert').modal('hide');
+                                var loading = layer.load(2, {shade: [0.5, '#fff']});
+                                $("#speedT" + deviceId).html(data);
+                                //分别获取低速、中速、高速的item
+                                var lowItemname = itemPre + '_Lwinds';
+                                var lowItem = getVdeviceItemsInfo(vId, lowItemname);
+                                var midItemname = itemPre + '_Mwinds';
+                                var midItem = getVdeviceItemsInfo(vId, midItemname);
+                                var highItemname = itemPre + '_Hwinds';
+                                var highItem = getVdeviceItemsInfo(vId, highItemname);
+                                if (data === '低速') {
+                                    updateLowSpeed(lowItem.devid, lowItem.itemid, 1);
+                                    updateMidSpeed(midItem.devid, midItem.itemid, 0);
+                                    updateHighSpeed(highItem.devid, highItem.itemid, 0);
+                                } else if (data === '高速') {
+                                    updateLowSpeed(lowItem.devid, lowItem.itemid, 0);
+                                    updateMidSpeed(midItem.devid, midItem.itemid, 0);
+                                    updateHighSpeed(highItem.devid, highItem.itemid, 1);
+                                } else if (data === '中速') {
+                                    updateLowSpeed(lowItem.devid, lowItem.itemid, 0);
+                                    updateMidSpeed(midItem.devid, midItem.itemid, 1);
+                                    updateHighSpeed(highItem.devid, highItem.itemid, 0);
+                                }
+                                //关闭loading
+                                layer.close(loading);
+                            },
+                            flag: speed
+                        })
+                    } else {
+                        singleAlter("Constant-warn-close-msg");
+                    }
+                }
+            });
+
         })
 
         //修改低速状态值
-        function updateLowSpeed(devid,itemid,val){
+        function updateLowSpeed(devid, itemid, val) {
             send_control_new(devid, itemid, val, false, function (res) {
                 if (res != "success") {
                     alert("控制失败");
@@ -1670,19 +1769,7 @@ define([
         }
 
         //修改中速状态值
-        function updateMidSpeed(devid,itemid,val){
-            send_control_new(devid, itemid, val, false, function (res) {
-                if (res != "success") {
-                    alert("控制失败");
-                } else {
-                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                        console.log("刷新数据成功")
-                    });
-                }
-            });
-        }
-        //修改高速状态值
-        function updateHighSpeed(devid,itemid,val){
+        function updateMidSpeed(devid, itemid, val) {
             send_control_new(devid, itemid, val, false, function (res) {
                 if (res != "success") {
                     alert("控制失败");
@@ -1694,77 +1781,97 @@ define([
             });
         }
 
+        //修改高速状态值
+        function updateHighSpeed(devid, itemid, val) {
+            send_control_new(devid, itemid, val, false, function (res) {
+                if (res != "success") {
+                    alert("控制失败");
+                } else {
+                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                        console.log("刷新数据成功")
+                    });
+                }
+            });
+        }
 
 
         //定时
         $("#main").off('tap', ".device_time").on('tap', '.device_time', function (e) {
             var deviceId = $(this).attr("deviceId");
-            if ($("#switch" + deviceId).hasClass("on")) {
-                var itemname = $(this).attr("itemname");
-                //需要根据天气提供页面图片
-                var air_img = getImgUrl(weather);
-                $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img));
-                //移除所有按钮的激活class，并激活当前按钮
-                $("#host").removeClass("active")
-                $("#control").removeClass("active")
-                $("#senior").addClass("active")
-                getValByKey(itemname, function (item) {
-                    var devid = item.devid;
-                    var itemid = item.itemid;
-                    var loading;
-                    $.ajax({
-                        type: 'get',
-                        url: '/device/getDeviceJob',
-                        data: {
-                            devid: devid,
-                            itemid: itemid,
-                        },
-                        //开启loading
-                        beforeSend: function () {
-                            loading = layer.load(2, {shade: [0.5, '#fff']});
-                        },
-                        dataType: "json",
-                        success: function (res) {
-                            $(".content").html(Layout.time_swtich());
-                            //添加itemname属性
-                            $("#time_switch").attr('itemname', itemname);
-                            //服务端结束处理后，重置状态
-                            if (res.data.length > 0) {
-                                for (var step = 0; step < res.data.length; step++) {
-                                    var cronTime = res.data[step].cronTime;
-                                    var arra = cronTime.split(" ");
-                                    var min = Number(arra[1]) < 10 ? '0' + Number(arra[1]) : Number(arra[1]);
-                                    var time = arra[2] + ":" + min;
-                                    if (Number(res.data[step].val) === 1) {
-                                        //开机时间
-                                        $("#open_time_t").html(time);
-                                    } else {
-                                        //关机时间
-                                        $("#close_time_t").html(time);
+            var itemname = $(this).attr("itemname");
+            //判断是否有权限
+            getUserProjectAuth(function (res) {
+                var roleId = ToolBox.getCookie("roleId");
+                //作为普通用户没有主机权限
+                if (Number(roleId) === 2 & Number(res.fkAuth) === 0) {
+                    singleAlter("Constant-account-no-permission-msg")
+                } else {
+                    if ($("#switch" + deviceId).hasClass("on")) {
+                        //需要根据天气提供页面图片
+                        var air_img = getImgUrl(weather);
+                        $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img));
+                        //移除所有按钮的激活class，并激活当前按钮
+                        $("#host").removeClass("active")
+                        $("#control").removeClass("active")
+                        $("#senior").addClass("active")
+                        getValByKey(itemname, function (item) {
+                            var devid = item.devid;
+                            var itemid = item.itemid;
+                            var loading;
+                            $.ajax({
+                                type: 'get',
+                                url: '/device/getDeviceJob',
+                                data: {
+                                    devid: devid,
+                                    itemid: itemid,
+                                },
+                                //开启loading
+                                beforeSend: function () {
+                                    loading = layer.load(2, {shade: [0.5, '#fff']});
+                                },
+                                dataType: "json",
+                                success: function (res) {
+                                    $(".content").html(Layout.time_swtich());
+                                    //添加itemname属性
+                                    $("#time_switch").attr('itemname', itemname);
+                                    //服务端结束处理后，重置状态
+                                    if (res.data.length > 0) {
+                                        for (var step = 0; step < res.data.length; step++) {
+                                            var cronTime = res.data[step].cronTime;
+                                            var arra = cronTime.split(" ");
+                                            var min = Number(arra[1]) < 10 ? '0' + Number(arra[1]) : Number(arra[1]);
+                                            var time = arra[2] + ":" + min;
+                                            if (Number(res.data[step].val) === 1) {
+                                                //开机时间
+                                                $("#open_time_t").html(time);
+                                            } else {
+                                                //关机时间
+                                                $("#close_time_t").html(time);
+                                            }
+                                        }
+                                        //取第一个的定时器的状态
+                                        var onoff = Number(res.data[0].jobStatus);
+                                        if (onoff === 1) {
+                                            //开机
+                                            $("#time_switch").removeClass("on");
+                                            $("#time_switch").addClass("on");
+                                            $("#time_switch").attr("src", "../assets/image/img/switch_on_full.png");
+                                        } else {
+                                            //关机
+                                            $("#time_switch").removeClass("on");
+                                            $("#time_switch").attr("src", "../assets/image/img/switch_off_full.png");
+                                        }
                                     }
+                                    //关闭loading
+                                    layer.close(loading);
                                 }
-                                //取第一个的定时器的状态
-                                var onoff=Number(res.data[0].jobStatus);
-                                if(onoff===1){
-                                    //开机
-                                    $("#time_switch").removeClass("on");
-                                    $("#time_switch").addClass("on");
-                                    $("#time_switch").attr("src", "../assets/image/img/switch_on_full.png");
-                                }else{
-                                    //关机
-                                    $("#time_switch").removeClass("on");
-                                    $("#time_switch").attr("src", "../assets/image/img/switch_off_full.png");
-                                }
-                            }
-                            //关闭loading
-                            layer.close(loading);
-                        }
-                    })
-                })
-            } else {
-                singleAlter("Constant-warn-close-msg");
-            }
-
+                            })
+                        })
+                    } else {
+                        singleAlter("Constant-warn-close-msg");
+                    }
+                }
+            });
         })
 
         //点击房控内部返回按钮
@@ -1795,9 +1902,9 @@ define([
             $("#control").removeClass("active")
             $(this).addClass("active")
             var roleId = ToolBox.getCookie("roleId");
-            if(roleId != "2"){
+            if (roleId != "2") {
                 $(".content").html(Layout.senior_mode())
-            }else{
+            } else {
                 $(".content").html(Layout.senior_mode_common())
             }
 
@@ -1816,9 +1923,9 @@ define([
             $("#senior").addClass("active")
             setTimeout(function () {
                 var roleId = ToolBox.getCookie("roleId");
-                if(roleId != "2"){
+                if (roleId != "2") {
                     $(".content").html(Layout.senior_mode())
-                }else{
+                } else {
                     $(".content").html(Layout.senior_mode_common())
                 }
             }, 100)
@@ -1831,9 +1938,9 @@ define([
             $("#senior").addClass("active")
             setTimeout(function () {
                 var roleId = ToolBox.getCookie("roleId");
-                if(roleId != "2"){
+                if (roleId != "2") {
                     $(".content").html(Layout.senior_mode())
-                }else{
+                } else {
                     $(".content").html(Layout.senior_mode_common())
                 }
             }, 100)
@@ -1909,59 +2016,67 @@ define([
 
         //定时开关
         $("#main").off('tap', '.time_control_1').on('tap', '.time_control_1', function (e) {
-            //定时开关页面需要更新开机时间和关机时间
-            getValByKey("Sys_RunSet", function (item) {
-                var devid = item.devid;
-                var itemid = item.itemid;
-                var loading;
-                $.ajax({
-                    type: 'get',
-                    url: '/device/getDeviceJob',
-                    data: {
-                        devid: devid,
-                        itemid: itemid,
-                    }, //开启loading
-                    beforeSend: function () {
-                        loading = layer.load(2, {shade: [0.5, '#fff']});
-                    },
-                    dataType: "json",
-                    success: function (res) {
-                        $(".content").html(Layout.time_swtich());
-                        //服务端结束处理后，重置状态
-                        if (res.data.length > 0) {
-                            for (var step = 0; step < res.data.length; step++) {
-                                var cronTime = res.data[step].cronTime;
-                                var arra = cronTime.split(" ");
-                                var min = Number(arra[1]) < 10 ? '0' + Number(arra[1]) : Number(arra[1]);
-                                var time = arra[2] + ":" + min;
-                                if (Number(res.data[step].val) === 1) {
-                                    //开机时间
-                                    $("#open_time_t").html(time);
-                                } else {
-                                    //关机时间
-                                    $("#close_time_t").html(time);
+            //判断是否有权限
+            getUserProjectAuth(function (res) {
+                var roleId = ToolBox.getCookie("roleId");
+                //作为普通用户没有主机权限
+                if (Number(roleId) === 2 & Number(res.fkAuth) === 0) {
+                    singleAlter("Constant-account-no-permission-msg")
+                } else {
+                    //定时开关页面需要更新开机时间和关机时间
+                    getValByKey("Sys_RunSet", function (item) {
+                        debugger
+                        var devid = item.devid;
+                        var itemid = item.itemid;
+                        var loading;
+                        $.ajax({
+                            type: 'get',
+                            url: '/device/getDeviceJob',
+                            data: {
+                                devid: devid,
+                                itemid: itemid,
+                            }, //开启loading
+                            beforeSend: function () {
+                                loading = layer.load(2, {shade: [0.5, '#fff']});
+                            },
+                            dataType: "json",
+                            success: function (res) {
+                                $(".content").html(Layout.time_swtich());
+                                //服务端结束处理后，重置状态
+                                if (res.data.length > 0) {
+                                    for (var step = 0; step < res.data.length; step++) {
+                                        var cronTime = res.data[step].cronTime;
+                                        var arra = cronTime.split(" ");
+                                        var min = Number(arra[1]) < 10 ? '0' + Number(arra[1]) : Number(arra[1]);
+                                        var time = arra[2] + ":" + min;
+                                        if (Number(res.data[step].val) === 1) {
+                                            //开机时间
+                                            $("#open_time_t").html(time);
+                                        } else {
+                                            //关机时间
+                                            $("#close_time_t").html(time);
+                                        }
+                                    }
+                                    //取第一个的定时器的状态
+                                    var onoff = Number(res.data[0].jobStatus);
+                                    if (onoff === 1) {
+                                        //开机
+                                        $("#time_switch").removeClass("on");
+                                        $("#time_switch").addClass("on");
+                                        $("#time_switch").attr("src", "../assets/image/img/switch_on_full.png");
+                                    } else {
+                                        //关机
+                                        $("#time_switch").removeClass("on");
+                                        $("#time_switch").attr("src", "../assets/image/img/switch_off_full.png");
+                                    }
                                 }
+                                //关闭loading
+                                layer.close(loading);
                             }
-                            //取第一个的定时器的状态
-                            var onoff=Number(res.data[0].jobStatus);
-                            if(onoff===1){
-                                //开机
-                                $("#time_switch").removeClass("on");
-                                $("#time_switch").addClass("on");
-                                $("#time_switch").attr("src", "../assets/image/img/switch_on_full.png");
-                            }else{
-                                //关机
-                                $("#time_switch").removeClass("on");
-                                $("#time_switch").attr("src", "../assets/image/img/switch_off_full.png");
-                            }
-                        }
-                        //关闭loading
-                        layer.close(loading);
-                    }
-                })
-            })
-
-
+                        })
+                    })
+                }
+            });
         })
 
 
@@ -1999,7 +2114,7 @@ define([
             }
         })
         //开机时间的业务代码控制
-        var onflag = 0, offflag = 0, timeOn, timeOff, switchflag = 0,timeSwitch;
+        var onflag = 0, offflag = 0, timeOn, timeOff, switchflag = 0, timeSwitch;
 
         //开机时间的后台处理
         function addDeviceJobServiceOpen(token, devid, val, itemid, startUpTime, onoff) {
@@ -2267,7 +2382,7 @@ define([
                     userName: ToolBox.getCookie("username"),
                     reason: reason,
                     repairDesc: describe,
-                    userType:0
+                    userType: 0
                 }),
                 beforeSend: function () {
                     loading = layer.load(2, {shade: [0.5, '#fff']});
@@ -2306,7 +2421,7 @@ define([
                 data: {
                     openId: ToolBox.getCookie("openId"),
                     projectId: global_projectId,
-                    roleId:roleId
+                    roleId: roleId
                 },
                 beforeSend: function () {
                     loading = layer.load(2, {shade: [0.5, '#fff']});
@@ -2351,9 +2466,9 @@ define([
                 //先清空content的内容，补充各个单独房间样式
                 $(".content").html("");
                 var roleId = ToolBox.getCookie("roleId");
-                if(roleId != 2){
+                if (roleId != 2) {
                     $(".content").html(Layout.senior_mode())
-                }else{
+                } else {
                     $(".content").html(Layout.senior_mode_common())
                 }
             }, 300)
@@ -2365,7 +2480,7 @@ define([
             var repairId = $(this).attr('id');
             var roleId = ToolBox.getCookie("roleId");
             var userType = 0;
-            if(roleId != '2'){
+            if (roleId != '2') {
                 userType = 1;
             }
             $.ajax({
@@ -2373,7 +2488,7 @@ define([
                 url: '/device/getRepairRecord',
                 data: {
                     repairId: repairId,
-                    userType:userType
+                    userType: userType
                 },
                 dataType: 'json',
                 contentType: "application/json;charset=utf-8",
@@ -2401,7 +2516,7 @@ define([
                     data: {
                         openId: ToolBox.getCookie("openId"),
                         projectId: global_projectId,
-                        roleId:roleId
+                        roleId: roleId
                     },
                     dataType: 'json',
                     success: function (res) {
@@ -2434,7 +2549,7 @@ define([
             var reply = $("#reply").val();
             var roleId = ToolBox.getCookie("roleId");
             var userType = 0;
-            if(roleId != '2'){
+            if (roleId != '2') {
                 userType = 1;
             }
             setTimeout(function () {
@@ -2456,7 +2571,7 @@ define([
                                 url: '/device/getRepairRecord',
                                 data: {
                                     repairId: repairId,
-                                    userType:userType
+                                    userType: userType
                                 },
                                 dataType: 'json',
                                 contentType: "application/json;charset=utf-8",
