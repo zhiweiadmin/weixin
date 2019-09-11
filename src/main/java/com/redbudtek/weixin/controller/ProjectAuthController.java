@@ -82,6 +82,7 @@ public class ProjectAuthController {
                 userAuth.setCtrlAuth(ctrlAuth);
                 userAuth.setHostAuth(hostAuth);
                 userAuth.setFkAuth(fkAuth);
+                userAuth.setProjectId(projectId);
                 projectAuthService.insert(userAuth);
             }
         }catch (Exception e){
