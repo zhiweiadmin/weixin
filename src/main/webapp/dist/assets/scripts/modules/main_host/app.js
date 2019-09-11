@@ -2012,7 +2012,7 @@ define([
 
                         if(res.hostAuth == 1){
                             $("#host_role_switch").addClass("on");
-                            $("#host_role_switch").attr("src", "../assets/image/img/switch_off_full.png");
+                            $("#host_role_switch").attr("src", "../assets/image/img/switch_on_full.png");
                         }else{
                             $("#host_role_switch").removeClass("on");
                             $("#host_role_switch").attr("src", "../assets/image/img/switch_off_full.png");
