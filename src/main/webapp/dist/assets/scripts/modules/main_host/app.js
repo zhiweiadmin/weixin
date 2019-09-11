@@ -310,7 +310,6 @@ define([
                 if (res.data.length > 0) {
                     var agents = res.data[0].dataItem[0].serialNumber;
                     agentListCondition(agents, function (res1) {
-                        debugger;
                         if (res1.status == "100") {
                             if (res1.result.data.length > 0) {
                                 agent_condition = res1.result.data[0].agentCondition;
@@ -1993,7 +1992,6 @@ define([
                     },
                     dataType: 'json',
                     success: function (res) {
-                        debugger;
                         if(res.ctrlAuth == 1){
                             $("#control_role_switch").addClass("on");
                             $("#control_role_switch").attr("src", "../assets/image/img/switch_on_full.png");
