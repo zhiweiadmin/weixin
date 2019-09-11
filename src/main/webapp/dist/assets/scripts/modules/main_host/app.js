@@ -285,6 +285,7 @@ define([
      *
      */
     var getUserProjectAuth = function (callback) {
+
         $.ajax({
             type: 'GET',
             url: '/auth/getProjectAuth',
@@ -300,7 +301,6 @@ define([
         });
     };
 
-
     /*frame*/
     var layout_init = function () {
         //取消modal的遮罩
@@ -315,6 +315,8 @@ define([
                                 agent_condition = res1.result.data[0].agentCondition;
                                 if (typeof (agent_condition) == "undefined" || agent_condition === null) {
                                     run_status = 0;
+                                }else{
+                                    run_status = agent_condition;
                                 }
                             } else {
                                 run_status = 0;
@@ -1212,59 +1214,57 @@ define([
                 if (Number(roleId) === 2 & Number(res.hostAuth) === 0) {
                     singleAlter("Constant-account-no-permission-msg")
                 } else {
-                    change_mode(0, null, function (res) {
-                        var msg = '';
-                        if (cur_power == '0') {
-                            msg = '确定开机吗?'
-                        } else {
-                            msg = '确定关机吗?'
-                        }
-                        ToolBox.confirm_alert({
-                            $container: $('#others'),
-                            afterCallback: function () {
-                                $('#confirm-alert').modal('hide');
-                                //开启loading
-                                var loading = layer.load(2, {shade: [0.5, '#fff']});
-                                if ($("#host_switch").hasClass('on')) {
-                                    getValByKey("Sys_RunSet", function (item) {
-                                        send_control(item, 0, true, function (res) {
-                                            if (res == 'success') {
-                                                $("#host_switch").attr("src", "../assets/image/img/switch_off_o.png");
-                                                $("#host_switch").removeClass("on");
+                    var msg = '';
+                    if (cur_power == '0') {
+                        msg = '确定开机吗?'
+                    } else {
+                        msg = '确定关机吗?'
+                    }
+                    ToolBox.confirm_alert({
+                        $container: $('#others'),
+                        afterCallback: function () {
+                            $('#confirm-alert').modal('hide');
+                            //开启loading
+                            var loading = layer.load(2, {shade: [0.5, '#fff']});
+                            if ($("#host_switch").hasClass('on')) {
+                                getValByKey("Sys_RunSet", function (item) {
+                                    send_control(item, 0, true, function (res) {
+                                        if (res == 'success') {
+                                            $("#host_switch").attr("src", "../assets/image/img/switch_off_o.png");
+                                            $("#host_switch").removeClass("on");
+                                            layout_init();
+                                            bindEvents();
+                                        } else {
+                                            alert("关机控制失败");
+                                        }
+                                        //关闭loading
+                                        layer.close(loading);
+                                    })
+                                })
+                            } else {
+                                getValByKey("Sys_RunSet", function (item) {
+                                    console.log(item);
+                                    send_control(item, 1, true, function (res) {
+                                        if (res == 'success') {
+                                            $('#msg_control').html('控制成功');
+                                            $('#msg_control').addClass('margin-left-5');
+                                            setTimeout(function () {
                                                 layout_init();
                                                 bindEvents();
-                                            } else {
-                                                alert("关机控制失败");
-                                            }
-                                            //关闭loading
-                                            layer.close(loading);
-                                        })
+                                                init_index_page();
+                                            }, 800);
+                                            $("#host_switch").attr("src", "../assets/image/img/switch_on_o.png");
+                                            $("#host_switch").addClass("on")
+                                        } else {
+                                            alert("开机控制失败");
+                                        }
+                                        //关闭loading
+                                        layer.close(loading);
                                     })
-                                } else {
-                                    getValByKey("Sys_RunSet", function (item) {
-                                        console.log(item);
-                                        send_control(item, 1, true, function (res) {
-                                            if (res == 'success') {
-                                                $('#msg_control').html('控制成功');
-                                                $('#msg_control').addClass('margin-left-5');
-                                                setTimeout(function () {
-                                                    layout_init();
-                                                    bindEvents();
-                                                    init_index_page();
-                                                }, 800);
-                                                $("#host_switch").attr("src", "../assets/image/img/switch_on_o.png");
-                                                $("#host_switch").addClass("on")
-                                            } else {
-                                                alert("开机控制失败");
-                                            }
-                                            //关闭loading
-                                            layer.close(loading);
-                                        })
-                                    })
-                                }
-                            },
-                            msg: msg
-                        })
+                                })
+                            }
+                        },
+                        msg: msg
                     })
                 }
             });
@@ -2025,7 +2025,6 @@ define([
                 } else {
                     //定时开关页面需要更新开机时间和关机时间
                     getValByKey("Sys_RunSet", function (item) {
-                        debugger
                         var devid = item.devid;
                         var itemid = item.itemid;
                         var loading;
