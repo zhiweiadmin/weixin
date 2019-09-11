@@ -310,7 +310,8 @@ define([
                 if (res.data.length > 0) {
                     var agents = res.data[0].dataItem[0].serialNumber;
                     agentListCondition(agents, function (res1) {
-                        if (res1.status === 100) {
+                        debugger;
+                        if (res1.status == "100") {
                             if (res1.result.data.length > 0) {
                                 agent_condition = res1.result.data[0].agentCondition;
                                 if (typeof (agent_condition) == "undefined" || agent_condition === null) {
@@ -1983,6 +1984,41 @@ define([
         $("#main").off('tap', '.role_setting').on('tap', '.role_setting', function (e) {
             setTimeout(function () {
                 $(".content").html(Layout.role_setting_mode())
+                //回显
+                $.ajax({
+                    type: 'GET',
+                    url: '/auth/getProjectAuthOri',
+                    data: {
+                        projectId: cur_projectId
+                    },
+                    dataType: 'json',
+                    success: function (res) {
+                        debugger;
+                        if(res.ctrlAuth == 1){
+                            $("#control_role_switch").addClass("on");
+                            $("#control_role_switch").attr("src", "../assets/image/img/switch_on_full.png");
+                        }else{
+                            $("#control_role_switch").removeClass("on");
+                            $("#control_role_switch").attr("src", "../assets/image/img/switch_off_full.png");
+                        }
+
+                        if(res.fkAuth == 1){
+                            $("#room_control_switch").addClass("on");
+                            $("#room_control_switch").attr("src", "../assets/image/img/switch_on_full.png");
+                        }else{
+                            $("#room_control_switch").removeClass("on");
+                            $("#room_control_switch").attr("src", "../assets/image/img/switch_off_full.png");
+                        }
+
+                        if(res.hostAuth == 1){
+                            $("#host_role_switch").addClass("on");
+                            $("#host_role_switch").attr("src", "../assets/image/img/switch_off_full.png");
+                        }else{
+                            $("#host_role_switch").removeClass("on");
+                            $("#host_role_switch").attr("src", "../assets/image/img/switch_off_full.png");
+                        }
+                    }
+                });
             }, 300)
         })
 
@@ -2078,7 +2114,6 @@ define([
             });
         })
 
-
         //权限控制的开关
         $("#main").off('tap', '#control_role_switch').on('tap', '#control_role_switch', function (e) {
             if ($(this).hasClass("on")) {
@@ -2088,6 +2123,32 @@ define([
                 $(this).addClass("on")
                 $(this).attr("src", "../assets/image/img/switch_on_full.png");
             }
+            var ctrlAuth = 0;
+            var hostAuth = 0;
+            var fkAuth = 0;
+            if($("#control_role_switch").hasClass("on")){
+                ctrlAuth = 1;
+            }
+            if($("#host_role_switch").hasClass("on")){
+                hostAuth = 1;
+            }
+            if($("#room_control_switch").hasClass("on")){
+                fkAuth = 1;
+            }
+            $.ajax({
+                type: 'GET',
+                url: '/auth/changeUserAuth',
+                data: {
+                    projectId: cur_projectId,
+                    ctrlAuth:ctrlAuth,
+                    hostAuth:hostAuth,
+                    fkAuth:fkAuth
+                },
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res)
+                }
+            });
         })
 
 
@@ -2100,6 +2161,32 @@ define([
                 $(this).addClass("on")
                 $(this).attr("src", "../assets/image/img/switch_on_full.png");
             }
+            var ctrlAuth = 0;
+            var hostAuth = 0;
+            var fkAuth = 0;
+            if($("#control_role_switch").hasClass("on")){
+                ctrlAuth = 1;
+            }
+            if($("#host_role_switch").hasClass("on")){
+                hostAuth = 1;
+            }
+            if($("#room_control_switch").hasClass("on")){
+                fkAuth = 1;
+            }
+            $.ajax({
+                type: 'GET',
+                url: '/auth/changeUserAuth',
+                data: {
+                    projectId: cur_projectId,
+                    ctrlAuth:ctrlAuth,
+                    hostAuth:hostAuth,
+                    fkAuth:fkAuth
+                },
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res)
+                }
+            });
         })
 
         //房控权限
@@ -2111,6 +2198,32 @@ define([
                 $(this).addClass("on")
                 $(this).attr("src", "../assets/image/img/switch_on_full.png");
             }
+            var ctrlAuth = 0;
+            var hostAuth = 0;
+            var fkAuth = 0;
+            if($("#control_role_switch").hasClass("on")){
+                ctrlAuth = 1;
+            }
+            if($("#host_role_switch").hasClass("on")){
+                hostAuth = 1;
+            }
+            if($("#room_control_switch").hasClass("on")){
+                fkAuth = 1;
+            }
+            $.ajax({
+                type: 'GET',
+                url: '/auth/changeUserAuth',
+                data: {
+                    projectId: cur_projectId,
+                    ctrlAuth:ctrlAuth,
+                    hostAuth:hostAuth,
+                    fkAuth:fkAuth
+                },
+                dataType: 'json',
+                success: function (res) {
+                    console.log(res)
+                }
+            });
         })
         //开机时间的业务代码控制
         var onflag = 0, offflag = 0, timeOn, timeOff, switchflag = 0, timeSwitch;
