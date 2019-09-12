@@ -1,0 +1,148 @@
+* {
+	margin: 0;		/*所有外边距 0px*/
+    padding: 0;	/*所有内边距 0px*/
+    }
+        
+html,
+body {
+	width: 100%;	/*设置宽度为父元素的宽度*/
+	height: 100%;	/*设置宽度为父元素的高度*/
+	}
+        
+.container {
+	width: 100%;
+	height: 100%;				
+	overflow: auto;	/*内容溢出时,显示滚动条查看其余内容*/
+	clear: both;	/*不允许有浮动对象*/
+}
+        
+.z_photo {
+    width: 100%;
+    padding: 0.3rem;
+    overflow: auto;
+    clear: both;
+    margin: 10px auto;	/*上下外边距为1rem 左右自适应*/
+    border: 1px solid #555;	/*设置边框为1px实线*/
+}
+        
+.z_photo img {
+    width: 1rem;
+    height: 1rem;
+}
+        
+.z_addImg {
+    float: left;	/*左浮动*/
+    margin-right: 0.2rem;	/*设置右外边距*/
+}
+        
+.z_file {
+    width: 1rem;
+    height: 1rem;
+    background: url('../image/z_add.png') no-repeat;
+    background-size: 100% 100%;	/*图片尺寸*/
+    float: left;
+    margin-right: 0.2rem;
+}
+        
+.z_file input::-webkit-file-upload-button {
+    width: 1rem;
+    height: 1rem;
+    border: none;	/*设置边框没有*/
+    position: absolute;	/*绝对定位*/
+    outline: 0;	/*边框边缘我的外围轮廓大小为0px*/
+    opacity: 0;	/*设置元素不透明级别*/
+}
+        
+.z_file input#file {
+    display: block;	/*此元素将会被显示为块级元素，此元素前后会带有换行符*/
+    width: auto;
+    border: 0;
+    vertical-align: middle;	/*此元素垂直居中*/
+}
+
+/*遮罩层*/
+        
+.z_mask {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /*渐变    R红色值 G绿色值 B蓝色值 A透明度*/
+    position: fixed;	/*生成绝对定位 相对于浏览器窗口进行定位*/
+    top: 0;
+    left: 0;
+    z-index: 999;	/*设置元素的堆叠顺序*/
+    display: none; /*此元素不会被显示*/
+}
+
+.z_alert {
+    width: 3rem;
+    height: 2rem;
+    border-radius: .2rem; /*添加圆角边框*/
+    background: #fff;	/*设置背景*/
+    font-size: .24rem;	/*字体大小*/
+    text-align: center;	/*对齐方式 居中*/
+    position: absolute; /*生成绝对定位，相对于 static 定位以外的第一个父元素进行定位*/
+    left: 50%;
+    top: 50%;
+    margin-left: -1.5rem;
+    margin-top: -2rem;
+}
+        
+.z_alert p:nth-child(1) {
+    line-height: 1.0rem;	/*设置行间的距离(行高)*/
+}
+
+.z_alert p:nth-child(2) span {
+    display: inline-block;	/*使段落生出行内框 行内块元素*/
+    width: 49%;
+    height: .5rem;
+    line-height: .5rem;
+    float: left;
+    border-top: 1px solid #ddd;
+}
+
+.z_cancel {
+   /* border-right: 1px solid #ddd;*/
+}
+
+.p_mask {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /*渐变    R红色值 G绿色值 B蓝色值 A透明度*/
+    position: fixed;	/*生成绝对定位 相对于浏览器窗口进行定位*/
+    top: 0;
+    left: 0;
+    z-index: 999;	/*设置元素的堆叠顺序*/
+    display: none; /*此元素不会被显示*/
+}
+
+.p_alert {
+    width: 8rem;
+    height: 6rem;
+    text-align: center;	/*对齐方式 居中*/
+    position: absolute; /*生成绝对定位，相对于 static 定位以外的第一个父元素进行定位*/
+    left: 50%;
+    top: 50%;
+    margin-left: -4rem;
+    margin-top: -4rem;
+}
+
+.p_alert img{
+	width: 8rem;
+    height: 6rem;
+}
+
+.sucainiu-demo-ad a {
+    text-decoration: none;
+    color: #666;
+}
+.sucainiu-demo-ad .sucainiu-fl {
+    float: left;
+    margin-left: 10px;
+}
+.sucainiu-demo-ad .sucainiu-fr {
+    float: right;
+    margin-right: 10px;
+}
+.sucainiu-demo-ad .sucainiu-fr a {
+    margin-left: 10px;
+}
