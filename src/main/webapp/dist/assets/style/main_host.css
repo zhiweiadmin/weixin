@@ -329,11 +329,13 @@ strong i{
     width: 72px;
 }
 
-body{
+#main{
     background: -webkit-linear-gradient(#83DECF, #fff); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(#83DECF, #fff); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(#83DECF, #fff); /* Firefox 3.6 - 15 */
     background: linear-gradient(#83DECF, #fff); /* 标准的语法 */
+    /*min-height: max-content !important;*/
+    /*min-height: -webkit-max-content  !important;*/
 }
 
 .content_body{
