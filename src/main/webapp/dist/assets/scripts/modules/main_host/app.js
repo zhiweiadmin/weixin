@@ -271,7 +271,7 @@ define([
                     ToolBox.setCookie('roleName', roleName, 1);
                     ToolBox.setCookie('roleId', roleId, 1);
                 } else {
-                    ToolBox.setCookie('roleId', 1, 1);
+                    ToolBox.setCookie('roleId', 2, 1);
                 }
 
             }
@@ -2481,23 +2481,67 @@ define([
                 return;
             }
 
+            //jiangzhiwei
+            var fileObj = document.getElementById("file").files; // 获取文件对象   
+            var formData = new FormData();
+            for(var i=0;i<fileObj.length;i++){
+                formData.append("file",fileObj[i]);
+            }
+            var json = {
+                projectId: global_projectId,
+                weixinId: ToolBox.getCookie("openId"),
+                phone: ToolBox.getCookie("phone"),
+                userName: ToolBox.getCookie("username"),
+                reason: reason,
+                repairDesc: describe,
+                userType: 0
+            }
+            formData.append("payLoad",JSON.stringify(json))
+
             var loading;
+            // $.ajax({
+            //     type: "POST",
+            //     url: "/device/addProjectRepair",
+            //     data: JSON.stringify({
+            //         projectId: global_projectId,
+            //         weixinId: ToolBox.getCookie("openId"),
+            //         phone: ToolBox.getCookie("phone"),
+            //         userName: ToolBox.getCookie("username"),
+            //         reason: reason,
+            //         repairDesc: describe,
+            //         userType: 0
+            //     }),
+            //     beforeSend: function () {
+            //         loading = layer.load(2, {shade: [0.5, '#fff']});
+            //     },
+            //     contentType: 'application/json',
+            //     dataType: 'json',
+            //     success: function (res) {
+            //         if (res.status == 100) {
+            //             //成功报修
+            //             singleAlter("Constant-account-repair-success-msg")
+            //             $("#repair_reason").val('');
+            //             $("#repair_describe").val('');
+            //         } else {
+            //             //报修失败
+            //             singleAlter("Constant-account-repair-fail-msg")
+            //         }
+            //         //关闭loading
+            //         layer.close(loading);
+            //
+            //     }
+            // })
+
             $.ajax({
                 type: "POST",
-                url: "/device/addProjectRepair",
-                data: JSON.stringify({
-                    projectId: global_projectId,
-                    weixinId: ToolBox.getCookie("openId"),
-                    phone: ToolBox.getCookie("phone"),
-                    userName: ToolBox.getCookie("username"),
-                    reason: reason,
-                    repairDesc: describe,
-                    userType: 0
-                }),
+                url: "/device/addProjectRepairNew",
+                data: formData,
                 beforeSend: function () {
                     loading = layer.load(2, {shade: [0.5, '#fff']});
                 },
-                contentType: 'application/json',
+                cache: false,
+                processData: false,
+                contentType: false,
                 dataType: 'json',
                 success: function (res) {
                     if (res.status == 100) {
@@ -2514,6 +2558,7 @@ define([
 
                 }
             })
+
         })
 
         //报修记录，重新绘制content元素

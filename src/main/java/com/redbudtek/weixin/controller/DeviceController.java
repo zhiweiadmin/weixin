@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -202,6 +203,25 @@ public class DeviceController {
             return result.toJSONString();
         }
     }
+
+    @ResponseBody
+    @RequestMapping(value = "addProjectRepairNew",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
+    public String addProjectRepairNew(String payLoad, MultipartFile[] file){
+        JSONObject result = new JSONObject();
+        System.out.println(file.length);
+        try{
+            ProjectRepair projectRepair = JSONObject.parseObject(payLoad,ProjectRepair.class);
+            repairService.addRepair(projectRepair);
+            result.put("status",100);
+            return result.toJSONString();
+        }catch (Exception e){
+            logger.error("addProjectRepair",e);
+            result.put("status",200);
+            return result.toJSONString();
+        }
+    }
+
+
 
     /**
      * 获取用户填报的维修记录

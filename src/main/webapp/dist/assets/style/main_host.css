@@ -522,6 +522,7 @@ strong i{
 #repair_submit {
     font-size: 15px;
     width: 110px;
+    height: 40px;
     padding: 1px;
     color: white;
     background-color: #4AD0B9;
