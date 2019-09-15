@@ -1479,6 +1479,10 @@ define([
                 if(res.status=="100"){
                     var $el = $(".content_body").find("div[id='"+cur_room_id+"']").find(".main_room");
                     $el.text(v_name);
+                    getVdeviceItems(cur_projectId,function (res) {
+                        //重新去加载数据
+                        devices = [];
+                    });
                 }else{
                     alert("控制失败")
                 }
