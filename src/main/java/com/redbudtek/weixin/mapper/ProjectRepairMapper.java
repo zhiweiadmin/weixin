@@ -18,4 +18,10 @@ public interface ProjectRepairMapper {
 
     List<ProjectRepair> selectByFields(Map<String,Object> param);
 
+    int getNextId();
+
+    void uploadFile(Map<String,Object> param);
+
+    List<Map<String,Object>> getUploadFiles(Integer repairId);
+
 }

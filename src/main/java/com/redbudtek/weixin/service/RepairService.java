@@ -5,9 +5,12 @@ import com.redbudtek.weixin.mapper.ProjectRepairMapper;
 import com.redbudtek.weixin.mapper.ProjectRepairRecordMapper;
 import com.redbudtek.weixin.model.ProjectRepair;
 import com.redbudtek.weixin.model.ProjectRepairRecord;
+import com.redbudtek.weixin.util.FileHandleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +24,11 @@ public class RepairService {
 
     @Autowired
     ProjectRepairRecordMapper projectRepairRecordMapper;
+
+    public int getRepairId(){
+        return projectRepairMapper.getNextId();
+    }
+
 
     public void addRepair(ProjectRepair repair){
         projectRepairMapper.insert(repair);
@@ -79,15 +87,29 @@ public class RepairService {
             }
         }
         ProjectRepair projectRepair = projectRepairMapper.selectByPrimaryKey(repairId);
+        List<Map<String,Object>> fileList = projectRepairMapper.getUploadFiles(repairId);
         jsonObject.put("msg",msg);
         jsonObject.put("phone",projectRepair.getPhone());
         jsonObject.put("username",projectRepair.getUserName());
         jsonObject.put("reason",projectRepair.getReason());
         jsonObject.put("desc",projectRepair.getRepairDesc());
         jsonObject.put("detail","detail");
+        jsonObject.put("fileList",fileList);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         jsonObject.put("time",sdf.format(projectRepair.getCreateDttm()));
         return jsonObject;
+    }
+
+    public void upoadFile(int repairId, MultipartFile[] files) throws IOException {
+        for(MultipartFile file : files){
+            String path = FileHandleUtil.upload(file.getInputStream(), file.getOriginalFilename());
+            String name = file.getOriginalFilename();
+            Map<String,Object> param = new HashMap<String, Object>();
+            param.put("repairId",repairId);
+            param.put("filePath",path);
+            param.put("fileName",name);
+            projectRepairMapper.uploadFile(param);
+        }
     }
 
 }

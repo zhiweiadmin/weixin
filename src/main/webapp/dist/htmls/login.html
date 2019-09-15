@@ -30,7 +30,7 @@
     };
 
     $(function(){
-        var code = "123456";
+        var code = getParam("code");
         if(typeof code != 'string'){
             $('body').prepend('<h3>Parameter [code] is error !</h3>');
             return false;

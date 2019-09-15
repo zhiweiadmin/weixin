@@ -61,6 +61,8 @@ define([
     //网关在线/离线
     var agent_condition = '';
 
+    var cur_room_id=-1;
+
     //当前所有项目列表
     var cur_all_projects = [];
     //当前带有层级的项目列表
@@ -702,6 +704,28 @@ define([
                     }
                 }
             })
+        })
+    }
+
+    //根据变量组id修改变量组名称
+    var editVdeviceName=function (vid,vname,callback) {
+        var obj={
+            name:vname,
+            id:vid
+        }
+        ToolBox.ajax({
+            type:'post',
+            url:'project/editVdevice',
+            data:JSON.stringify({
+                token:ToolBox.getCookie('token'),
+                vdevice:obj
+            }),
+            dataType:'json',
+            success:function (res) {
+                if(res.status=='100'){
+                    callback(res);
+                }
+            }
         })
     }
 
@@ -1354,9 +1378,9 @@ define([
         }
 
         //点击房控方向键,显示房间内细节
-        $("#main").off('tap', '.control_sub_right,.controle_row').on('tap', '.control_sub_right,.controle_row', function (e) {
+        $("#main").off('tap', '.controle_row .control_right_div').on('tap', '.controle_row .control_right_div', function (e) {
             //获取当前房间设备的个数
-            var count = $(this).attr("count");
+            var count = $(this).parent('.controle_row').attr("count");
             if (count == "0" || typeof (count) == "undefined") {
                 return;
             }
@@ -1365,8 +1389,8 @@ define([
             var height = $(window).height();
 
             //房间ID
-            var roomId = $(this).attr("id");
-            var name = $(this).attr("name");
+            var roomId = $(this).parent('.controle_row').attr("id");
+            var name = $(this).parent('.controle_row').attr("name");
             //根据个数来创建设备信息
             //i后期使用装置ID来替换
             for (var i = 1; i <= count; i++) {
@@ -1422,6 +1446,43 @@ define([
                 var swiper = new Swiper('.swiper-container');
             }
 
+        })
+
+        $("#main").off('tap', '.main_room').on('tap', '.main_room', function (e) {
+            e.stopPropagation();e.preventDefault();
+            var room_name = $(this).html();
+            cur_room_id = Number($(this).parent('.col-xs-7').parent('.controle_row').attr('id'));
+            $('#edit_room_name_modal').modal('show').css({
+                width:ToolBox.screen_width*0.8,
+                height:ToolBox.screen_height*0.4,
+                'margin-left':function () {
+                    return ToolBox.screen_width*0.1
+                },
+                'margin-top':function () {
+                    return ToolBox.screen_height*0.3
+                }
+            })
+            $('#edit_room_name_input').val(room_name);
+        })
+
+        //确定更改房间名称
+        $('#main').off('tap','#room_name_submit').on('tap','#room_name_submit',function (e) {
+            e.stopPropagation();e.preventDefault();
+            $('#edit_room_name_modal').modal('hide');
+            //开启loading
+            var loading = layer.load(2, {shade: [0.5, '#fff']});
+            $('body').css('overflow','hidden');
+            var v_name=$('#edit_room_name_input').val();
+            editVdeviceName(cur_room_id,v_name,function (res) {
+                //关闭loading
+                layer.close(loading);
+                if(res.status=="100"){
+                    var $el = $(".content_body").find("div[id='"+cur_room_id+"']").find(".main_room");
+                    $el.text(v_name);
+                }else{
+                    alert("控制失败")
+                }
+            })
         })
 
         //开机状态页面渲染
@@ -1933,6 +1994,10 @@ define([
 
         //返回高级页面
         $('#main').off('tap', '.repair_title').on('tap', '.repair_title', function (e) {
+            //清除图片等信息
+            fileall = [];
+            $(".z_addImg").remove();
+
             $("#host").removeClass("active")
             $("#control").removeClass("active")
             $("#senior").addClass("active")
@@ -2482,10 +2547,9 @@ define([
             }
 
             //jiangzhiwei
-            var fileObj = document.getElementById("file").files; // 获取文件对象   
             var formData = new FormData();
-            for(var i=0;i<fileObj.length;i++){
-                formData.append("file",fileObj[i]);
+            for(var i=0;i<fileall.length;i++){
+                formData.append("file",fileall[i]);
             }
             var json = {
                 projectId: global_projectId,
@@ -2542,7 +2606,7 @@ define([
                 cache: false,
                 processData: false,
                 contentType: false,
-                dataType: 'json',
+                dataType: "json",
                 success: function (res) {
                     if (res.status == 100) {
                         //成功报修
@@ -2553,6 +2617,9 @@ define([
                         //报修失败
                         singleAlter("Constant-account-repair-fail-msg")
                     }
+                    //清空
+                    fileall = [];
+                    $(".z_addImg").remove();
                     //关闭loading
                     layer.close(loading);
 
@@ -2653,10 +2720,14 @@ define([
                     $("#main").html(Layout.basic_repair("报修内容", "repair_content_back"))
                     $(".log_list").html("");
                     $(".log_list").prepend(Layout.repair_content(repairId, res.username, res.phone, res.time, res.desc, res.detail, res.msg))
+                    $.each(res.fileList,function(index,file){
+                        var divImg = "<div class='z_addImg boxer' href='"+file.filepath+"'><img src='"+file.filepath+"'></div>"
+                        //var divImg = "<div class='z_addImg boxer' href='http://goldcontrol.link/file/test.jpg'><img src='http://goldcontrol.link/file/test.jpg'></div>"
+                        $(".z_photo").prepend(divImg);
+                    });
+                    var viewer = new Viewer(document.getElementById('files'));
                 }
             })
-
-
         })
 
         //报修内容点击返回到报修记录页面
@@ -2696,6 +2767,10 @@ define([
                 //判断是否有维修记录
                 $(".log_list").html("");
             }, 200);
+        })
+
+        $("#main").off('tap', '.boxer-content').on('tap', '.boxer-content', function (e) {
+            this.hidden();
         })
 
         //报修内容点击提交

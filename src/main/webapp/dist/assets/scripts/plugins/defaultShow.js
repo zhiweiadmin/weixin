@@ -16,18 +16,24 @@
     doc.addEventListener('DOMContentLoaded', recalc, false);
 })(document, window);
 
+var fileall = [];
+
 function imgChange(obj1, obj2) {
+    console.log("33333")
     //获取点击的文本框
     var file = document.getElementById("file");
+
     //存放图片的父级元素
     var imgContainer = document.getElementsByClassName(obj1)[0];
     //获取的图片文件
     var fileList = file.files;
+
     //文本框的父级元素
     var input = document.getElementsByClassName(obj2)[0];
     var imgArr = [];
     //遍历获取到得图片文件
     for (var i = 0; i < fileList.length; i++) {
+        fileall.push(file.files[i]);
         var imgUrl = window.URL.createObjectURL(file.files[i]);
         imgArr.push(imgUrl);
         var img = document.createElement("img");
@@ -42,10 +48,10 @@ function imgChange(obj1, obj2) {
 
 function imgRemove(imgContainer) {
     var imgList = document.getElementsByClassName("z_addImg");
-    
+
     var pmask = document.getElementsByClassName("p_mask")[0];
     var palert = document.getElementsByClassName("p_alert")[0];
-    
+
     var mask = document.getElementsByClassName("z_mask")[0];
     var cancel = document.getElementsByClassName("z_cancel")[0];
     var sure = document.getElementsByClassName("z_sure")[0];
@@ -68,7 +74,7 @@ function imgRemove(imgContainer) {
 	                pmask.style.display = "none";
 	            };
             }
-            
+
         }
     };
 };

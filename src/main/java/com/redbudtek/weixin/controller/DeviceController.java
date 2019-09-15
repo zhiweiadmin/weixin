@@ -188,6 +188,7 @@ public class DeviceController {
      * @param payLoad
      * @return
      */
+    @Deprecated
     @ResponseBody
     @RequestMapping(value = "addProjectRepair",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
     public String addProjectRepair(@RequestBody String payLoad){
@@ -206,12 +207,15 @@ public class DeviceController {
 
     @ResponseBody
     @RequestMapping(value = "addProjectRepairNew",method = RequestMethod.POST,produces = "application/json;charset=UTF-8")
-    public String addProjectRepairNew(String payLoad, MultipartFile[] file){
+    public String addProjectRepairNew(HttpServletRequest request,String payLoad, MultipartFile[] file){
         JSONObject result = new JSONObject();
         System.out.println(file.length);
         try{
+            int id = repairService.getRepairId();
             ProjectRepair projectRepair = JSONObject.parseObject(payLoad,ProjectRepair.class);
+            projectRepair.setRepairId(id);
             repairService.addRepair(projectRepair);
+            repairService.upoadFile(id,file);
             result.put("status",100);
             return result.toJSONString();
         }catch (Exception e){

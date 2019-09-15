@@ -43,10 +43,23 @@
       phone, user_name, reason, repair_desc,
       create_dttm, update_dttm
       )
-    values (nextval('weixin_repair_id'), #{projectId,jdbcType=VARCHAR}, #{weixinId,jdbcType=VARCHAR},
+    values (#{repairId,jdbcType=INTEGER}, #{projectId,jdbcType=VARCHAR}, #{weixinId,jdbcType=VARCHAR},
       #{phone,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, #{repairDesc,jdbcType=VARCHAR},
       now(), now()
       )
   </insert>
+
+  <select id="getNextId" resultType="java.lang.Integer">
+    select nextval('weixin_repair_id')
+  </select>
+
+  <insert id="uploadFile" parameterType="java.util.Map">
+    insert into t_project_repair_file (repair_id,file_name,file_path)
+    values (#{repairId,jdbcType=INTEGER},#{fileName,jdbcType=VARCHAR},#{filePath,jdbcType=VARCHAR})
+  </insert>
+
+  <select id="getUploadFiles" parameterType="java.lang.Integer" resultType="java.util.Map">
+    select file_path filePath from t_project_repair_file where repair_id = #{repairId,jdbcType=INTEGER}
+  </select>
 
 </mapper>
