@@ -273,7 +273,7 @@ define([
                     ToolBox.setCookie('roleName', roleName, 1);
                     ToolBox.setCookie('roleId', roleId, 1);
                 } else {
-                    ToolBox.setCookie('roleId', 2, 1);
+                    ToolBox.setCookie('roleId', 1, 1);
                 }
 
             }
