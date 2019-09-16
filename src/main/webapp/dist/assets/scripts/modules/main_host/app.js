@@ -370,15 +370,8 @@ define([
     //获取项目所在地的一些信息，包括天气温度等等
     var getLocation = function () {
         getProjectInfo(cur_projectId, function (res) {
-            var long = res.data.longitude;
-            var lat = res.data.latitude;
-            city = res.data.city;
-            var location;
-            if(typeof(long) == "undefined" || typeof(lat) == "undefined"){
-                location = city;
-            }else{
-                location = long + ',' + lat;
-            }
+            var location = res.data.city;
+            city = res.data.city || '北京';
             $.ajax({
                 type: 'get',
                 url: 'https://free-api.heweather.com/s6/weather/now',
