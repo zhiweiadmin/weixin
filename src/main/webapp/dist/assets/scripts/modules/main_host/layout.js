@@ -29,14 +29,14 @@ define([
 
 
     /*基础frame*/
-    var basic_frame = function(weather,humidity,temperature,wind,air_img){
-        return template({'tempId': 'basic_frame','weather':weather,'humidity':humidity,'temperature':temperature,'wind':wind,'air_img':air_img});
+    var basic_frame = function(weather,humidity,temperature,wind,air_img,city){
+        return template({'tempId': 'basic_frame','weather':weather,'humidity':humidity,'temperature':temperature,'wind':wind,'air_img':air_img,'city':city});
     };
 
 
     //房控房间细节头样式
-    var room_detail_basic = function(weather,humidity,temperature,wind,air_img){
-        return template({'tempId': 'room_detail_basic','weather':weather,'humidity':humidity,'temperature':temperature,'wind':wind,'air_img':air_img});
+    var room_detail_basic = function(weather,humidity,temperature,wind,air_img,city){
+        return template({'tempId': 'room_detail_basic','weather':weather,'humidity':humidity,'temperature':temperature,'wind':wind,'air_img':air_img,'city':city});
     };
 
     //房控房间细节样式

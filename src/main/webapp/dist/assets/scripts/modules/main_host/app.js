@@ -35,7 +35,7 @@ define([
     var cur_power = -1;
     //在家/离家
     //var cur_home=-1,address='',weather='';
-    var cur_home = -1, address = '', weather = '', temperature = '', humidity = '', wind = '', cond_code = '';//add by jiangzhiwei
+    var cur_home = -1, address = '',city = '', weather = '', temperature = '', humidity = '', wind = '', cond_code = '';//add by jiangzhiwei
     //当前设定温度
     var cur_set_temperature = -1;
     //当前温度
@@ -370,9 +370,10 @@ define([
     //获取项目所在地的一些信息，包括天气温度等等
     var getLocation = function () {
         getProjectInfo(cur_projectId, function (res) {
-            var long = res.data.longitude || '116.395645';
-            var lat = res.data.latitude || '39.929985';
-            var location = long + ',' + lat;
+            // var long = res.data.longitude || '116.395645';
+            // var lat = res.data.latitude || '39.929985';
+            // var location = long + ',' + lat;
+            var location = res.data.city;
             $.ajax({
                 type: 'get',
                 url: 'https://free-api.heweather.com/s6/weather/now',
@@ -383,6 +384,7 @@ define([
                 dataType: 'json',
                 success: function (res) {
                     try {
+                        city = location;
                         address = res.HeWeather6[0].basic.location || '朝阳区';
                         weather = res.HeWeather6[0].now.cond_txt || '晴';
                         // 需要温度、湿度、风向、天气4个信息
@@ -393,7 +395,7 @@ define([
                         //需要根据天气提供页面图片
                         var air_img = getImgUrl(weather);
                         //初始化页面
-                        $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img));
+                        $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img,city));
                         $(".content").html(Layout.host_mode());
                     } catch (e) {
                         console.error('超过规定的请求次数')
@@ -1385,7 +1387,7 @@ define([
                 return;
             }
             var air_img = getImgUrl(weather);
-            $("#main").html(Layout.room_detail_basic(weather, humidity, temperature, wind, air_img));
+            $("#main").html(Layout.room_detail_basic(weather, humidity, temperature, wind, air_img,city));
             var height = $(window).height();
 
             //房间ID
@@ -1874,7 +1876,7 @@ define([
                     if ($("#switch" + deviceId).hasClass("on")) {
                         //需要根据天气提供页面图片
                         var air_img = getImgUrl(weather);
-                        $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img));
+                        $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img,city));
                         //移除所有按钮的激活class，并激活当前按钮
                         $("#host").removeClass("active")
                         $("#control").removeClass("active")
@@ -1944,7 +1946,7 @@ define([
             //需要根据天气提供页面图片
             var air_img = getImgUrl(weather);
             setTimeout(function () {
-                $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img));
+                $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img,city));
                 //移除所有按钮的激活class，并激活当前按钮
                 $("#host").removeClass("active")
                 $("#control").removeClass("active")
@@ -2683,7 +2685,7 @@ define([
             //需要根据天气提供页面图片
             var air_img = getImgUrl(weather);
             setTimeout(function () {
-                $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img));
+                $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img,city));
                 //移除所有按钮的激活class，并激活当前按钮
                 $("#host").removeClass("active")
                 $("#control").removeClass("active")
