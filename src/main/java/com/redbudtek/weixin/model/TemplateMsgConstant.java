@@ -14,7 +14,7 @@ public class TemplateMsgConstant {
 
     public static String ALARM_TEMPLATE_ID = "";
 
-    public static final String TEMPLATE_URL = "http://jcm.anylinkcloud.com:8185";
+    public static final String TEMPLATE_URL = "http://112.126.98.10:8600";
 
     public static final String TEMPLATE_COLOR = "#000000";
 
