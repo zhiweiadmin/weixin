@@ -300,7 +300,7 @@ define([
     /*frame*/
     var layout_init = function () {
         //清除之前的数据
-        devices = [];
+        recoveyData();
         //取消modal的遮罩
         if (is_req_weather) {
             getLocation();
@@ -362,6 +362,18 @@ define([
         getUserProjectAuth(function (res) {
         });
     };
+
+    var recoveyData = function () {
+        cur_out_temp = null;
+        cur_in_temp  = null;
+        cur_sys_ext_temp  = null;
+        run_status = 0;
+        run_model = 0;
+        deviceItems = null;//变量组数据
+        cur_item_data = null;//变量组实时数据
+        agent_condition = 0;
+        devices = [];
+    }
 
     var layout_init_refresh = function () {
         //getLocation(); 会重新跳转到首页
