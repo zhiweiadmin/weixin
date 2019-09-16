@@ -299,6 +299,8 @@ define([
 
     /*frame*/
     var layout_init = function () {
+        //清除之前的数据
+        devices = [];
         //取消modal的遮罩
         if (is_req_weather) {
             getLocation();
@@ -371,6 +373,7 @@ define([
                     run_status = agent_condition;
                 }
             })
+            devices = [];
             _.each(res.data, function (p, index) {
                 if (index > 0) {
                     //获取最后一个统计项
