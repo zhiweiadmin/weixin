@@ -2554,11 +2554,20 @@ define([
             for(var i=0;i<fileall.length;i++){
                 formData.append("file",fileall[i]);
             }
+            var phone = ToolBox.getCookie("phone");
+            var userName = ToolBox.getCookie("userName");
+            if(typeof phone == 'undefined'){
+                phone = '';
+            }
+            if (typeof userName == 'undefined'){
+                userName = '';
+            }
+
             var json = {
                 projectId: global_projectId,
                 weixinId: ToolBox.getCookie("openId"),
-                phone: ToolBox.getCookie("phone"),
-                userName: ToolBox.getCookie("userName"),
+                phone: phone,
+                userName: userName,
                 reason: reason,
                 repairDesc: describe,
                 userType: 0
