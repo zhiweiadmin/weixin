@@ -2558,7 +2558,7 @@ define([
                 projectId: global_projectId,
                 weixinId: ToolBox.getCookie("openId"),
                 phone: ToolBox.getCookie("phone"),
-                userName: ToolBox.getCookie("username"),
+                userName: ToolBox.getCookie("userName"),
                 reason: reason,
                 repairDesc: describe,
                 userType: 0

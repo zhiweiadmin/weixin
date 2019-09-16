@@ -37,6 +37,7 @@ define([
                     if(res&&res.status=='100'){
                         var token = res.data;
                         ToolBox.setCookie('token',token,1);
+                        ToolBox.setCookie('loginName',username,30);//用户名
                         getUserBasicInfo(token,username);
                         Main.start();
                         //jiangzhiwei
@@ -128,6 +129,8 @@ define([
                  if(res.status=='100'){
                      //存token
                      ToolBox.setCookie('token',res.data,1);
+                     var userName = ToolBox.getCookie("userName")
+                     getUserBasicInfo(res.data,userName);
                      Main.start();
                  }else{
                      bind_account();
