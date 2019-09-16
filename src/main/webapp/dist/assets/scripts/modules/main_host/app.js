@@ -2066,6 +2066,8 @@ define([
                         }else{
                             $("#control_role_switch").removeClass("on");
                             $("#control_role_switch").attr("src", "../assets/image/img/switch_off_full.png");
+                            res.fkAuth = 0;
+                            res.hostAuth = 0;
                         }
 
                         if(res.fkAuth == 1){
@@ -2220,6 +2222,12 @@ define([
 
         //主机权限
         $("#main").off('tap', '#host_role_switch').on('tap', '#host_role_switch', function (e) {
+
+            if(!$("#control_role_switch").hasClass("on")){
+                alert("请先打开控制权限")
+                return;
+            }
+
             if ($(this).hasClass("on")) {
                 $(this).removeClass("on")
                 $(this).attr("src", "../assets/image/img/switch_off_full.png");
@@ -2257,6 +2265,12 @@ define([
 
         //房控权限
         $("#main").off('tap', '#room_control_switch').on('tap', '#room_control_switch', function (e) {
+
+            if(!$("#control_role_switch").hasClass("on")){
+                alert("请先打开控制权限")
+                return;
+            }
+
             if ($(this).hasClass("on")) {
                 $(this).removeClass("on")
                 $(this).attr("src", "../assets/image/img/switch_off_full.png");

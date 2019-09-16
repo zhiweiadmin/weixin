@@ -70,6 +70,11 @@ public class ProjectAuthController {
         JSONObject result = new JSONObject();
         result.put("status",100);
         try{
+            if(ctrlAuth == 0){
+                hostAuth = 0;
+                fkAuth = 0;
+            }
+
             List<ProjectUserAuth> authList = projectAuthService.getAuth(projectId);
             if(authList != null && authList.size() > 0){
                 ProjectUserAuth userAuth = authList.get(0);
