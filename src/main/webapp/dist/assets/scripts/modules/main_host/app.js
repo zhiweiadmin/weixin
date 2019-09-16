@@ -361,6 +361,68 @@ define([
         });
     };
 
+    var layout_init_refresh = function () {
+        //getLocation(); 会重新跳转到首页
+        getVdeviceItems(cur_projectId, function (res) {
+            var agents = res.data[0].dataItem[0].serialNumber;
+            agentListCondition(agents, function (res1) {
+                if (res1.status == 100) {
+                    agent_condition = res1.result.data[0].agentCondition;
+                    run_status = agent_condition;
+                }
+            })
+            _.each(res.data, function (p, index) {
+                if (index > 0) {
+                    //获取最后一个统计项
+                    var lastitem = p.dataItem[p.dataItem.length - 1].itemName;
+                    var count = 0;
+                    if (typeof (lastitem) != "undefined") {
+                        var firstWeizhi = lastitem.indexOf('_');
+                        var lastWeizhi = lastitem.lastIndexOf('_');
+                        count = lastitem.substring(firstWeizhi + 1, lastWeizhi);
+                    }
+                    var obj = {
+                        name: p.vdeviceName,
+                        vid: p.vdeviceId,
+                        count: count,
+                        room_img: getRoomImg(p.vdeviceName)
+                    };
+                    devices.push(obj);
+                }
+
+            })
+        })
+        getCurrentDataByProject(cur_projectId, function (resp) {
+            var cur_data = resp.data;
+            cur_all_data = cur_data;
+            setTimeJob();
+            show_other_info();
+        })
+        getUserProjectInfo();
+        getUserProjectAuth(function (res) {
+        });
+    }
+
+    //根据房间名获取对应图片
+    var getRoomImg = function (name) {
+        switch (name) {
+            case '客厅':
+                return '../assets/image/img/keting.png';
+            case '主卧':
+                return '../assets/image/img/zhuwo.png';
+            case '卧室':
+                return '../assets/image/img/zhuwo.png';
+            case '次卧':
+                return '../assets/image/img/ciwo.png';
+            case '阁楼':
+                return '../assets/image/img/gelou.png';
+            case '公卫':
+                return '../assets/image/img/gongwei.png';
+            default:
+                return '../assets/image/img/keting.png';
+        }
+    }
+
     //获取项目所在地的一些信息，包括天气温度等等
     var getLocation = function () {
         getProjectInfo(cur_projectId, function (res) {
@@ -3014,7 +3076,7 @@ define([
                 //只刷新页面
                 //如果当前是非主页的刷新,则不需要刷新当前页
                 console.log("要刷新页面了")
-                layout_init();
+                layout_init_refresh();
                 // if ($("#cur_choice").is(":visible")) {
                 //     layout_init();
                 // }

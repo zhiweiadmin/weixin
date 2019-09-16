@@ -89,11 +89,10 @@ define([
             },
             dataType: 'json',
             success: function(res){
-
-                if(typeof res.data.cellphone != 'undefined'){
+                if(res.status == '100' && typeof res.data.cellphone != 'undefined'){
                     ToolBox.setCookie('phone',res.data.cellphone,30);//30天
                 }
-                if(typeof res.data.real_name != 'undefined'){
+                if(res.status == '100' && typeof res.data.real_name != 'undefined'){
                     ToolBox.setCookie('userName',res.data.real_name,30);//30天
                 }
             }
