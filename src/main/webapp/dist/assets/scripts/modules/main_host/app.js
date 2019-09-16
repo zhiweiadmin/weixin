@@ -370,10 +370,15 @@ define([
     //获取项目所在地的一些信息，包括天气温度等等
     var getLocation = function () {
         getProjectInfo(cur_projectId, function (res) {
-            // var long = res.data.longitude || '116.395645';
-            // var lat = res.data.latitude || '39.929985';
-            // var location = long + ',' + lat;
-            var location = res.data.city;
+            var long = res.data.longitude;
+            var lat = res.data.latitude;
+            city = res.data.city;
+            var location;
+            if(typeof(long) == "undefined" || typeof(lat) == "undefined"){
+                location = city;
+            }else{
+                location = long + ',' + lat;
+            }
             $.ajax({
                 type: 'get',
                 url: 'https://free-api.heweather.com/s6/weather/now',
@@ -384,8 +389,7 @@ define([
                 dataType: 'json',
                 success: function (res) {
                     try {
-                        city = location;
-                        address = res.HeWeather6[0].basic.location || '朝阳区';
+                        address = res.HeWeather6[0].basic.location || city;
                         weather = res.HeWeather6[0].now.cond_txt || '晴';
                         // 需要温度、湿度、风向、天气4个信息
                         humidity = res.HeWeather6[0].now.hum;
