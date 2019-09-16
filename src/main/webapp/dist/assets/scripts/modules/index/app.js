@@ -89,8 +89,13 @@ define([
             },
             dataType: 'json',
             success: function(res){
-                ToolBox.setCookie('phone',res.data.cellphone,30);//30天
-                ToolBox.setCookie('userName',res.data.real_name,30);//30天
+
+                if(typeof res.data.cellphone != 'undefined'){
+                    ToolBox.setCookie('phone',res.data.cellphone,30);//30天
+                }
+                if(typeof res.data.real_name != 'undefined'){
+                    ToolBox.setCookie('userName',res.data.real_name,30);//30天
+                }
             }
         });
     }
