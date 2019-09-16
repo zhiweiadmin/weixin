@@ -2214,7 +2214,15 @@ define([
                 },
                 dataType: 'json',
                 success: function (res) {
-                    console.log(res)
+                    if(res.status = '100'){
+                        if(!$(this).hasClass("on")){
+                            $('#host_role_switch').removeClass("on")
+                            $('#host_role_switch').attr("src", "../assets/image/img/switch_off_full.png");
+
+                            $('#room_control_switch').removeClass("on")
+                            $('#room_control_switch').attr("src", "../assets/image/img/switch_off_full.png");
+                        }
+                    }
                 }
             });
         })
