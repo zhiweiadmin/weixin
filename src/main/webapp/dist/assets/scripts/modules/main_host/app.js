@@ -68,7 +68,7 @@ define([
     //当前带有层级的项目列表
     var cur_all_projects_cascade = [];
     //是否进行定时任务
-    var flag = false;
+    var flag = true;
     //开关机的设备Id
     var cur_power_deviceId = 0;
     //开关机的itemId
@@ -168,12 +168,6 @@ define([
             //所以到当前页删除所有的定时任务
             if (timeJobId != -1) {
                 clearInterval(timeJobId)
-            }
-            if (roomJobId != -1) {
-                clearInterval(roomJobId);
-            }
-            if (locationJobId != -1) {
-                clearInterval(locationJobId);
             }
         })
     }
@@ -3014,11 +3008,6 @@ define([
             if (timeJobId != -1) {
                 //清除
                 clearInterval(timeJobId);
-            }
-            //清除房间列表
-            if (roomJobId != -1) {
-                //清除
-                clearInterval(roomJobId);
             }
             //开启
             timeJobId = setInterval(function () {
