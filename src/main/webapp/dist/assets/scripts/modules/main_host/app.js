@@ -3014,9 +3014,10 @@ define([
                 //只刷新页面
                 //如果当前是非主页的刷新,则不需要刷新当前页
                 console.log("要刷新页面了")
-                if ($("#cur_choice").is(":visible")) {
-                    layout_init();
-                }
+                layout_init();
+                // if ($("#cur_choice").is(":visible")) {
+                //     layout_init();
+                // }
             }, timeJobFre);
         }
 
