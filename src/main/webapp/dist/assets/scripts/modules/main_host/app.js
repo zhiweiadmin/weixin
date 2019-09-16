@@ -2232,7 +2232,7 @@ define([
         $("#main").off('tap', '#host_role_switch').on('tap', '#host_role_switch', function (e) {
 
             if(!$("#control_role_switch").hasClass("on")){
-                alert("请先打开控制权限")
+                singleAlter("Constant-account-no-permission-msg-2");
                 return;
             }
 
@@ -2275,7 +2275,7 @@ define([
         $("#main").off('tap', '#room_control_switch').on('tap', '#room_control_switch', function (e) {
 
             if(!$("#control_role_switch").hasClass("on")){
-                alert("请先打开控制权限")
+                singleAlter("Constant-account-no-permission-msg-2")
                 return;
             }
 
