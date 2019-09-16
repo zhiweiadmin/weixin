@@ -129,18 +129,18 @@
 </div>
 <%}else if(tempId=='host_mode'){%>
 <!--在线状态-->
-<div class="col-xs-2 padt20 padb20">
+<div class="col-xs-2 padt20 padb20 padl22">
     <img class="host_img" src="../assets/image/img/online_model.png">
 </div>
-<div class="col-xs-8 title  padt20 padb20">在线状态</div>
-<div class="col-xs-2 value status_value  padt20 padb20">
+<div class="col-xs-7 title  padt20 padb20">在线状态</div>
+<div class="col-xs-3 value status_value  padt20 padb20">
     <img class="online_status online" src="../assets/image/img/online.png">
 </div>
 <div class="col-xs-12">
     <div class="acrossbar"></div>
 </div>
 <!--温度-->
-<div class="col-xs-2 padt20 padb20">
+<div class="col-xs-2 padt20 padb20 padl22">
     <img class="host_img" src="../assets/image/img/temp_icon.png">
 </div>
 <div class="col-xs-4 title  padt20 padb20">设定温度(℃)</div>
@@ -158,7 +158,7 @@
     <div class="acrossbar"></div>
 </div>
 <!--设定运行模式-->
-<div class="col-xs-2 padt20 padb20">
+<div class="col-xs-2 padt20 padb20 padl22">
     <img class="host_img" src="../assets/image/img/setting_model.png">
 </div>
 <div class="col-xs-4 title  padt20 padb20">设定模式</div>
@@ -174,30 +174,30 @@
     <div class="acrossbar"></div>
 </div>
 <!--回水温度-->
-<div class="col-xs-2 padt20 padb20">
+<div class="col-xs-2 padt20 padb20 padl22">
     <img class="host_img" src="../assets/image/img/temp_icon.png">
 </div>
 <div class="col-xs-4 title  padt20 padb20">回水温度</div>
-<div class="col-xs-offset-3 col-xs-3  title textRight  padt20 padb20 padl10 ">
+<div class="col-xs-offset-3 col-xs-3  title textRight  padt20 padb20 padl25 ">
     <span id="inTemp"></span>℃
 </div>
 <div class="col-xs-12">
     <div class="acrossbar"></div>
 </div>
 <!--出水温度-->
-<div class="col-xs-2 padt20 padb20">
+<div class="col-xs-2 padt20 padb20 padl22">
     <img class="host_img" src="../assets/image/img/temp_icon.png">
 </div>
 <div class="col-xs-4 title  padt20 padb20">出水温度</div>
-<div class="col-xs-offset-3 col-xs-3  title textRight  padt20 padb20 padl10 ">
+<div class="col-xs-offset-3 col-xs-3  title textRight  padt20 padb20 padl25 ">
     <span id="outTemp"></span>℃
 </div>
 <div class="col-xs-12">
     <div class="acrossbar"></div>
 </div>
 <!--开关-->
-<div class="col-xs-6 title  padt20 padb20 switch_title" style="padding-left: 28px;">开关</div>
-<div class="col-xs-offset-3 col-xs-3  title textRight  padt20 padb20 padl10 color_active">
+<div class="col-xs-6 title  padt20 padb20 switch_title padl35" >开关</div>
+<div class="col-xs-offset-3 col-xs-3  title textRight  padt20 padb20 padl25 color_active">
     <img id="host_switch" vid class="on" src="../assets/image/img/switch_on_o.png">
 </div>
 <%}else if(tempId=='single_room_device'){%>
@@ -416,10 +416,10 @@
         <div class="senior_title width100">用户权限</div>
     </div>
     <div class="col-xs-3 senior_right_div padb10 padt10 padl25 border_bottom">
-        <span class="senior_sub_right" id="user_role">&nbsp;<i class="fa fa-angle-right"></i></span>
+        <span class="senior_sub_right" id="user_role">&nbsp;<i class="fa fa-angle-down"></i></span>
     </div>
 </div>
-<div class="row user_sub disNone">
+<div class="row user_sub">
     <div class="col-xs-offset-3 col-xs-6  padl25 padb10 padt10 border_bottom senior_title_div">
         <div class="senior_title width100">控制权限</div>
     </div>
@@ -432,7 +432,6 @@
 </div>
 
 
-<!--项目列表-->
 <div class="row project_role_1">
     <div class="col-xs-3 padt20 padb10 padl40">
         <span class="senior_icon">&nbsp;<i class="fa fa-list-ul"></i></span>
@@ -441,10 +440,10 @@
         <div class="senior_title width100">项目权限</div>
     </div>
     <div class="col-xs-3 senior_right_div padb10 padt10 padl25 border_bottom">
-        <span class="senior_sub_right" id="project_role">&nbsp;<i class="fa fa-angle-right"></i></span>
+        <span class="senior_sub_right" id="project_role">&nbsp;<i class="fa fa-angle-down"></i></span>
     </div>
 </div>
-<div class="row project_sub disNone">
+<div class="row project_sub">
     <div class="col-xs-offset-3 col-xs-6  padl25 padb10 padt10 border_bottom senior_title_div">
         <div class="senior_title width100">主机权限</div>
     </div>

@@ -391,8 +391,8 @@ strong i{
 
 .online_status{
     width: 50px;
-    position: absolute;
-    right: 25px;
+    /*position: absolute;*/
+    /*right: 30px;*/
 }
 .temp_img{
     width: 35px;
