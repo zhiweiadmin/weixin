@@ -46,14 +46,14 @@
 </div>
 <%}else if(tempId=='simple-projectInfo'){%>
 <div class="parentTab">
-    <div class="tab-first firstChild" drop="true">
+    <div class="tab-first firstChild" drop="false">
        <span class="inline-span">
           <span class="inline-left-span"><%=data.name%></span>
-          <span class="inline-right-span pull-right"><image src="../assets/image/down.png"
+          <span class="inline-right-span pull-right"><image src="../assets/image/right.png"
                                                             class="dropImage img-style"></image></span>
        </span>
     </div>
-    <div class="secondChild">
+    <div class="secondChild" style="display:none">
         <%_.each(data.nodes,function(p){%>
         <div class="tab-second" projectId="<%=p.id%>">
             <div>
