@@ -42,9 +42,9 @@ public class RepairService {
     public JSONObject getUserRepairs(String roleId,String weixinId,String projectId){
         Map<String,Object> param = new HashMap<String,Object>();
         if("2".equals(roleId)){
-            param.put("projectId",projectId);
             param.put("weixinId",weixinId);
         }
+        param.put("projectId",projectId);
         List<ProjectRepair> repairList = projectRepairMapper.selectByFields(param);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("repairList",repairList);
