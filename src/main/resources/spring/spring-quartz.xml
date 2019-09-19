@@ -45,11 +45,33 @@
 		<property name="repeatCount" value="0" />   <!-- 重复次数 -->
 	</bean>
 
+
+	<!-- quartz -->
+	<bean id="accessJob" class="com.redbudtek.weixin.job.AccessJob"/>
+	<bean id="accessTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject">
+			<ref bean="accessJob"/>
+		</property>
+		<property name="targetMethod">
+			<value>updateAccess</value>
+		</property>
+	</bean>
+	<bean id="accessTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail">
+			<ref bean="accessTask"/>
+		</property>
+		<property name="cronExpression">
+			<value>0 0 0/2 * * ?</value>
+		</property>
+	</bean>
+
+
 	<!-- 总管理类 如果将lazy-init='false'那么容器启动就会执行调度程序  -->
-	<bean id="startQuertz" lazy-init="true" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	<bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
 				<ref bean="simpleTrigger" />
+				<ref bean="accessTime" />
 			</list>
 		</property>
 	</bean>

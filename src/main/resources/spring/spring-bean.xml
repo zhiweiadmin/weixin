@@ -15,31 +15,31 @@
     </context:component-scan>
 
     <!-- quartz -->
-    <bean id="accessJob" class="com.redbudtek.weixin.job.AccessJob"/>
-    <bean id="accessTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject">
-            <ref bean="accessJob"/>
-        </property>
-        <property name="targetMethod">
-            <value>updateAccess</value>
-        </property>
-    </bean>
-    <bean id="accessTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail">
-            <ref bean="accessTask"/>
-        </property>
-        <property name="cronExpression">
-            <value>0 0 0/2 * * ?</value>
-        </property>
-    </bean>
-    <bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="triggers">
-            <list>
-                <ref bean="accessTime"/>
-            </list>
-        </property>
-    </bean>
+<!--    <bean id="accessJob" class="com.redbudtek.weixin.job.AccessJob"/>-->
+<!--    <bean id="accessTask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+<!--        <property name="targetObject">-->
+<!--            <ref bean="accessJob"/>-->
+<!--        </property>-->
+<!--        <property name="targetMethod">-->
+<!--            <value>updateAccess</value>-->
+<!--        </property>-->
+<!--    </bean>-->
+<!--    <bean id="accessTime" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
+<!--        <property name="jobDetail">-->
+<!--            <ref bean="accessTask"/>-->
+<!--        </property>-->
+<!--        <property name="cronExpression">-->
+<!--            <value>>0/1 * * * * ?</value>-->
+<!--        </property>-->
+<!--    </bean>-->
+<!--    <bean id="startQuertz" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">-->
+<!--        <property name="triggers">-->
+<!--            <list>-->
+<!--                <ref bean="accessTime"/>-->
+<!--            </list>-->
+<!--        </property>-->
+<!--    </bean>-->
 
-    <!-- 调度工厂 -->
-    <bean id="schedulerFactory" class="org.quartz.impl.StdSchedulerFactory"/>
+<!--    &lt;!&ndash; 调度工厂 &ndash;&gt;-->
+<!--    <bean id="schedulerFactory" class="org.quartz.impl.StdSchedulerFactory"/>-->
 </beans>
