@@ -2,6 +2,7 @@ package com.redbudtek.weixin.service;
 
 import com.redbudtek.weixin.mapper.ScheduledMapper;
 import com.redbudtek.weixin.model.JobEntity;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,8 @@ import java.util.Map;
 
 @Service
 public class ScheduledService {
+
+    private static Logger logger = Logger.getLogger(ScheduledService.class);
 
     @Autowired
     ScheduledMapper scheduledMapper;

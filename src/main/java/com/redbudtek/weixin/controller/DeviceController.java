@@ -31,7 +31,7 @@ import java.util.*;
 @RequestMapping("device")
 public class DeviceController {
 
-    private static final Logger logger = Logger.getLogger(DeviceController.class);
+    private static Logger logger = Logger.getLogger(DeviceController.class);
 
     /**
      * service单例对象
@@ -146,16 +146,33 @@ public class DeviceController {
         String cronTime = "0 "+min+" "+hour+" * * ? *";
         jobEntity.setCronTime(cronTime);
         jobEntity.setVal(val);
-        if(scheduledService.checkIfExists(devid,itemid,val)){
-            scheduledService.addJob(jobEntity);
-            quartzManager.addJob(jobEntity);
-        }else{
-            scheduledService.updateJob(jobEntity);
-            quartzManager.updateJob(jobEntity);
+        boolean flag = checkJobIfExists(devid,itemid,val);
+        try{
+            if(onoff == 1){
+                if(flag){
+                    scheduledService.addJob(jobEntity);
+                    quartzManager.addJob(jobEntity);
+                }else{
+                    scheduledService.updateJob(jobEntity);
+                    quartzManager.updateJob(jobEntity);
+                }
+            }else{
+                scheduledService.updateJob(jobEntity);
+                quartzManager.removeJob(jobEntity);
+            }
+        }catch (Exception e){
+            logger.error("设置定时任务失败",e);
         }
 
         return "success";
     }
+
+    public boolean checkJobIfExists(String devid,String itemid,String val){
+        return scheduledService.checkIfExists(devid,itemid,val);
+    }
+
+    private static final String ON = "1";
+    private static final String OFF = "0";
 
     /**
      * 定时开、关机按钮状态改变
@@ -168,11 +185,24 @@ public class DeviceController {
             onoff = 0;
         }
         scheduledService.updateTimeSwtich(devid,itemid,onoff);
+        JobEntity onJob = new JobEntity();
+        onJob.setDevid(devid);
+        onJob.setItemid(itemid);
+        onJob.setVal(ON);
+        if(onoff == 0){
+            //关机 删除定时任务
+            quartzManager.removeJob(onJob);
+            onJob.setVal(OFF);
+            quartzManager.removeJob(onJob);
+        }else{
+            List<JobEntity> jobEntityList = scheduledService.getJob(devid,itemid);
+            for(JobEntity jobEntity : jobEntityList){
+                quartzManager.removeJob(jobEntity);
+                quartzManager.addJob(jobEntity);
+            }
+        }
         return "success";
     }
-
-
-
 
     @ResponseBody
     @RequestMapping(value = "getDeviceJob",method = RequestMethod.GET)

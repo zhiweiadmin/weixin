@@ -1622,23 +1622,17 @@ define([
                                 $('#confirm-alert').modal('hide');
                                 var loading = layer.load(2, {shade: [0.5, '#fff']});
                                 send_control_new(item.devid, item.itemid, 0, false, function (res) {
-                                    renderClose(deviceId);
                                     //关闭loading
                                     layer.close(loading);
-                                    //刷新数据
-                                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                        console.log("刷新数据成功")
-                                    });
-                                    // if (res.status != "100") {
-                                    //     alert("控制失败");
-                                    // }else{
-                                    //     console.log(deviceId)
-                                    //     renderClose(deviceId);
-                                    //     //刷新数据
-                                    //     getCurrentDataByProject(cur_projectId,function () {
-                                    //         console.log("刷新数据成功")
-                                    //     });
-                                    // }
+                                    if (res != "success") {
+                                        singleAlter("Constant-control-fail")
+                                    }else{
+                                        renderClose(deviceId);
+                                        //刷新数据
+                                        getCurrentDataByProject(cur_projectId,function () {
+                                            console.log("刷新数据成功")
+                                        });
+                                    }
                                 })
                             },
                             msg: ToolBox.getConstant('Constant-turn-down-msg')
@@ -1653,23 +1647,17 @@ define([
                                 $('#confirm-alert').modal('hide');
                                 var loading = layer.load(2, {shade: [0.5, '#fff']});
                                 send_control_new(item.devid, item.itemid, 1, false, function (res) {
-                                    renderOpen(deviceId);
                                     //关闭loading
                                     layer.close(loading);
-                                    //刷新数据
-                                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                        console.log("刷新数据成功")
-                                    });
-
-                                    // if (res.status != "100") {
-                                    //     alert("控制失败");
-                                    // }else{
-                                    //     renderOpen(deviceId);
-                                    //     //刷新数据
-                                    //     getCurrentDataByProject(cur_projectId,function () {
-                                    //         console.log("刷新数据成功")
-                                    //     });
-                                    // }
+                                    if (res != "success") {
+                                        singleAlter("Constant-control-fail")
+                                    }else{
+                                        renderOpen(deviceId);
+                                        //刷新数据
+                                        refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                            console.log("刷新数据成功")
+                                        });
+                                    }
                                 })
                             },
                             msg: ToolBox.getConstant('Constant-turn-on-msg')

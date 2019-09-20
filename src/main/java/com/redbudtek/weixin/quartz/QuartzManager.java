@@ -1,6 +1,7 @@
 package com.redbudtek.weixin.quartz;
 
 import com.redbudtek.weixin.model.JobEntity;
+import org.apache.log4j.Logger;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class QuartzManager {
+
+    private static Logger logger = Logger.getLogger(QuartzManager.class);
+
     /**
      * 调度工厂
      */
@@ -22,6 +26,12 @@ public class QuartzManager {
         String jobName = "JOB_NAME_"+jobKey;
         String triName = "TRI_NAME_"+jobKey;
         addJob(jobName,triName,DynamicJobQuartz.class,jobEntity);
+    }
+    public void removeJob(JobEntity jobEntity){
+        String jobKey = jobEntity.getDevid()+"_"+jobEntity.getItemid()+"_"+jobEntity.getVal();
+        String jobName = "JOB_NAME_"+jobKey;
+        String triName = "TRI_NAME_"+jobKey;
+        removeJob(jobName,Constants.JOB_GROUP_NAME,triName,Constants.TRIGGER_GROUP_NAME);
     }
 
     public void updateJob(JobEntity jobEntity){
