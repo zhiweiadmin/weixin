@@ -307,21 +307,7 @@ define([
             getVdeviceItems(cur_projectId, function (res) {
                 if (res.data.length > 0) {
                     var agents = res.data[0].dataItem[0].serialNumber;
-                    agentListCondition(agents, function (res1) {
-                        if (res1.status == "100") {
-                            if (res1.result.data.length > 0) {
-                                agent_condition = res1.result.data[0].agentCondition;
-                                if (typeof (agent_condition) == "undefined" || agent_condition === null) {
-                                    run_status = 0;
-                                }else{
-                                    run_status = agent_condition;
-                                }
-                            } else {
-                                run_status = 0;
-                            }
-
-                        }
-                    })
+                    agentListCondition(agents)
                 }
             })
             setTimeout(function () {
@@ -338,12 +324,7 @@ define([
             getLocation();
             getVdeviceItems(cur_projectId, function (res) {
                 var agents = res.data[0].dataItem[0].serialNumber;
-                agentListCondition(agents, function (res1) {
-                    if (res1.status == 100) {
-                        agent_condition = res1.result.data[0].agentCondition;
-                        run_status = agent_condition;
-                    }
-                })
+                agentListCondition(agents)
             })
             getCurrentDataByProject(cur_projectId, function (resp) {
                 var cur_data = resp.data;
@@ -379,12 +360,7 @@ define([
         //getLocation(); 会重新跳转到首页
         getVdeviceItems(cur_projectId, function (res) {
             var agents = res.data[0].dataItem[0].serialNumber;
-            agentListCondition(agents, function (res1) {
-                if (res1.status == 100) {
-                    agent_condition = res1.result.data[0].agentCondition;
-                    run_status = agent_condition;
-                }
-            })
+            agentListCondition(agents)
             devices = [];
             _.each(res.data, function (p, index) {
                 if (index > 0) {
@@ -491,7 +467,7 @@ define([
     }
 
     //获取网关状态信息
-    var agentListCondition = function (agentIds, callback) {
+    var agentListCondition = function (agentIds) {
         ToolBox.ajax({
             type: 'get',
             url: 'agentList/pagination',
@@ -503,8 +479,20 @@ define([
             },
             async: false,
             dataType: 'json',
-            success: function (res) {
-                callback(res);
+            success: function (res1) {
+                if (Number(res1.status) == 100) {
+                    var dataNode = res1.result.data;
+                    if (dataNode.length == 0
+                        || typeof (dataNode[0].agentCondition) == "undefined"
+                        || dataNode[0].agentCondition === null) {
+                        run_status = 0;
+                    }else{
+                        run_status = agent_condition;
+                    }
+
+                }else{
+                    run_status = 0;
+                }
             }
         })
     }
@@ -1384,12 +1372,7 @@ define([
                 getVdeviceItems(cur_projectId, function (res) {
                     if (res.status === 100) {
                         var agents = res.data[0].dataItem[0].serialNumber;
-                        agentListCondition(agents, function (res1) {
-                            if (res1.status === 100) {
-                                agent_condition = res1.result.data[0].agentCondition;
-                                run_status = agent_condition;
-                            }
-                        })
+                        agentListCondition(agents)
                     }
                     _.each(res.data, function (p, index) {
                         if (index > 0) {
