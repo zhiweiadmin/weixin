@@ -27,7 +27,7 @@ define([
                 url:'weixin/bindAccount',
                 data:JSON.stringify({
                     weixin_id:ToolBox.getCookie('openId'),
-                    tenantEname:'bmyulin',
+                    tenantEname:'bimuyu',
                     userName:username,
                     password:password,
                     hash:'test',

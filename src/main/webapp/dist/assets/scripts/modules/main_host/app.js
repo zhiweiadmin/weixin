@@ -54,6 +54,9 @@ define([
     var cur_out_temp;
     var cur_in_temp;
     var cur_sys_ext_temp;
+    var cur_hot_temp;//制热温度
+    var cur_cold_temp;//制冷温度
+    var cur_env_temp;//环境温度
     var run_status = 0;
     var run_model = 0;
     var deviceItems;//变量组数据
@@ -140,15 +143,15 @@ define([
             })
 
             cur_all_projects_cascade = ttt;
-            // if(ttt.length==1&&ttt[0].nodes.length==1){
-            //     var projectId=ttt[0].nodes[0].id;
-            //     cur_projectId=projectId;
-            //     global_projectId=projectId;
-            //     flag=true;
-            //     layout_init();
-            //     bindEvents();
-            //     setTimeJob();
-            // }else{
+            if(ttt.length==1&&ttt[0].nodes.length==1){
+                var projectId=ttt[0].nodes[0].id;
+                cur_projectId=projectId;
+                global_projectId=projectId;
+                flag=true;
+                layout_init();
+                bindEvents();
+                setTimeJob();
+            }else{
             //获取当前用户的项目列表
             $('#main').html(Layout.before_choice());
             bindProjEvents();
@@ -163,7 +166,7 @@ define([
             _.each(ttt, function (p) {
                 $('#projectList').append(Layout.simple_projectInfo(p));
             })
-            // }
+            }
             //有可能从项目列表返回到当前页
             //所以到当前页删除所有的定时任务
             if (timeJobId != -1) {
@@ -348,6 +351,9 @@ define([
         cur_out_temp = null;
         cur_in_temp  = null;
         cur_sys_ext_temp  = null;
+        cur_hot_temp = null;
+        cur_cold_temp = null;
+        cur_env_temp=null;
         run_status = 0;
         run_model = 0;
         deviceItems = null;//变量组数据
@@ -467,29 +473,33 @@ define([
     }
 
     //获取网关状态信息
-    var agentListCondition = function (agentIds) {
+    var agentListCondition = function (agents) {
+        var agentIds = [];
+        agentIds.push(parseInt(agents));
         ToolBox.ajax({
-            type: 'get',
-            url: 'agentList/pagination',
-            data: {
+            type: 'post',
+            url: 'agentList/condition',
+            data: JSON.stringify({
                 token: ToolBox.getCookie('token'),
-                agentId: agentIds,
-                page: 1,
-                perPage: 999
-            },
+                agentIds: agentIds,
+                hash:'test'
+            }),
             async: false,
+            contentType : "application/json",
             dataType: 'json',
-            success: function (res1) {
-                if (Number(res1.status) == 100) {
-                    var dataNode = res1.result.data;
-                    if (dataNode.length == 0
-                        || typeof (dataNode[0].agentCondition) == "undefined"
-                        || dataNode[0].agentCondition === null) {
-                        run_status = 0;
-                    }else{
-                        run_status = agent_condition;
-                    }
-
+            success: function (res) {
+                if (Number(res.status) == 100) {
+                    // debugger;
+                    // var dataNode = res1.data;
+                    // if (dataNode.length == 0
+                    //     || typeof (dataNode[0].agentCondition) == "undefined"
+                    //     || dataNode[0].agentCondition === null) {
+                    //     run_status = 0;
+                    // }else{
+                    //     run_status = dataNode[0].condition;
+                    // }
+                    var dataNode = res.data;
+                    run_status = dataNode[0].condition;
                 }else{
                     run_status = 0;
                 }
@@ -514,7 +524,8 @@ define([
         //然后按需获取属性名及属性值
         var item_onoff = i + '_OnOff';
         var item_model = i + '_Model';
-        var ext_temp = i + '_ExtTemp';
+        var ext_temp = i + '_HeatSetP';
+        var temp_set = i + '_HeatSetP';
         //风速 低速 中速 高速
         var low = i + '_Lwinds';
         var mid = i + '_Mwinds';
@@ -532,11 +543,43 @@ define([
                 //遍历实时数据
                 device.modelVal = getItemValueByName(device.modelName);
             }
-            //温度
-            if (p.itemName.indexOf(ext_temp) != -1) {
+            //温度设置统计项
+            if(p.itemName.indexOf(temp_set) != -1){
                 device.tempName = p.itemName;
+            }
+            //房控室内温度
+            if (p.itemName.indexOf(ext_temp) != -1) {
+                debugger;
                 //遍历实时数据
-                device.tempVal = getItemValueByName(device.tempName);
+                //温度需要转换成16进制来显示
+                var data = getItemValueByName(device.tempName)+"";
+                if(data.length === 1){
+                    data = "000"+data;
+                }else if(data.length === 2){
+                    data = "00"+data;
+                }else if(data.length === 3){
+                    data = "0"+data;
+                }
+                var extTemp10 = parseInt(data);
+                var extTemp16 = extTemp10.toString(16);
+                var preTemp = extTemp16.substring(0,extTemp16.length-2);
+                var sufTemp = extTemp16.substring(extTemp16.length-2,extTemp16.length);
+
+                var pre = parseInt(preTemp,16);
+                var suf = parseInt(sufTemp,16);
+
+                if(typeof(pre)=="undefined" || isNaN(pre) || "" === pre){
+                    pre = 0;
+                }
+                if(typeof(suf)=="undefined" || isNaN(suf)){
+                    suf = 0;
+                }
+
+                if(suf !== 0){
+                    device.tempVal = pre+"."+suf;
+                }else{
+                    device.tempVal = pre;
+                }
             }
             //低速
             if (p.itemName.indexOf(low) != -1) {
@@ -565,12 +608,21 @@ define([
     //获取当前速度
     function getSpeed(device) {
         var speed = '低速';
-        if (Number(device.highVal) === 1) {
+        // if (Number(device.highVal) === 1) {
+        //     speed = '高速';
+        // } else if (Number(device.midVal) === 1) {
+        //     speed = '中速';
+        // } else {
+        //     speed = '低速';
+        // }
+        if(Number(device.highVal) === 1){
             speed = '高速';
-        } else if (Number(device.midVal) === 1) {
+        }else if(Number(device.highVal) === 2){
             speed = '中速';
-        } else {
+        }else if(Number(device.highVal) === 3){
             speed = '低速';
+        }else if(Number(device.highVal) === 4){
+            speed = '自动';
         }
         return speed;
     }
@@ -729,16 +781,23 @@ define([
                     $('#inTemp').html(cur_in_temp);
                 }
                 if (p.itemname == "Sys_ExtTemp") {
-                    cur_sys_ext_temp = p.val;
-                    $('#extTemp').html(cur_sys_ext_temp);
+                    cur_env_temp = p.val;
+                    $('#envTemp').html(cur_env_temp);
+                }
+                if (p.itemname == "Sys_HeatSetP") {
+                    cur_hot_temp = p.val;
+                }
+
+                if (p.itemname == "Sys_CoolSetP") {
+                    cur_cold_temp = p.val;
                 }
                 if (p.itemname == "Sys_RunSet") {
                     cur_power = p.val;
                     if (cur_power == '0') {
-                        $("#host_switch").attr("src", "../assets/image/img/switch_off_o.png");
+                        $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
                         $("#host_switch").removeClass("on");
                     } else if (cur_power == '1') {
-                        $("#host_switch").attr("src", "../assets/image/img/switch_on_o.png");
+                        $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
                         $("#host_switch").addClass("on")
                     }
                 }
@@ -762,6 +821,13 @@ define([
                     }
                 }
             })
+            if(run_model == 0){
+                cur_sys_ext_temp = cur_cold_temp;
+                $('#extTemp').html(cur_cold_temp);
+            }else{
+                cur_sys_ext_temp = cur_hot_temp;
+                $('#extTemp').html(cur_hot_temp);
+            }
         })
     }
 
@@ -863,11 +929,12 @@ define([
         }
         tempTimeDeviceJob = setTimeout(function () {
             console.log('当前设置的温度是:' + val);
+            // var loading = layer.load(2, {shade: [0.5, '#fff']});
             set_device_temp(itemname, val, callback);
-        }, 4000)
+        }, 2000)
     }
 
-    var set_device_temp = function (itemname, val, callback) {
+    var set_device_temp = function (itemname, val,callback) {
         getValByKey(itemname, function (item) {
             send_control(item, val, false, callback);
         })
@@ -1090,7 +1157,7 @@ define([
                             }
                             break;
                     }
-                    if (count > 8) {
+                    if (count > 1) {
                         //控制结果不明
                         clearInterval(timer);
                         callback('unknown');
@@ -1145,6 +1212,7 @@ define([
         var init_index_page = function () {
             $('#outTemp').html(cur_out_temp);
             $('#inTemp').html(cur_in_temp);
+            $('#envTemp').html(cur_env_temp);
             $('#extTemp').html(cur_sys_ext_temp);
             if (Number(run_status) === 1) {
                 $(".online_status").attr("src", "../assets/image/img/online.png");
@@ -1161,10 +1229,10 @@ define([
                 $("#cold_model").removeClass("color_cold_active")
             }
             if (Number(cur_power) === 0) {
-                $("#host_switch").attr("src", "../assets/image/img/switch_off_o.png");
+                $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
                 $("#host_switch").removeClass("on");
             } else if (cur_power == '1') {
-                $("#host_switch").attr("src", "../assets/image/img/switch_on_o.png");
+                $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
                 $("#host_switch").addClass("on")
             }
         }
@@ -1194,19 +1262,31 @@ define([
                 } else {
                     cur_sys_ext_temp = parseInt(cur_sys_ext_temp) + 1;
                     $('#extTemp').html(cur_sys_ext_temp);
+                    //延时执行
+                    if (tempTimeJob != 'undefined') {
+                        window.clearTimeout(tempTimeJob);
+                    }
+                    tempTimeJob = setTimeout(function () {
+                        var loading = layer.load(2, {shade: [0.5, '#fff']});
+                        change_mode(5, cur_sys_ext_temp, function (res) {
+                            layer.close(loading);
+                            if (res != 'success') {
+                                singleAlter2("控制失败");
+                                var key = "Sys_CoolSetP";
+                                if(run_model == 1){
+                                    key = "Sys_HeatSetP";
+                                }
+                                getValByKey(key, function (res) {
+                                    $('#extTemp').html(res.val);
+                                })
+                            } else {
+                                refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                    console.log("刷新成功");
+                                })
+                            }
+                        });
 
-                    change_mode_time(5, cur_sys_ext_temp, function (res) {
-                        if (res != 'success') {
-                            singleAlter2("控制失败");
-                            getValByKey('Sys_ExtTemp', function (res) {
-                                $('#extTemp').html(res.val);
-                            })
-                        } else {
-                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                console.log("刷新成功");
-                            })
-                        }
-                    })
+                    }, 2000);
                 }
             });
         })
@@ -1222,18 +1302,29 @@ define([
                 } else {
                     cur_sys_ext_temp = parseInt(cur_sys_ext_temp) - 1;
                     $('#extTemp').html(cur_sys_ext_temp);
-                    change_mode_time(6, cur_sys_ext_temp, function (res) {
-                        if (res != 'success') {
-                            singleAlter2("控制失败");
-                            getValByKey('Sys_ExtTemp', function (res) {
-                                $('#extTemp').html(res.val);
-                            })
-                        } else {
-                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                console.log("刷新成功");
-                            })
-                        }
-                    })
+
+                    if (tempTimeJob != 'undefined') {
+                        window.clearTimeout(tempTimeJob);
+                    }
+                    tempTimeJob = setTimeout(function () {
+                        var loading = layer.load(2, {shade: [0.5, '#fff']});
+                        change_mode(6, cur_sys_ext_temp, function (res) {
+                            if (res != 'success') {
+                                singleAlter2("控制失败");
+                                var key = "Sys_CoolSetP";
+                                if(run_model == 1){
+                                    key = "Sys_HeatSetP";
+                                }
+                                getValByKey(key, function (res) {
+                                    $('#extTemp').html(res.val);
+                                })
+                            } else {
+                                refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                    console.log("刷新成功");
+                                })
+                            }
+                        });
+                    }, 2000);
                 }
             });
         })
@@ -1253,11 +1344,15 @@ define([
                     change_mode(0, null, function (res) {
                         //关闭loading
                         layer.close(loading);
+                        res = "success";
                         if (res !== 'success') {
                             singleAlter2("控制模式失败");
                             $("#hot_model").addClass("color_hot_active");
                             $("#cold_model").removeClass("color_cold_active");
                         } else {
+                            cur_sys_ext_temp = cur_cold_temp;
+                            run_model = 0;
+                            $('#extTemp').html(cur_sys_ext_temp);
                             $("#cold_model").addClass("color_cold_active");
                             $("#hot_model").removeClass("color_hot_active");
                             refreshCurrentDataByProjectDelay(cur_projectId, function () {
@@ -1287,6 +1382,9 @@ define([
                             $('#hot_model').removeClass("color_hot_active");
                             $("#cold_model").addClass("color_cold_active");
                         } else {
+                            run_model = 1;
+                            cur_sys_ext_temp = cur_hot_temp;
+                            $('#extTemp').html(cur_sys_ext_temp);
                             $("#hot_model").addClass("color_hot_active");
                             $("#cold_model").removeClass("color_cold_active");
                             refreshCurrentDataByProjectDelay(cur_projectId, function () {
@@ -1323,7 +1421,7 @@ define([
                                 getValByKey("Sys_RunSet", function (item) {
                                     send_control(item, 0, true, function (res) {
                                         if (res == 'success') {
-                                            $("#host_switch").attr("src", "../assets/image/img/switch_off_o.png");
+                                            $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
                                             $("#host_switch").removeClass("on");
                                             layout_init();
                                             bindEvents();
@@ -1346,7 +1444,7 @@ define([
                                                 bindEvents();
                                                 init_index_page();
                                             }, 800);
-                                            $("#host_switch").attr("src", "../assets/image/img/switch_on_o.png");
+                                            $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
                                             $("#host_switch").addClass("on")
                                         } else {
                                             singleAlter2("开机控制失败");
@@ -1417,7 +1515,7 @@ define([
             var array = data;
             $('.content').html("");
             for (var i = 0; i < array.length; i++) {
-                $('.content').prepend(Layout.room_device(array[i].room_img, array[i].name, array[i].count, array[i].vid));
+                $('.content').append(Layout.room_device(array[i].room_img, array[i].name, array[i].count, array[i].vid));
             }
         }
 
@@ -1463,9 +1561,9 @@ define([
                 var deviceObj = getSingleDeviceData(i, roomId);
                 //获取Fk_1 前缀
                 var item_pre = deviceObj.modelName.substring(0, deviceObj.modelName.lastIndexOf('_'));
-                var model = (Number(deviceObj.modelVal) === 0) ? "制冷" : "制热";
-                var modelImg = (Number(deviceObj.modelVal) === 0) ? "fa-snowflake-o" : "fa-sun-o";
-                var preClass = (Number(deviceObj.modelVal) === 0) ? "cold" : "hot"
+                var model = (Number(deviceObj.modelVal) === 1) ? "制冷" : "制热";
+                var modelImg = (Number(deviceObj.modelVal) === 1) ? "fa-snowflake-o" : "fa-sun-o";
+                var preClass = (Number(deviceObj.modelVal) === 1) ? "cold" : "hot"
                 var parent = preClass + "_parent";
                 var child = preClass + "_child";
                 var circleId = "child" + deviceId;
@@ -1676,6 +1774,7 @@ define([
                         var id = "#temp" + deviceId;
                         var temp = $(id).html().trim();
                         var tempNum = Number(temp.substring(0, temp.indexOf('℃')));
+                        var tempOri = tempNum;
                         tempNum = tempNum - 1;
                         //重新设置页面的温度和环形
                         $(id).html(tempNum + '℃');
@@ -1683,18 +1782,44 @@ define([
                         $('#' + wraId).circleProgress({
                             temp: tempNum
                         });
+                        //进制转换
+                        var tempNumFormat = changeTempFormat(tempNum);
                         //延迟5s进行操作
                         console.log("装置：" + deviceId + ",当前温度为：" + temp + "执行减操作")
                         var itemname = $(id).attr("itemname");
-                        change_device_temp(itemname, tempNum, function () {
-                            console.log('已经执行完操作了');
-                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                console.log("刷新数据成功")
+                        // change_device_temp(itemname, tempNumFormat, function (res) {
+                        //     if(res == 'success'){
+                        //         refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                        //             console.log("刷新数据成功")
+                        //         });
+                        //     }else{
+                        //         $(id).html(tempOri+'℃');
+                        //         singleAlter2("温度设置失败");
+                        //     }
+                        // })
+                        if (tempTimeDeviceJob != 'undefined') {
+                            window.clearTimeout(tempTimeDeviceJob);
+                        }
+                        tempTimeDeviceJob = setTimeout(function () {
+                            console.log('当前设置的温度是:' + tempNumFormat);
+                            var loading = layer.load(2, {shade: [0.5, '#fff']});
+                            set_device_temp(itemname, tempNumFormat, function (res) {
+                                layer.close(loading);
+                                if(res == 'success'){
+                                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                        console.log("刷新数据成功")
+                                    });
+                                }else{
+                                    var roomId = deviceId.substring(0,deviceId.indexOf('_'));
+                                    var i = deviceId.substring(deviceId.indexOf('_')+1);
+                                    var obj = getSingleDeviceData(i,roomId);
+                                    $(id).html(obj.tempVal+'℃');
+                                    singleAlter2("温度设置失败");
+                                }
                             });
-                        })
+                        }, 2000)
                     } else {
                         singleAlter("Constant-warn-close-msg")
-                        // alert("已关机，请开机后操作")
                     }
                 }
             });
@@ -1714,6 +1839,7 @@ define([
                         var id = "#temp" + deviceId;
                         var temp = $(id).html().trim();
                         var tempNum = Number(temp.substring(0, temp.indexOf('℃')));
+                        var tempOri = tempNum;
                         tempNum = tempNum + 1;
                         //重新设置页面的温度和环形
                         $(id).html(tempNum + '℃');
@@ -1722,22 +1848,51 @@ define([
                             temp: tempNum,
                         });
                         //延迟5s进行操作
+                        //进制转换
+                        var tempNumFormat = changeTempFormat(tempNum);
                         console.log("装置：" + deviceId + ",当前温度为：" + temp + "执行加操作");
                         var itemname = $(id).attr("itemname");
-                        change_device_temp(itemname, tempNum, function () {
-                            console.log('已经执行完操作了')
-                            refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                console.log("刷新数据成功")
+                        // change_device_temp(itemname, tempNumFormat, function (res) {
+                        //     if(res == 'success'){
+                        //         refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                        //             console.log("刷新数据成功")
+                        //         });
+                        //     }else{
+                        //         $(id).html(tempOri+'℃');
+                        //         singleAlter2("温度设置失败");
+                        //     }
+                        // })
+                        if (tempTimeDeviceJob != 'undefined') {
+                            window.clearTimeout(tempTimeDeviceJob);
+                        }
+                        tempTimeDeviceJob = setTimeout(function () {
+                            console.log('当前设置的温度是:' + tempNumFormat);
+                            var loading = layer.load(2, {shade: [0.5, '#fff']});
+                            set_device_temp(itemname, tempNumFormat, function (res) {
+                                layer.close(loading);
+                                if(res == 'success'){
+                                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                                        console.log("刷新数据成功")
+                                    });
+                                }else{
+                                    var roomId = deviceId.substring(0,deviceId.indexOf('_'));
+                                    var i = deviceId.substring(deviceId.indexOf('_')+1);
+                                    var obj = getSingleDeviceData(i,roomId);
+                                    $(id).html(obj.tempVal+'℃');
+                                    singleAlter2("温度设置失败");
+                                }
                             });
-                        })
+                        }, 2000)
+
                     } else {
                         singleAlter("Constant-warn-close-msg");
-                        // alert("已关机，请开机后操作")
                     }
                 }
             });
 
         })
+
+
         //装置模式
         $("#main").off('tap', ". ").on('tap', '.device_model', function (e) {
             var deviceId = $(this).attr("deviceId");
@@ -1756,25 +1911,27 @@ define([
                         ToolBox.device_model({
                             $container: $('#others'),
                             afterCallbackCold: function () {
+                                var cold = 1;
                                 $('#confirm-alert').modal('hide');
                                 var loading = layer.load(2, {shade: [0.5, '#fff']});
-                                send_control_new(item.devid, item.itemid, 0, false, function (res) {
-                                    //修改环形颜色和背景颜色
-                                    $('#child' + deviceId).circleProgress({
-                                        fill: {
-                                            gradient: ["#21BFFE", "#67F7B2"]
-                                        }
-                                    });
-                                    $('#parent' + deviceId).removeClass("hot_parent");
-                                    $('#parent' + deviceId).addClass("cold_parent");
-                                    $('#child' + deviceId).removeClass("hot_child");
-                                    $('#child' + deviceId).addClass("cold_child");
-                                    $("#modelImg" + deviceId).removeClass("fa-sun-o");
-                                    $("#modelImg" + deviceId).addClass("fa-snowflake-o");
-                                    $("#modelText" + deviceId).html("制冷");
+                                send_control_new(item.devid, item.itemid, cold, false, function (res) {
                                     if (res != "success") {
                                         singleAlter2("控制失败");
                                     } else {
+                                        //返回结果成功再修改环形颜色和背景颜色
+                                        $('#child' + deviceId).circleProgress({
+                                            fill: {
+                                                gradient: ["#21BFFE", "#67F7B2"]
+                                            }
+                                        });
+                                        $('#parent' + deviceId).removeClass("hot_parent");
+                                        $('#parent' + deviceId).addClass("cold_parent");
+                                        $('#child' + deviceId).removeClass("hot_child");
+                                        $('#child' + deviceId).addClass("cold_child");
+                                        $("#modelImg" + deviceId).removeClass("fa-sun-o");
+                                        $("#modelImg" + deviceId).addClass("fa-snowflake-o");
+                                        $("#modelText" + deviceId).html("制冷");
+
                                         refreshCurrentDataByProjectDelay(cur_projectId, function () {
                                             console.log("刷新数据成功")
                                         });
@@ -1784,25 +1941,26 @@ define([
                                 })
                             },
                             afterCallbackHot: function () {
+                                var hot = 4;
                                 $('#confirm-alert').modal('hide');
                                 var loading = layer.load(2, {shade: [0.5, '#fff']});
-                                send_control_new(item.devid, item.itemid, 1, false, function (res) {
-                                    //修改环形颜色和背景颜色
-                                    $('#child' + deviceId).circleProgress({
-                                        fill: {
-                                            gradient: ["#2CCBF3", "#B40608"]
-                                        }
-                                    });
-                                    $('#parent' + deviceId).addClass("hot_parent");
-                                    $('#parent' + deviceId).removeClass("cold_parent");
-                                    $('#child' + deviceId).removeClass("cold_child");
-                                    $('#child' + deviceId).addClass("hot_child");
-                                    $("#modelImg" + deviceId).removeClass("fa-snowflake-o");
-                                    $("#modelImg" + deviceId).addClass("fa-sun-o");
-                                    $("#modelText" + deviceId).html("制热");
+                                send_control_new(item.devid, item.itemid, hot, false, function (res) {
                                     if (res != "success") {
                                         singleAlter2("控制失败");
                                     } else {
+                                        //返回结果成功再修改环形颜色和背景颜色
+                                        $('#child' + deviceId).circleProgress({
+                                            fill: {
+                                                gradient: ["#2CCBF3", "#B40608"]
+                                            }
+                                        });
+                                        $('#parent' + deviceId).addClass("hot_parent");
+                                        $('#parent' + deviceId).removeClass("cold_parent");
+                                        $('#child' + deviceId).removeClass("cold_child");
+                                        $('#child' + deviceId).addClass("hot_child");
+                                        $("#modelImg" + deviceId).removeClass("fa-snowflake-o");
+                                        $("#modelImg" + deviceId).addClass("fa-sun-o");
+                                        $("#modelText" + deviceId).html("制热");
                                         refreshCurrentDataByProjectDelay(cur_projectId, function () {
                                             console.log("刷新数据成功")
                                         });
@@ -1848,16 +2006,20 @@ define([
                                 var highItemname = itemPre + '_Hwinds';
                                 var highItem = getVdeviceItemsInfo(vId, highItemname);
                                 if (data === '低速') {
-                                    updateLowSpeed(lowItem.devid, lowItem.itemid, 1,loading,deviceId,data);
-                                    updateMidSpeed(midItem.devid, midItem.itemid, 0,loading,deviceId,data);
-                                    updateHighSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
+                                    updateLowSpeed(lowItem.devid, lowItem.itemid, 3,loading,deviceId,data);
+                                    //updateMidSpeed(midItem.devid, midItem.itemid, 0,loading,deviceId,data);
+                                    //updateHighSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
                                 } else if (data === '高速') {
-                                    updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
-                                    updateMidSpeed(midItem.devid, midItem.itemid, 0,loading,deviceId,data);
+                                    //updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
+                                    //updateMidSpeed(midItem.devid, midItem.itemid, 0,loading,deviceId,data);
                                     updateHighSpeed(highItem.devid, highItem.itemid, 1,loading,deviceId,data);
                                 } else if (data === '中速') {
-                                    updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
-                                    updateMidSpeed(midItem.devid, midItem.itemid, 1,loading,deviceId,data);
+                                    //updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
+                                    updateMidSpeed(midItem.devid, midItem.itemid, 2,loading,deviceId,data);
+                                    //updateHighSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
+                                }else if (data === '自动') {
+                                    //updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
+                                    //updateMidSpeed(midItem.devid, midItem.itemid, 1,loading,deviceId,data);
                                     updateHighSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
                                 }
                             },
@@ -3080,11 +3242,7 @@ define([
             timeJobId = setInterval(function () {
                 //只刷新页面
                 //如果当前是非主页的刷新,则不需要刷新当前页
-                console.log("要刷新页面了")
                 layout_init_refresh();
-                // if ($("#cur_choice").is(":visible")) {
-                //     layout_init();
-                // }
             }, timeJobFre);
         }
 
@@ -3096,6 +3254,15 @@ define([
             $container: $('#others'),
             msg: ToolBox.getConstant(msg)
         })
+    }
+
+    //温度进制转换
+    function changeTempFormat(temp) {
+        //温度取整
+        var tempInt = parseInt(temp);
+        //转换成16进制 23 -> 1700
+        var temp16 = tempInt.toString(16)+'00';
+        return parseInt(temp16,16);
     }
 
     //提示框，单按钮

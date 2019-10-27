@@ -376,8 +376,8 @@ strong i{
 }
 
 #host_switch {
-    width: 22px;
-    height: 22px;
+    width: 45px;
+    height: 45px;
     margin-top: -5px;
 }
 
@@ -431,7 +431,7 @@ strong i{
 }
 .control_right_div{
     text-align: left;
-    display: -webkit-flex;
+    /*display: -webkit-flex;*/
     -webkit-align-items: center;
     font-size: 14px;
     color: grey;
