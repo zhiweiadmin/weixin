@@ -524,6 +524,7 @@ define([
         //然后按需获取属性名及属性值
         var item_onoff = i + '_OnOff';
         var item_model = i + '_Model';
+        var env_temp = i + '_ExtTemp';//环境温度
         var ext_temp = i + '_HeatSetP';
         var temp_set = i + '_HeatSetP';
         //风速 低速 中速 高速
@@ -547,9 +548,11 @@ define([
             if(p.itemName.indexOf(temp_set) != -1){
                 device.tempName = p.itemName;
             }
-            //房控室内温度
+            if(p.itemName.indexOf(env_temp) != -1){
+                device.envTempName = p.itemName;
+            }
+            //房控设置温度
             if (p.itemName.indexOf(ext_temp) != -1) {
-                debugger;
                 //遍历实时数据
                 //温度需要转换成16进制来显示
                 var data = getItemValueByName(device.tempName)+"";
@@ -581,6 +584,39 @@ define([
                     device.tempVal = pre;
                 }
             }
+            //房控室内温度
+            if (p.itemName.indexOf(env_temp) != -1) {
+                //遍历实时数据
+                //温度需要转换成16进制来显示
+                var data = getItemValueByName(device.envTempName)+"";
+                if(data.length === 1){
+                    data = "000"+data;
+                }else if(data.length === 2){
+                    data = "00"+data;
+                }else if(data.length === 3){
+                    data = "0"+data;
+                }
+                var extTemp10 = parseInt(data);
+                var extTemp16 = extTemp10.toString(16);
+                var preTemp = extTemp16.substring(0,extTemp16.length-2);
+                var sufTemp = extTemp16.substring(extTemp16.length-2,extTemp16.length);
+
+                var pre = parseInt(preTemp,16);
+                var suf = parseInt(sufTemp,16);
+
+                if(typeof(pre)=="undefined" || isNaN(pre) || "" === pre){
+                    pre = 0;
+                }
+                if(typeof(suf)=="undefined" || isNaN(suf)){
+                    suf = 0;
+                }
+
+                if(suf !== 0){
+                    device.envTempVal = pre+"."+suf;
+                }else{
+                    device.envTempVal = pre;
+                }
+            }
             //低速
             if (p.itemName.indexOf(low) != -1) {
                 device.lowName = p.itemName;
@@ -602,6 +638,8 @@ define([
         })
         //获取当前速度
         device.speed = getSpeed(device);
+        debugger;
+        console.log(device);
         return device;
     }
 
@@ -1569,7 +1607,7 @@ define([
                 var circleId = "child" + deviceId;
                 //默认均为低速
                 var speed = deviceObj.speed;
-                $(".swiper-wrapper").append(Layout.room_detail_basic_device(parent, child, model, modelImg, deviceObj.tempVal, deviceId, speed, name +'-'+ i, deviceObj.tempName, deviceObj.onoffName, deviceObj.modelName, item_pre));
+                $(".swiper-wrapper").append(Layout.room_detail_basic_device(parent, child, model, modelImg, deviceObj.envTempVal,deviceObj.tempVal, deviceId, speed, name +'-'+ i, deviceObj.tempName, deviceObj.onoffName, deviceObj.modelName, item_pre));
                 var size = $(".parent").width() * 0.8;
                 if (model === "制热") {
                     $('#' + circleId).circleProgress({

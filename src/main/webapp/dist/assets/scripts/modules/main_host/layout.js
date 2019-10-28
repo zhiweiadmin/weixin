@@ -40,8 +40,8 @@ define([
     };
 
     //房控房间细节样式
-    var room_detail_basic_device = function(parent,child,model,modelImg,temp,deviceId,speed,deviceName,itemname_temp,itemname_onoff,itemname_model,item_pre){
-        return template({'tempId': 'room_detail_basic_device','parent':parent,'child':child,'model':model,'modelImg':modelImg,'temp':temp,'deviceId':deviceId,'speed':speed,'deviceName':deviceName,'itemname_temp':itemname_temp,'itemname_onoff':itemname_onoff,'itemname_model':itemname_model,'item_pre':item_pre});
+    var room_detail_basic_device = function(parent,child,model,modelImg,envTemp,temp,deviceId,speed,deviceName,itemname_temp,itemname_onoff,itemname_model,item_pre){
+        return template({'tempId': 'room_detail_basic_device','parent':parent,'child':child,'model':model,'modelImg':modelImg,'temp':temp,'deviceId':deviceId,'speed':speed,'deviceName':deviceName,'itemname_temp':itemname_temp,'itemname_onoff':itemname_onoff,'itemname_model':itemname_model,'item_pre':item_pre,'envTemp':envTemp});
     };
 
     //主机页面
