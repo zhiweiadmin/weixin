@@ -1347,6 +1347,7 @@ define([
                     tempTimeJob = setTimeout(function () {
                         var loading = layer.load(2, {shade: [0.5, '#fff']});
                         change_mode(6, cur_sys_ext_temp, function (res) {
+                            layer.close(loading);
                             if (res != 'success') {
                                 singleAlter2("控制失败");
                                 var key = "Sys_CoolSetP";
