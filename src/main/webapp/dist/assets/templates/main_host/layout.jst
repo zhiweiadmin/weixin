@@ -215,7 +215,7 @@
     <img id="host_switch" vid class="on" src="../assets/image/img/switch_on_o_new.png">
 </div>
 <%}else if(tempId=='single_room_device'){%>
-<div class="controle_row" count='<%=count%>' id='<%=vid%>' name='<%=name%>'>
+<div class="controle_row" count='<%=count%>' id='<%=vid%>' name='<%=name%>' devicename='<%=deviceName%>'>
     <div class="col-xs-2 padt20 padb20" >
         <img class="host_img" src="<%=room_img%>">
     </div>
@@ -674,7 +674,7 @@
     </div>
 </div>
 <%}else if(tempId=='room_detail_basic_device'){%>
-<div class="swiper-slide" id="swiper<%=deviceId%>">
+<div class="swiper-slide" id="swiper<%=deviceId%>" devicename="<%=devicename%>">
     <div class="col-xs-12 " style="margin-top: -8px">
         <div><img class='control_top_icon' src="../assets/image/img/woshi-o.png" style="width: 80px"></div>
         <div class="color_white font-25"><%=deviceName%></div>
@@ -701,15 +701,15 @@
     </div>
     <div>
         <div class="col-xs-3 control_bottom_menu">
-            <div class="mt25 device_switch" deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>" id="switch<%=deviceId%>">
+            <div class="mt25 device_switch" deviceId="<%=deviceId%>" itemname="<%=itemname_onoff%>" id="switch<%=deviceId%>" devicename="<%=devicename%>">
                 <img class="control_icon_img"  src="../assets/image/img/control_switch.png">
             </div>
-            <div  id="switchT<%=deviceId%>" class="icon<%=deviceId%>">
+            <div  id="switchT<%=deviceId%>" class="icon<%=deviceId%>" >
                 开关
             </div>
         </div>
         <div class="col-xs-3 control_bottom_menu">
-            <div class="mt25 device_model cold_model" deviceId="<%=deviceId%>" itemname="<%=itemname_model%>" id="model<%=deviceId%>">
+            <div class="mt25 device_model cold_model" deviceId="<%=deviceId%>" itemname="<%=itemname_model%>" id="model<%=deviceId%>" devicename="<%=devicename%>">
                 <img class="control_icon_img" src="../assets/image/img/control_model.png">
             </div>
             <div  id="modelT<%=deviceId%>" class="icon<%=deviceId%>">
@@ -717,7 +717,7 @@
             </div>
         </div>
         <div class="col-xs-3 control_bottom_menu">
-            <div class="mt25 device_speed" deviceId="<%=deviceId%>" itemPre="<%=item_pre%>" id="speed<%=deviceId%>">
+            <div class="mt25 device_speed" deviceId="<%=deviceId%>" itemPre="<%=item_pre%>" id="speed<%=deviceId%>" devicename="<%=devicename%>">
                 <img class="control_icon_img"  src="../assets/image/img/control_speed.png">
             </div>
             <div  id="speedT<%=deviceId%>" class="icon<%=deviceId%>">

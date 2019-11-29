@@ -638,7 +638,6 @@ define([
         })
         //获取当前速度
         device.speed = getSpeed(device);
-        debugger;
         console.log(device);
         return device;
     }
@@ -1526,6 +1525,7 @@ define([
                         if (index > 0) {
                             //获取最后一个统计项
                             var lastitem = p.dataItem[p.dataItem.length - 1].itemName;
+                            var deviceName = p.dataItem[p.dataItem.length - 1].deviceName;
                             var count = 0;
                             if (typeof (lastitem) != "undefined") {
                                 var firstWeizhi = lastitem.indexOf('_');
@@ -1536,7 +1536,8 @@ define([
                                 name: p.vdeviceName,
                                 vid: p.vdeviceId,
                                 count: count,
-                                room_img: getRoomImg(p.vdeviceName)
+                                room_img: getRoomImg(p.vdeviceName),
+                                deviceName:deviceName
                             };
                             devices.push(obj);
                         }
@@ -1554,7 +1555,7 @@ define([
             var array = data;
             $('.content').html("");
             for (var i = 0; i < array.length; i++) {
-                $('.content').append(Layout.room_device(array[i].room_img, array[i].name, array[i].count, array[i].vid));
+                $('.content').append(Layout.room_device(array[i].room_img, array[i].name, array[i].count, array[i].vid,array[i].deviceName));
             }
         }
 
@@ -1591,6 +1592,7 @@ define([
 
             //房间ID
             var roomId = $(this).parent('.controle_row').attr("id");
+            var devicename = $(this).parent('.controle_row').attr("devicename");
             var name = $(this).parent('.controle_row').attr("name");
             //根据个数来创建设备信息
             //i后期使用装置ID来替换
@@ -1608,7 +1610,7 @@ define([
                 var circleId = "child" + deviceId;
                 //默认均为低速
                 var speed = deviceObj.speed;
-                $(".swiper-wrapper").append(Layout.room_detail_basic_device(parent, child, model, modelImg, deviceObj.envTempVal,deviceObj.tempVal, deviceId, speed, name +'-'+ i, deviceObj.tempName, deviceObj.onoffName, deviceObj.modelName, item_pre));
+                $(".swiper-wrapper").append(Layout.room_detail_basic_device(parent, child, model, modelImg, deviceObj.envTempVal,deviceObj.tempVal, deviceId, speed, name +'-'+ i, deviceObj.tempName, deviceObj.onoffName, deviceObj.modelName, item_pre,devicename));
                 var size = $(".parent").width() * 0.8;
                 if (model === "制热") {
                     $('#' + circleId).circleProgress({
@@ -1732,6 +1734,7 @@ define([
         //房控里面的切换 jiangzhiwei
         //装置开关
         $("#main").off('tap', ".device_switch").on('tap', '.device_switch', function (e) {
+            var devicename = $(this).attr("devicename");
             var itemname = $(this).attr("itemname");
             var deviceId = $(this).attr("deviceId");
             var vId = deviceId.substring(0, deviceId.indexOf('_'));
@@ -1936,6 +1939,7 @@ define([
         $("#main").off('tap', ". ").on('tap', '.device_model', function (e) {
             var deviceId = $(this).attr("deviceId");
             var itemname_model = $(this).attr("itemname");
+            var devicename = $(this).attr("devicename");
             //判断是否有权限
             getUserProjectAuth(function (res) {
                 var roleId = ToolBox.getCookie("roleId");
@@ -1945,70 +1949,37 @@ define([
                 } else {
                     if ($("#switch" + deviceId).hasClass("on")) {
                         var vId = deviceId.substring(0, deviceId.indexOf('_'));
-                        var item = getVdeviceItemsInfo(vId, itemname_model);
-                        //当前为开机状态，提供关机功能
-                        ToolBox.device_model({
-                            $container: $('#others'),
-                            afterCallbackCold: function () {
-                                var cold = 1;
-                                $('#confirm-alert').modal('hide');
-                                var loading = layer.load(2, {shade: [0.5, '#fff']});
-                                send_control_new(item.devid, item.itemid, cold, false, function (res) {
-                                    if (res != "success") {
-                                        singleAlter2("控制失败");
-                                    } else {
-                                        //返回结果成功再修改环形颜色和背景颜色
-                                        $('#child' + deviceId).circleProgress({
-                                            fill: {
-                                                gradient: ["#21BFFE", "#67F7B2"]
-                                            }
-                                        });
-                                        $('#parent' + deviceId).removeClass("hot_parent");
-                                        $('#parent' + deviceId).addClass("cold_parent");
-                                        $('#child' + deviceId).removeClass("hot_child");
-                                        $('#child' + deviceId).addClass("cold_child");
-                                        $("#modelImg" + deviceId).removeClass("fa-sun-o");
-                                        $("#modelImg" + deviceId).addClass("fa-snowflake-o");
-                                        $("#modelText" + deviceId).html("制冷");
-
-                                        refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                            console.log("刷新数据成功")
-                                        });
-                                    }
-                                    //关闭loading
-                                    layer.close(loading);
-                                })
-                            },
-                            afterCallbackHot: function () {
-                                var hot = 4;
-                                $('#confirm-alert').modal('hide');
-                                var loading = layer.load(2, {shade: [0.5, '#fff']});
-                                send_control_new(item.devid, item.itemid, hot, false, function (res) {
-                                    if (res != "success") {
-                                        singleAlter2("控制失败");
-                                    } else {
-                                        //返回结果成功再修改环形颜色和背景颜色
-                                        $('#child' + deviceId).circleProgress({
-                                            fill: {
-                                                gradient: ["#2CCBF3", "#B40608"]
-                                            }
-                                        });
-                                        $('#parent' + deviceId).addClass("hot_parent");
-                                        $('#parent' + deviceId).removeClass("cold_parent");
-                                        $('#child' + deviceId).removeClass("cold_child");
-                                        $('#child' + deviceId).addClass("hot_child");
-                                        $("#modelImg" + deviceId).removeClass("fa-snowflake-o");
-                                        $("#modelImg" + deviceId).addClass("fa-sun-o");
-                                        $("#modelText" + deviceId).html("制热");
-                                        refreshCurrentDataByProjectDelay(cur_projectId, function () {
-                                            console.log("刷新数据成功")
-                                        });
-                                    }
-                                    //关闭loading
-                                    layer.close(loading);
-                                })
-                            }
-                        })
+                        if(devicename.indexOf("XiLe") > -1){
+                            ToolBox.device_model_xile({
+                                $container: $('#others'),
+                                afterCallbackHot: function () {
+                                    sendModelControl(item,0,"制热")
+                                },
+                                afterCallbackCold: function () {
+                                    sendModelControl(item,1,"制冷")
+                                },
+                                afterCallbackWind: function () {
+                                    sendModelControl(item,2,"通风")
+                                },
+                                afterCallbackHeat: function () {
+                                    sendModelControl(item,3,"地暖")
+                                },
+                                afterCallbackHotHeat: function () {
+                                    sendModelControl(item,4,"制热+地暖")
+                                }
+                            })
+                        }else{
+                            //装置模式设置
+                            ToolBox.device_model({
+                                $container: $('#others'),
+                                afterCallbackCold: function () {
+                                    sendModelControl(item,1,"制冷");
+                                },
+                                afterCallbackHot: function () {
+                                    sendModelControl(item,4,"制热");
+                                }
+                            })
+                        }
                     } else {
                         singleAlter("Constant-warn-close-msg");
                     }
@@ -2016,10 +1987,46 @@ define([
             });
         })
 
+        /**
+         * 房控模式设置请求
+         * @param item
+         * @param val
+         * @param name
+         */
+        var sendModelControl = function(item,val,name){
+            $('#confirm-alert').modal('hide');
+            var loading = layer.load(2, {shade: [0.5, '#fff']});
+            send_control_new(item.devid, item.itemid, val, false, function (res) {
+                if (res != "success") {
+                    singleAlter2("控制失败");
+                } else {
+                    //返回结果成功再修改环形颜色和背景颜色
+                    $('#child' + deviceId).circleProgress({
+                        fill: {
+                            gradient: ["#2CCBF3", "#B40608"]
+                        }
+                    });
+                    $('#parent' + deviceId).addClass("hot_parent");
+                    $('#parent' + deviceId).removeClass("cold_parent");
+                    $('#child' + deviceId).removeClass("cold_child");
+                    $('#child' + deviceId).addClass("hot_child");
+                    $("#modelImg" + deviceId).removeClass("fa-snowflake-o");
+                    $("#modelImg" + deviceId).addClass("fa-sun-o");
+                    $("#modelText" + deviceId).html("制热");
+                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                        console.log("刷新数据成功")
+                    });
+                }
+                //关闭loading
+                layer.close(loading);
+            })
+        }
+
         //风速
         $("#main").off('tap', ".device_speed").on('tap', '.device_speed', function (e) {
             var deviceId = $(this).attr("deviceId");
             var itemPre = $(this).attr("itemPre");
+            var devicename = $(this).attr("devicename")
             //判断是否有权限
             getUserProjectAuth(function (res) {
                 var roleId = ToolBox.getCookie("roleId");
@@ -2030,40 +2037,72 @@ define([
                     if ($("#switch" + deviceId).hasClass("on")) {
                         var vId = deviceId.substring(0, deviceId.indexOf('_'));
                         var speed = $("#speedT" + deviceId).html();
-                        ToolBox.device_speed({
-                            $container: $('#others'),
-                            afterCallback: function (data) {
+                        if(devicename.indexOf("XiLe") > -1){
+                            ToolBox.device_speed_xile({
+                                $container: $('#others'),
+                                afterCallback: function (data) {
+                                    debugger;
+                                    $('#confirm-alert').modal('hide');
+                                    var loading = layer.load(2, {shade: [0.5, '#fff']});
 
-                                $('#confirm-alert').modal('hide');
-                                var loading = layer.load(2, {shade: [0.5, '#fff']});
+                                    //分别获取低速、中速、高速的item
+                                    var lowItemname = itemPre + '_Lwinds';
+                                    var lowItem = getVdeviceItemsInfo(vId, lowItemname);
+                                    var midItemname = itemPre + '_Mwinds';
+                                    var midItem = getVdeviceItemsInfo(vId, midItemname);
+                                    var highItemname = itemPre + '_Hwinds';
+                                    var highItem = getVdeviceItemsInfo(vId, highItemname);
+                                    //TODO
+                                    if (data === '低速') {
+                                        updateSpeed(lowItem.devid, lowItem.itemid, 3,loading,deviceId,data);
+                                    } else if (data === '高速') {
+                                        updateSpeed(highItem.devid, highItem.itemid, 1,loading,deviceId,data);
+                                    } else if (data === '中速') {
+                                        updateSpeed(midItem.devid, midItem.itemid, 2,loading,deviceId,data);
+                                    }else if (data === '自动') {
+                                        updateSpeed(highItem.devid, highItem.itemid, 4,loading,deviceId,data);
+                                    }else if (data === '停风') {
+                                        updateSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
+                                    }
+                                },
+                                flag: speed
+                            })
+                        }else{
+                            ToolBox.device_speed({
+                                $container: $('#others'),
+                                afterCallback: function (data) {
 
-                                //分别获取低速、中速、高速的item
-                                var lowItemname = itemPre + '_Lwinds';
-                                var lowItem = getVdeviceItemsInfo(vId, lowItemname);
-                                var midItemname = itemPre + '_Mwinds';
-                                var midItem = getVdeviceItemsInfo(vId, midItemname);
-                                var highItemname = itemPre + '_Hwinds';
-                                var highItem = getVdeviceItemsInfo(vId, highItemname);
-                                if (data === '低速') {
-                                    updateLowSpeed(lowItem.devid, lowItem.itemid, 3,loading,deviceId,data);
-                                    //updateMidSpeed(midItem.devid, midItem.itemid, 0,loading,deviceId,data);
-                                    //updateHighSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
-                                } else if (data === '高速') {
-                                    //updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
-                                    //updateMidSpeed(midItem.devid, midItem.itemid, 0,loading,deviceId,data);
-                                    updateHighSpeed(highItem.devid, highItem.itemid, 1,loading,deviceId,data);
-                                } else if (data === '中速') {
-                                    //updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
-                                    updateMidSpeed(midItem.devid, midItem.itemid, 2,loading,deviceId,data);
-                                    //updateHighSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
-                                }else if (data === '自动') {
-                                    //updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
-                                    //updateMidSpeed(midItem.devid, midItem.itemid, 1,loading,deviceId,data);
-                                    updateHighSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
-                                }
-                            },
-                            flag: speed
-                        })
+                                    $('#confirm-alert').modal('hide');
+                                    var loading = layer.load(2, {shade: [0.5, '#fff']});
+
+                                    //分别获取低速、中速、高速的item
+                                    var lowItemname = itemPre + '_Lwinds';
+                                    var lowItem = getVdeviceItemsInfo(vId, lowItemname);
+                                    var midItemname = itemPre + '_Mwinds';
+                                    var midItem = getVdeviceItemsInfo(vId, midItemname);
+                                    var highItemname = itemPre + '_Hwinds';
+                                    var highItem = getVdeviceItemsInfo(vId, highItemname);
+                                    if (data === '低速') {
+                                        updateLowSpeed(lowItem.devid, lowItem.itemid, 3,loading,deviceId,data);
+                                        //updateMidSpeed(midItem.devid, midItem.itemid, 0,loading,deviceId,data);
+                                        //updateHighSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
+                                    } else if (data === '高速') {
+                                        //updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
+                                        //updateMidSpeed(midItem.devid, midItem.itemid, 0,loading,deviceId,data);
+                                        updateHighSpeed(highItem.devid, highItem.itemid, 1,loading,deviceId,data);
+                                    } else if (data === '中速') {
+                                        //updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
+                                        updateMidSpeed(midItem.devid, midItem.itemid, 2,loading,deviceId,data);
+                                        //updateHighSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
+                                    }else if (data === '自动') {
+                                        //updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
+                                        //updateMidSpeed(midItem.devid, midItem.itemid, 1,loading,deviceId,data);
+                                        updateHighSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
+                                    }
+                                },
+                                flag: speed
+                            })
+                        }
                     } else {
                         singleAlter("Constant-warn-close-msg");
                     }
@@ -2071,6 +2110,22 @@ define([
             });
 
         })
+
+        //修改速度
+        function updateSpeed(devid, itemid, val,loading,deviceId,data) {
+            send_control_new(devid, itemid, val, false, function (res) {
+                if (res != "success") {
+                    singleAlter2("控制失败");
+                } else {
+                    $("#speedT" + deviceId).html(data);
+                    refreshCurrentDataByProjectDelay(cur_projectId, function () {
+                        console.log("刷新数据成功")
+                    });
+                }
+                //关闭loading
+                layer.close(loading);
+            });
+        }
 
         //修改低速状态值
         function updateLowSpeed(devid, itemid, val,loading,deviceId,data) {

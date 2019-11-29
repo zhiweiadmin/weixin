@@ -31,15 +31,15 @@
 
     $(function(){
         var code = getParam("code");
-        if(typeof code != 'string'){
-            $('body').prepend('<h3>Parameter [code] is error !</h3>');
-            return false;
-        }
-        var state = getParam("state");
-        if(typeof state != 'string' || state.indexOf('0') < 0){
-            $('body').prepend('<h3>Parameter [state] is error !</h3>');
-            return false;
-        }
+        // if(typeof code != 'string'){
+        //     $('body').prepend('<h3>Parameter [code] is error !</h3>');
+        //     return false;
+        // }
+        // var state = getParam("state");
+        // if(typeof state != 'string' || state.indexOf('0') < 0){
+        //     $('body').prepend('<h3>Parameter [state] is error !</h3>');
+        //     return false;
+        // }
         $.ajax({
             type: 'get',
             url: '/access/webAuth',

@@ -165,6 +165,59 @@ define([
         $('#confirm-alert').modal('show');
     };
 
+    /*装置模式调整*/
+    var device_model_xile = function(options){
+        if(typeof options != 'object'){
+            return false;
+        }
+        var $container = options['$container'];
+        var beforeCallback = options['beforeCallback'];
+        var afterCallbackCold = options['afterCallbackCold'];
+        var afterCallbackHot = options['afterCallbackHot'];
+        var afterCallbackWind = options['afterCallbackWind'];//通风
+        var afterCallbackHeat = options['afterCallbackHeat'];//地暖
+        var afterCallbackHotHeat = options['afterCallbackHotHeat'];//地暖
+        if(typeof beforeCallback == 'function'){
+            beforeCallback();
+        }
+        $container.html(template({'tempId': 'device_model_xile'}));
+        if(typeof afterCallbackCold == 'function'){
+            $('#confirm-alert a.btn.hot').on('tap', function(){
+                afterCallbackCold();
+            });
+        }
+        if(typeof afterCallbackHot == 'function'){
+            $('#confirm-alert a.btn.cold').on('tap', function(){
+                afterCallbackHot();
+            });
+        }
+        if(typeof afterCallbackWind == 'function'){
+            $('#confirm-alert a.btn.wind').on('tap', function(){
+                afterCallbackWind();
+            });
+        }
+        if(typeof afterCallbackHeat == 'function'){
+            $('#confirm-alert a.btn.heat').on('tap', function(){
+                afterCallbackHeat();
+            });
+        }
+        if(typeof afterCallbackHotHeat == 'function'){
+            $('#confirm-alert a.btn.hotheat').on('tap', function(){
+                afterCallbackHotHeat();
+            });
+        }
+        $('.modal-backdrop').remove();
+        $('#confirm-alert').on('show.bs.modal', function (e) {
+            // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
+            $(this).css('display', 'block');
+            var modalHeight=$(window).height() / 2 - $('#confirm-alert .modal-dialog').height() / 2;
+            $(this).find('.modal-dialog').css({
+                'margin-top': modalHeight
+            });
+        });
+        $('#confirm-alert').modal('show');
+    };
+
     /*装置速度切换*/
     var device_speed = function(options){
         if(typeof options != 'object'){
@@ -187,6 +240,46 @@ define([
             beforeCallback();
         }
         $container.html(template({'tempId': 'device_speed', 'lowColor': lowColor,'midColor':midColor,'highColor':highColor}));
+        if(typeof afterCallback == 'function'){
+            $('#confirm-alert a.btn').on('tap', function(){
+                var text=$(this).html();
+                afterCallback(text);
+            });
+        }
+        $('.modal-backdrop').remove();
+        $('#confirm-alert').on('show.bs.modal', function (e) {
+            // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
+            $(this).css('display', 'block');
+            var modalHeight=$(window).height() / 2 - $('#confirm-alert .modal-dialog').height() / 2;
+            $(this).find('.modal-dialog').css({
+                'margin-top': modalHeight
+            });
+        });
+        $('#confirm-alert').modal('show');
+    };
+
+    /*装置速度切换*/
+    var device_speed_xile = function(options){
+        if(typeof options != 'object'){
+            return false;
+        }
+        var flag=options['flag'];
+        flag=flag.replace(/(^\s*)|(\s*$)/g, '');
+        var lowColor='black',midColor='black',highColor='black';
+        if(flag==='低速'){
+            lowColor='blue';
+        }else if(flag==='中速'){
+            midColor='blue';
+        }else{
+            highColor='blue';
+        }
+        var $container = options['$container'];
+        var beforeCallback = options['beforeCallback'];
+        var afterCallback = options['afterCallback'];
+        if(typeof beforeCallback == 'function'){
+            beforeCallback();
+        }
+        $container.html(template({'tempId': 'device_speed_xile', 'lowColor': lowColor,'midColor':midColor,'highColor':highColor}));
         if(typeof afterCallback == 'function'){
             $('#confirm-alert a.btn').on('tap', function(){
                 var text=$(this).html();
@@ -553,7 +646,9 @@ define([
         confirm_alert: confirm_alert,
         device_on:device_on,
         device_model:device_model,
+        device_model_xile:device_model_xile,
         device_speed:device_speed,
+        device_speed_xile:device_speed_xile,
         getCookie: getCookie,
         setCookie: setCookie,
         getParam: getParam,

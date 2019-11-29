@@ -73,8 +73,33 @@
         </div>
     </div>
 </div>
-<%}
-else if(tempId == 'device_speed'){%>
+<%}else if(tempId == 'device_model_xile'){%>
+<div class="modal fade" id="confirm-alert" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4 class="text-center">模式</h4>
+                <div class="btn-group btn-group-lg btn-group-justified">
+                    <a href="javascript:;" class="btn hot" style="backgroud-color" data-dismiss="modal"> <span ><i class="fa fa-snowflake-o"></i></span>&nbsp;&nbsp;制热</a>
+                    <a href="javascript:;" class="btn cold" data-dismiss="modal"><span ><i class="fa fa-sun-o"></i></span>&nbsp;&nbsp;制冷</a>
+                </div>
+                <div class="btn-group btn-group-lg btn-group-justified">
+                    <a href="javascript:;" class="btn wind" data-dismiss="modal"><span ><i class="fa fa-sun-o"></i></span>&nbsp;&nbsp;通风</a>
+                    <a href="javascript:;" class="btn heat" data-dismiss="modal"><span ><i class="fa fa-sun-o"></i></span>&nbsp;&nbsp;地暖</a>
+                </div>
+                <div class="btn-group btn-group-lg btn-group-justified">
+                    <a href="javascript:;" class="btn hotheat" data-dismiss="modal"><span ><i class="fa fa-sun-o"></i></span>&nbsp;&nbsp;制热+地暖</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%}else if(tempId == 'device_speed'){%>
 <div class="modal fade" id="confirm-alert" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -94,8 +119,31 @@ else if(tempId == 'device_speed'){%>
         </div>
     </div>
 </div>
-<%}
-else if(tempId == 'warn_open'){%>
+<%}else if(tempId == 'device_speed_xile'){%>
+<div class="modal fade" id="confirm-alert" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4 class="text-center">风速</h4>
+                <div class="btn-group btn-group-lg btn-group-justified">
+                    <a href="javascript:;" class="btn <%=lowColor%>" data-dismiss="modal">低速</a>
+                    <a href="javascript:;" class="btn <%=midColor%> mid" data-dismiss="modal">中速</a>
+                    <a href="javascript:;" class="btn <%=highColor%> high" data-dismiss="modal">高速</a>
+                </div>
+                <div class="btn-group btn-group-lg btn-group-justified">
+                     <a href="javascript:;" class="btn stop" data-dismiss="modal">停风</a>
+                     <a href="javascript:;" class="btn auto" data-dismiss="modal">自动风</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%}else if(tempId == 'warn_open'){%>
 <div class="modal fade" id="confirm-alert" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
