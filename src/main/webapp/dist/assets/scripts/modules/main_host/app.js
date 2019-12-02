@@ -2272,7 +2272,12 @@ define([
             //需要根据天气提供页面图片
             var air_img = getImgUrl(weather);
             setTimeout(function () {
-                $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img,city));
+                var type = getRequestParam("type");
+                if(type === "1"){
+                    $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img,city));
+                }else{
+                    $("#main").html(Layout.basic_frame_2(weather, humidity, temperature, wind, air_img,city));
+                }
                 //移除所有按钮的激活class，并激活当前按钮
                 $("#host").removeClass("active")
                 $("#control").removeClass("active")
@@ -3042,7 +3047,12 @@ define([
             //需要根据天气提供页面图片
             var air_img = getImgUrl(weather);
             setTimeout(function () {
-                $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img,city));
+                var type = getRequestParam("type");
+                if(type === "1"){
+                    $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img,city));
+                }else{
+                    $("#main").html(Layout.basic_frame_2(weather, humidity, temperature, wind, air_img,city));
+                }
                 //移除所有按钮的激活class，并激活当前按钮
                 $("#host").removeClass("active")
                 $("#control").removeClass("active")
