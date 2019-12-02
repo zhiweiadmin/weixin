@@ -29,8 +29,17 @@
         if (r != null) return r[2]; return null;
     };
 
+    function getRequestParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null)
+            return decodeURI(r[2]);
+        return null;
+    }
+
     $(function(){
         var code = getParam("code");
+        var type = getRequestParam("type");
         // if(typeof code != 'string'){
         //     $('body').prepend('<h3>Parameter [code] is error !</h3>');
         //     return false;
@@ -60,7 +69,7 @@
                             + ((expiredays == null) ? "" : ";expires="
                                 + exdate.toGMTString());
                     })('openId', openId, 1);
-                    location.href = 'index.html';
+                    location.href = 'index.html?type='+type;
                 }else{
                     location.href = 'error.html?'+'02';
                 }

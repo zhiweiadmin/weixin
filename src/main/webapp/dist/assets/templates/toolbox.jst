@@ -84,17 +84,17 @@
             </div>
             <div class="modal-body">
                 <h4 class="text-center">模式</h4>
-                <div class="btn-group btn-group-lg btn-group-justified">
-                    <a href="javascript:;" class="btn hot" style="backgroud-color" data-dismiss="modal"> <span ><i class="fa fa-snowflake-o"></i></span>&nbsp;&nbsp;制热</a>
-                    <a href="javascript:;" class="btn cold" data-dismiss="modal"><span ><i class="fa fa-sun-o"></i></span>&nbsp;&nbsp;制冷</a>
-                </div>
-                <div class="btn-group btn-group-lg btn-group-justified">
-                    <a href="javascript:;" class="btn wind" data-dismiss="modal"><span ><i class="fa fa-sun-o"></i></span>&nbsp;&nbsp;通风</a>
-                    <a href="javascript:;" class="btn heat" data-dismiss="modal"><span ><i class="fa fa-sun-o"></i></span>&nbsp;&nbsp;地暖</a>
-                </div>
-                <div class="btn-group btn-group-lg btn-group-justified">
-                    <a href="javascript:;" class="btn hotheat" data-dismiss="modal"><span ><i class="fa fa-sun-o"></i></span>&nbsp;&nbsp;制热+地暖</a>
-                </div>
+                      <div class="btn-group btn-group-lg btn-group-justified">
+                            <a href="javascript:;" class="btn blue cold" style="backgroud-color" id="ok" data-dismiss="modal"> <span ><i class="fa fa-snowflake-o"></i></span>&nbsp;&nbsp;制冷</a>
+                            <a href="javascript:;" class="btn grey hot" id="cancle" data-dismiss="modal"><span ><i class="fa fa-sun-o"></i></span>&nbsp;&nbsp;制热</a>
+                      </div>
+                      <div class="btn-group btn-group-lg btn-group-justified">
+                            <a href="javascript:;" class="btn blue wind" data-dismiss="modal"><span ><i class="fa fa-sun-o"></i></span>&nbsp;&nbsp;通风</a>
+                            <a href="javascript:;" class="btn grey heat" data-dismiss="modal"><span ><i class="fa fa-sun-o"></i></span>&nbsp;&nbsp;地暖</a>
+                      </div>
+                      <div class="btn-group btn-group-lg btn-group-justified">
+                            <a href="javascript:;" class="btn grey hotheat" data-dismiss="modal"><span ><i class="fa fa-sun-o"></i></span>&nbsp;&nbsp;制热+地暖</a>
+                      </div>
             </div>
         </div>
     </div>
@@ -114,6 +114,7 @@
                     <a href="javascript:;" class="btn <%=lowColor%>" data-dismiss="modal">低速</a>
                     <a href="javascript:;" class="btn <%=midColor%> mid" data-dismiss="modal">中速</a>
                     <a href="javascript:;" class="btn <%=highColor%> high" data-dismiss="modal">高速</a>
+                    <a href="javascript:;" class="btn <%=autoColor%> auto" data-dismiss="modal">自动</a>
                 </div>
             </div>
         </div>
@@ -136,8 +137,8 @@
                     <a href="javascript:;" class="btn <%=highColor%> high" data-dismiss="modal">高速</a>
                 </div>
                 <div class="btn-group btn-group-lg btn-group-justified">
-                     <a href="javascript:;" class="btn stop" data-dismiss="modal">停风</a>
-                     <a href="javascript:;" class="btn auto" data-dismiss="modal">自动风</a>
+                     <a href="javascript:;" class="btn stop <%=stopColor%>" data-dismiss="modal">停风</a>
+                     <a href="javascript:;" class="btn auto <%=autoColor%>" data-dismiss="modal">自动</a>
                 </div>
             </div>
         </div>

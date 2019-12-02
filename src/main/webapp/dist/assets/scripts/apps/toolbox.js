@@ -265,13 +265,17 @@ define([
         }
         var flag=options['flag'];
         flag=flag.replace(/(^\s*)|(\s*$)/g, '');
-        var lowColor='black',midColor='black',highColor='black';
+        var lowColor='black',midColor='black',highColor='black',stopColor='black',autoColor='black';
         if(flag==='低速'){
             lowColor='blue';
         }else if(flag==='中速'){
             midColor='blue';
-        }else{
+        }else if(flag==='高速'){
             highColor='blue';
+        }else if(flag==='停风'){
+            stopColor='blue';
+        }else if(flag==='自动'){
+            autoColor='blue';
         }
         var $container = options['$container'];
         var beforeCallback = options['beforeCallback'];
@@ -279,7 +283,7 @@ define([
         if(typeof beforeCallback == 'function'){
             beforeCallback();
         }
-        $container.html(template({'tempId': 'device_speed_xile', 'lowColor': lowColor,'midColor':midColor,'highColor':highColor}));
+        $container.html(template({'tempId': 'device_speed_xile', 'lowColor': lowColor,'midColor':midColor,'highColor':highColor,'stopColor':stopColor,'autoColor':autoColor}));
         if(typeof afterCallback == 'function'){
             $('#confirm-alert a.btn').on('tap', function(){
                 var text=$(this).html();

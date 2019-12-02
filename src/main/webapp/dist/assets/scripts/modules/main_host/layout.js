@@ -33,6 +33,11 @@ define([
         return template({'tempId': 'basic_frame','weather':weather,'humidity':humidity,'temperature':temperature,'wind':wind,'air_img':air_img,'city':city});
     };
 
+    /*基础frame*/
+    var basic_frame_2 = function(weather,humidity,temperature,wind,air_img,city){
+        return template({'tempId': 'basic_frame_2','weather':weather,'humidity':humidity,'temperature':temperature,'wind':wind,'air_img':air_img,'city':city});
+    };
+
 
     //房控房间细节头样式
     var room_detail_basic = function(weather,humidity,temperature,wind,air_img,city){
@@ -109,6 +114,7 @@ define([
     return {
         before_choice:before_choice,
         basic_frame: basic_frame,
+        basic_frame_2: basic_frame_2,
         room_detail_basic:room_detail_basic,
         room_detail_basic_device:room_detail_basic_device,
 

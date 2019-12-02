@@ -304,6 +304,10 @@ define([
     var layout_init = function () {
         //清除之前的数据
         recoveyData();
+        var type = getRequestParam("type");
+        if(type === "1"){
+            $("#roomDiv").attr("display","none");
+        }
         //取消modal的遮罩
         if (is_req_weather) {
             getLocation();
@@ -445,7 +449,12 @@ define([
                         //需要根据天气提供页面图片
                         var air_img = getImgUrl(weather);
                         //初始化页面
-                        $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img,city));
+                        var type = getRequestParam("type");
+                        if(type === "1"){
+                            $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img,city));
+                        }else{
+                            $("#main").html(Layout.basic_frame_2(weather, humidity, temperature, wind, air_img,city));
+                        }
                         $(".content").html(Layout.host_mode());
                     } catch (e) {
                         console.error('超过规定的请求次数')
@@ -489,7 +498,6 @@ define([
             dataType: 'json',
             success: function (res) {
                 if (Number(res.status) == 100) {
-                    // debugger;
                     // var dataNode = res1.data;
                     // if (dataNode.length == 0
                     //     || typeof (dataNode[0].agentCondition) == "undefined"
@@ -1949,6 +1957,7 @@ define([
                 } else {
                     if ($("#switch" + deviceId).hasClass("on")) {
                         var vId = deviceId.substring(0, deviceId.indexOf('_'));
+                        var item = getVdeviceItemsInfo(vId, itemname_model);
                         if(devicename.indexOf("XiLe") > -1){
                             ToolBox.device_model_xile({
                                 $container: $('#others'),
@@ -2041,28 +2050,22 @@ define([
                             ToolBox.device_speed_xile({
                                 $container: $('#others'),
                                 afterCallback: function (data) {
-                                    debugger;
                                     $('#confirm-alert').modal('hide');
                                     var loading = layer.load(2, {shade: [0.5, '#fff']});
 
-                                    //分别获取低速、中速、高速的item
-                                    var lowItemname = itemPre + '_Lwinds';
-                                    var lowItem = getVdeviceItemsInfo(vId, lowItemname);
-                                    var midItemname = itemPre + '_Mwinds';
-                                    var midItem = getVdeviceItemsInfo(vId, midItemname);
-                                    var highItemname = itemPre + '_Hwinds';
-                                    var highItem = getVdeviceItemsInfo(vId, highItemname);
-                                    //TODO
+                                    //获取风速的item
+                                    var windItemname = itemPre + '_Wind';
+                                    var windItem = getVdeviceItemsInfo(vId, windItemname);
                                     if (data === '低速') {
-                                        updateSpeed(lowItem.devid, lowItem.itemid, 3,loading,deviceId,data);
+                                        updateSpeed(windItem.devid, windItem.itemid, 3,loading,deviceId,data);
                                     } else if (data === '高速') {
-                                        updateSpeed(highItem.devid, highItem.itemid, 1,loading,deviceId,data);
+                                        updateSpeed(windItem.devid, windItem.itemid, 1,loading,deviceId,data);
                                     } else if (data === '中速') {
-                                        updateSpeed(midItem.devid, midItem.itemid, 2,loading,deviceId,data);
+                                        updateSpeed(windItem.devid, windItem.itemid, 2,loading,deviceId,data);
                                     }else if (data === '自动') {
-                                        updateSpeed(highItem.devid, highItem.itemid, 4,loading,deviceId,data);
+                                        updateSpeed(windItem.devid, windItem.itemid, 4,loading,deviceId,data);
                                     }else if (data === '停风') {
-                                        updateSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
+                                        updateSpeed(windItem.devid, windItem.itemid, 0,loading,deviceId,data);
                                     }
                                 },
                                 flag: speed
@@ -2190,7 +2193,12 @@ define([
                     if ($("#switch" + deviceId).hasClass("on")) {
                         //需要根据天气提供页面图片
                         var air_img = getImgUrl(weather);
-                        $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img,city));
+                        var type = getRequestParam("type");
+                        if(type === "1"){
+                            $("#main").html(Layout.basic_frame(weather, humidity, temperature, wind, air_img,city));
+                        }else{
+                            $("#main").html(Layout.basic_frame_2(weather, humidity, temperature, wind, air_img,city));
+                        }
                         //移除所有按钮的激活class，并激活当前按钮
                         $("#host").removeClass("active")
                         $("#control").removeClass("active")
@@ -3365,6 +3373,14 @@ define([
             $container: $('#others'),
             msg: msg
         })
+    }
+
+    function getRequestParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null)
+            return decodeURI(r[2]);
+        return null;
     }
 
     return {
