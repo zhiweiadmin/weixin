@@ -346,10 +346,40 @@ define([
         //     locationTimeJob();
         //     is_req_weather = false;
         // }
+        init_index_page();
         getUserProjectInfo();
         getUserProjectAuth(function (res) {
         });
     };
+
+    //初始化首页
+    var init_index_page = function () {
+        $('#outTemp').html(cur_out_temp);
+        $('#inTemp').html(cur_in_temp);
+        $('#envTemp').html(cur_env_temp);
+        $('#extTemp').html(cur_sys_ext_temp);
+        if (Number(run_status) === 1) {
+            $(".online_status").attr("src", "../assets/image/img/online.png");
+            $(".online_status").addClass("online")
+        } else {
+            $(".online_status").attr("src", "../assets/image/img/offline.png");
+            $(".online_status").removeClass("online")
+        }
+        if (Number(run_model) === 0) {
+            $("#cold_model").addClass("color_cold_active")
+            $("#hot_model").removeClass("color_hot_active")
+        } else {
+            $("#hot_model").addClass("color_hot_active")
+            $("#cold_model").removeClass("color_cold_active")
+        }
+        if (Number(cur_power) === 0) {
+            $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
+            $("#host_switch").removeClass("on");
+        } else if (cur_power == '1') {
+            $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
+            $("#host_switch").addClass("on")
+        }
+    }
 
     var recoveyData = function () {
         cur_out_temp = null;

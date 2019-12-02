@@ -85,7 +85,7 @@ public class AccessController {
 		Map<String, Object> map = new LinkedHashMap<String, Object>();
 		map.put("status", ResultStatus.SUCCESS.toString());
 		map.put("data", weixinService.getOpenId(code));
-//		map.put("data", "123456");
+//		map.put("data", "ocDINxG-aww-BFfaXqnZOiuEFu54");
 		return JSON.toJSONString(map);
 	}
 
