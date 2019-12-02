@@ -1651,6 +1651,10 @@ define([
                 } else {
                     renderOpen(deviceId);
                 }
+                if(Number(height) < 800){
+                    height = 800;
+                }
+
                 $(".parent").css("height", height * 0.6);
                 $(".child").css("padding-top", height * 0.6 * 0.2);
                 $(".control_temp").css("margin-top", -(height * 0.6 * 0.4));
