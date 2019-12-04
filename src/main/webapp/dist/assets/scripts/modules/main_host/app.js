@@ -2044,18 +2044,34 @@ define([
                     singleAlter2("控制失败");
                 } else {
                     //返回结果成功再修改环形颜色和背景颜色
-                    $('#child' + deviceId).circleProgress({
-                        fill: {
-                            gradient: ["#2CCBF3", "#B40608"]
-                        }
-                    });
-                    $('#parent' + deviceId).addClass("hot_parent");
-                    $('#parent' + deviceId).removeClass("cold_parent");
-                    $('#child' + deviceId).removeClass("cold_child");
-                    $('#child' + deviceId).addClass("hot_child");
-                    $("#modelImg" + deviceId).removeClass("fa-snowflake-o");
-                    $("#modelImg" + deviceId).addClass("fa-sun-o");
-                    $("#modelText" + deviceId).html("制热");
+                    if(val === 1 || val === 2){
+                        $('#child' + deviceId).circleProgress({
+                            fill: {
+                                gradient: ["#21BFFE", "#67F7B2"]
+                            }
+                        });
+                        $('#parent' + deviceId).addClass("cold_parent");
+                        $('#child' + deviceId).addClass("cold_child");
+                        $('#parent' + deviceId).removeClass("hot_parent");
+                        $('#child' + deviceId).removeClass("hot_child");
+                        $("#modelImg" + deviceId).removeClass("fa-sun-o");
+                        $("#modelImg" + deviceId).addClass("fa-snowflake-o");
+                    }else{
+                        $('#child' + deviceId).circleProgress({
+                            fill: {
+                                gradient: ["#2CCBF3", "#B40608"]
+                            }
+                        });
+                        $('#parent' + deviceId).addClass("hot_parent");
+                        $('#child' + deviceId).addClass("hot_child");
+                        $('#parent' + deviceId).removeClass("cold_parent");
+                        $('#child' + deviceId).removeClass("cold_child");
+
+                        $("#modelImg" + deviceId).removeClass("fa-snowflake-o");
+                        $("#modelImg" + deviceId).addClass("fa-sun-o");
+                    }
+
+                    $("#modelText" + deviceId).html(name);
                     refreshCurrentDataByProjectDelay(cur_projectId, function () {
                         console.log("刷新数据成功")
                     });
