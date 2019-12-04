@@ -593,7 +593,7 @@ define([
                 if(deviceName.indexOf("XiLe") > -1){
                     var data = getItemValueByName(device.tempName)+"";
                     device.tempVal = data / 2;
-                }else{
+                }else if (deviceName.indexOf("HaiLin") > -1){
                     //hailin使用16进制转换 xile则/2
                     //遍历实时数据
                     //温度需要转换成16进制来显示
@@ -632,7 +632,7 @@ define([
                 if(deviceName.indexOf("XiLe") > -1){
                     var data = getItemValueByName(device.envTempName)+"";
                     device.envTempVal = data / 2;
-                }else{
+                }else if (deviceName.indexOf("HaiLin") > -1){
                     //遍历实时数据
                     //温度需要转换成16进制来显示
                     var data = getItemValueByName(device.envTempName)+"";
@@ -665,8 +665,9 @@ define([
                     }
                 }
             }
-            //低速
+            //风速
             if (p.itemName.indexOf(wind) != -1) {
+                device.deviceName = p.deviceName;
                 device.speedName = p.itemName;
                 //遍历实时数据
                 device.speedVal = getItemValueByName(device.speedName);
@@ -680,16 +681,28 @@ define([
     //获取当前速度
     function getSpeed(device) {
         var speed = '低速';
-        if(Number(device.speedVal) === 1){
-            speed = '高速';
-        }else if(Number(device.speedVal) === 2){
-            speed = '中速';
-        }else if(Number(device.speedVal) === 3){
-            speed = '低速';
-        }else if(Number(device.speedVal) === 4){
-            speed = '自动';
-        }else if(Number(device.speedVal) === 0){
-            speed = '停风';
+        if(device.deviceName.indexOf("XiLe") > -1){
+            if(Number(device.speedVal) === 1){
+                speed = '高速';
+            }else if(Number(device.speedVal) === 2){
+                speed = '中速';
+            }else if(Number(device.speedVal) === 3){
+                speed = '低速';
+            }else if(Number(device.speedVal) === 4){
+                speed = '自动';
+            }else if(Number(device.speedVal) === 0){
+                speed = '停风';
+            }
+        }else if(device.deviceName.indexOf("HaiLin") > -1){
+            if(Number(device.speedVal) === 1){
+                speed = '高速';
+            }else if(Number(device.speedVal) === 2){
+                speed = '中速';
+            }else if(Number(device.speedVal) === 3){
+                speed = '低速';
+            }else if(Number(device.speedVal) === 0){
+                speed = '自动';
+            }
         }
         return speed;
     }
@@ -2005,7 +2018,7 @@ define([
                                     sendModelControl(deviceId,item,4,"制热+地暖")
                                 }
                             })
-                        }else{
+                        }else if(devicename.indexOf("HaiLin") > -1){
                             //装置模式设置
                             ToolBox.device_model({
                                 $container: $('#others'),
@@ -2114,7 +2127,7 @@ define([
                                 },
                                 flag: speed
                             })
-                        }else{
+                        }else if (devicename.indexOf("HaiLin") > -1){
                             ToolBox.device_speed({
                                 $container: $('#others'),
                                 afterCallback: function (data) {
@@ -2132,7 +2145,7 @@ define([
                                     } else if (data === '中速') {
                                         updateSpeed(windItem.devid, windItem.itemid, 2,loading,deviceId,data);
                                     }else if (data === '自动') {
-                                        updateHighSpeed(windItem.devid, windItem.itemid, 4,loading,deviceId,data);
+                                        updateHighSpeed(windItem.devid, windItem.itemid, 0,loading,deviceId,data);
                                     }
                                 },
                                 flag: speed
@@ -3404,7 +3417,7 @@ define([
     function changeTempFormat(devicename,temp) {
         if(devicename.indexOf("Xile") > -1){
             return temp*2;
-        }else{
+        }else if (devicename.indexOf("HaiLin") > -1){
             //温度取整
             var tempInt = parseInt(temp);
             //转换成16进制 23 -> 1700
