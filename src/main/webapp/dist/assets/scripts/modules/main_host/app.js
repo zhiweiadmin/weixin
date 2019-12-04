@@ -589,68 +589,80 @@ define([
             }
             //房控设置温度
             if (p.itemName.indexOf(ext_temp) != -1) {
-                //遍历实时数据
-                //温度需要转换成16进制来显示
-                var data = getItemValueByName(device.tempName)+"";
-                if(data.length === 1){
-                    data = "000"+data;
-                }else if(data.length === 2){
-                    data = "00"+data;
-                }else if(data.length === 3){
-                    data = "0"+data;
-                }
-                var extTemp10 = parseInt(data);
-                var extTemp16 = extTemp10.toString(16);
-                var preTemp = extTemp16.substring(0,extTemp16.length-2);
-                var sufTemp = extTemp16.substring(extTemp16.length-2,extTemp16.length);
-
-                var pre = parseInt(preTemp,16);
-                var suf = parseInt(sufTemp,16);
-
-                if(typeof(pre)=="undefined" || isNaN(pre) || "" === pre){
-                    pre = 0;
-                }
-                if(typeof(suf)=="undefined" || isNaN(suf)){
-                    suf = 0;
-                }
-
-                if(suf !== 0){
-                    device.tempVal = pre+"."+suf;
+                var deviceName = p.deviceName;
+                if(deviceName.indexOf("XiLe") > -1){
+                    var data = getItemValueByName(device.tempName)+"";
+                    device.tempVal = data / 2;
                 }else{
-                    device.tempVal = pre;
+                    //hailin使用16进制转换 xile则/2
+                    //遍历实时数据
+                    //温度需要转换成16进制来显示
+                    var data = getItemValueByName(device.tempName)+"";
+                    if(data.length === 1){
+                        data = "000"+data;
+                    }else if(data.length === 2){
+                        data = "00"+data;
+                    }else if(data.length === 3){
+                        data = "0"+data;
+                    }
+                    var extTemp10 = parseInt(data);
+                    var extTemp16 = extTemp10.toString(16);
+                    var preTemp = extTemp16.substring(0,extTemp16.length-2);
+                    var sufTemp = extTemp16.substring(extTemp16.length-2,extTemp16.length);
+
+                    var pre = parseInt(preTemp,16);
+                    var suf = parseInt(sufTemp,16);
+
+                    if(typeof(pre)=="undefined" || isNaN(pre) || "" === pre){
+                        pre = 0;
+                    }
+                    if(typeof(suf)=="undefined" || isNaN(suf)){
+                        suf = 0;
+                    }
+                    if(suf !== 0){
+                        device.tempVal = pre+"."+suf;
+                    }else{
+                        device.tempVal = pre;
+                    }
                 }
             }
             //房控室内温度
             if (p.itemName.indexOf(env_temp) != -1) {
-                //遍历实时数据
-                //温度需要转换成16进制来显示
-                var data = getItemValueByName(device.envTempName)+"";
-                if(data.length === 1){
-                    data = "000"+data;
-                }else if(data.length === 2){
-                    data = "00"+data;
-                }else if(data.length === 3){
-                    data = "0"+data;
-                }
-                var extTemp10 = parseInt(data);
-                var extTemp16 = extTemp10.toString(16);
-                var preTemp = extTemp16.substring(0,extTemp16.length-2);
-                var sufTemp = extTemp16.substring(extTemp16.length-2,extTemp16.length);
-
-                var pre = parseInt(preTemp,16);
-                var suf = parseInt(sufTemp,16);
-
-                if(typeof(pre)=="undefined" || isNaN(pre) || "" === pre){
-                    pre = 0;
-                }
-                if(typeof(suf)=="undefined" || isNaN(suf)){
-                    suf = 0;
-                }
-
-                if(suf !== 0){
-                    device.envTempVal = pre+"."+suf;
+                var deviceName = p.deviceName;
+                if(deviceName.indexOf("XiLe") > -1){
+                    var data = getItemValueByName(device.envTempName)+"";
+                    device.envTempVal = data / 2;
                 }else{
-                    device.envTempVal = pre;
+                    //遍历实时数据
+                    //温度需要转换成16进制来显示
+                    var data = getItemValueByName(device.envTempName)+"";
+                    if(data.length === 1){
+                        data = "000"+data;
+                    }else if(data.length === 2){
+                        data = "00"+data;
+                    }else if(data.length === 3){
+                        data = "0"+data;
+                    }
+                    var extTemp10 = parseInt(data);
+                    var extTemp16 = extTemp10.toString(16);
+                    var preTemp = extTemp16.substring(0,extTemp16.length-2);
+                    var sufTemp = extTemp16.substring(extTemp16.length-2,extTemp16.length);
+
+                    var pre = parseInt(preTemp,16);
+                    var suf = parseInt(sufTemp,16);
+
+                    if(typeof(pre)=="undefined" || isNaN(pre) || "" === pre){
+                        pre = 0;
+                    }
+                    if(typeof(suf)=="undefined" || isNaN(suf)){
+                        suf = 0;
+                    }
+
+                    if(suf !== 0){
+                        device.envTempVal = pre+"."+suf;
+                    }else{
+                        device.envTempVal = pre;
+                    }
                 }
             }
             //低速
@@ -1627,7 +1639,6 @@ define([
                 var child = preClass + "_child";
                 var circleId = "child" + deviceId;
                 //默认均为低速
-                debugger;
                 var speed = deviceObj.speed;
                 $(".swiper-wrapper").append(Layout.room_detail_basic_device(parent, child, model, modelImg, deviceObj.envTempVal,deviceObj.tempVal, deviceId, speed, name +'-'+ i, deviceObj.tempName, deviceObj.onoffName, deviceObj.modelName, item_pre,devicename));
                 var size = $(".parent").width() * 0.8;
@@ -1827,6 +1838,7 @@ define([
         $("#main").off('tap', ".device_minus").on('tap', '.device_minus', function (e) {
             //开机状态
             var deviceId = $(this).attr("deviceId");
+            var devicename = $(this).attr("devicename");
             //判断是否有权限
             getUserProjectAuth(function (res) {
                 var roleId = ToolBox.getCookie("roleId");
@@ -1848,7 +1860,7 @@ define([
                             temp: tempNum
                         });
                         //进制转换
-                        var tempNumFormat = changeTempFormat(tempNum);
+                        var tempNumFormat = changeTempFormat(devicename,tempNum);
                         //延迟5s进行操作
                         console.log("装置：" + deviceId + ",当前温度为：" + temp + "执行减操作")
                         var itemname = $(id).attr("itemname");
@@ -1893,6 +1905,7 @@ define([
         //温度加
         $("#main").off('tap', ".device_plus").on('tap', '.device_plus', function (e) {
             var deviceId = $(this).attr("deviceId");
+            var devicename = $(this).attr("devicename");
             //判断是否有权限
             getUserProjectAuth(function (res) {
                 var roleId = ToolBox.getCookie("roleId");
@@ -1914,7 +1927,7 @@ define([
                         });
                         //延迟5s进行操作
                         //进制转换
-                        var tempNumFormat = changeTempFormat(tempNum);
+                        var tempNumFormat = changeTempFormat(devicename,tempNum);
                         console.log("装置：" + deviceId + ",当前温度为：" + temp + "执行加操作");
                         var itemname = $(id).attr("itemname");
                         // change_device_temp(itemname, tempNumFormat, function (res) {
@@ -3388,12 +3401,16 @@ define([
     }
 
     //温度进制转换
-    function changeTempFormat(temp) {
-        //温度取整
-        var tempInt = parseInt(temp);
-        //转换成16进制 23 -> 1700
-        var temp16 = tempInt.toString(16)+'00';
-        return parseInt(temp16,16);
+    function changeTempFormat(devicename,temp) {
+        if(devicename.indexOf("Xile") > -1){
+            return temp*2;
+        }else{
+            //温度取整
+            var tempInt = parseInt(temp);
+            //转换成16进制 23 -> 1700
+            var temp16 = tempInt.toString(16)+'00';
+            return parseInt(temp16,16);
+        }
     }
 
     //提示框，单按钮
