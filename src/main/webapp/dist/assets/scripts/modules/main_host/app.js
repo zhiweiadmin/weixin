@@ -566,9 +566,7 @@ define([
         var ext_temp = i + '_HeatSetP';
         var temp_set = i + '_HeatSetP';
         //风速 低速 中速 高速
-        var low = i + '_Lwinds';
-        var mid = i + '_Mwinds';
-        var high = i + '_Hwinds';
+        var wind = i + '_Winds';
         _.each(deviceInfos, function (p) {
             //开关
             if (p.itemName.indexOf(item_onoff) != -1) {
@@ -656,48 +654,30 @@ define([
                 }
             }
             //低速
-            if (p.itemName.indexOf(low) != -1) {
-                device.lowName = p.itemName;
+            if (p.itemName.indexOf(wind) != -1) {
+                device.speedName = p.itemName;
                 //遍历实时数据
-                device.lowVal = getItemValueByName(device.lowName);
-            }
-            //中速
-            if (p.itemName.indexOf(mid) != -1) {
-                device.midName = p.itemName;
-                //遍历实时数据
-                device.midVal = getItemValueByName(device.midName);
-            }
-            //高速
-            if (p.itemName.indexOf(high) != -1) {
-                device.highName = p.itemName;
-                //遍历实时数据
-                device.highVal = getItemValueByName(device.highName);
+                device.speedVal = getItemValueByName(device.speedName);
             }
         })
         //获取当前速度
         device.speed = getSpeed(device);
-        console.log(device);
         return device;
     }
 
     //获取当前速度
     function getSpeed(device) {
         var speed = '低速';
-        // if (Number(device.highVal) === 1) {
-        //     speed = '高速';
-        // } else if (Number(device.midVal) === 1) {
-        //     speed = '中速';
-        // } else {
-        //     speed = '低速';
-        // }
-        if(Number(device.highVal) === 1){
+        if(Number(device.speedVal) === 1){
             speed = '高速';
-        }else if(Number(device.highVal) === 2){
+        }else if(Number(device.speedVal) === 2){
             speed = '中速';
-        }else if(Number(device.highVal) === 3){
+        }else if(Number(device.speedVal) === 3){
             speed = '低速';
-        }else if(Number(device.highVal) === 4){
+        }else if(Number(device.speedVal) === 4){
             speed = '自动';
+        }else if(Number(device.speedVal) === 0){
+            speed = '停风';
         }
         return speed;
     }
@@ -1647,6 +1627,7 @@ define([
                 var child = preClass + "_child";
                 var circleId = "child" + deviceId;
                 //默认均为低速
+                debugger;
                 var speed = deviceObj.speed;
                 $(".swiper-wrapper").append(Layout.room_detail_basic_device(parent, child, model, modelImg, deviceObj.envTempVal,deviceObj.tempVal, deviceId, speed, name +'-'+ i, deviceObj.tempName, deviceObj.onoffName, deviceObj.modelName, item_pre,devicename));
                 var size = $(".parent").width() * 0.8;
@@ -2104,7 +2085,7 @@ define([
                                     var loading = layer.load(2, {shade: [0.5, '#fff']});
 
                                     //获取风速的item
-                                    var windItemname = itemPre + '_Wind';
+                                    var windItemname = itemPre + '_Winds';
                                     var windItem = getVdeviceItemsInfo(vId, windItemname);
                                     if (data === '低速') {
                                         updateSpeed(windItem.devid, windItem.itemid, 3,loading,deviceId,data);
@@ -2128,29 +2109,17 @@ define([
                                     $('#confirm-alert').modal('hide');
                                     var loading = layer.load(2, {shade: [0.5, '#fff']});
 
-                                    //分别获取低速、中速、高速的item
-                                    var lowItemname = itemPre + '_Lwinds';
-                                    var lowItem = getVdeviceItemsInfo(vId, lowItemname);
-                                    var midItemname = itemPre + '_Mwinds';
-                                    var midItem = getVdeviceItemsInfo(vId, midItemname);
-                                    var highItemname = itemPre + '_Hwinds';
-                                    var highItem = getVdeviceItemsInfo(vId, highItemname);
+                                    //获取风速的item
+                                    var windItemname = itemPre + '_Winds';
+                                    var windItem = getVdeviceItemsInfo(vId, windItemname);
                                     if (data === '低速') {
-                                        updateLowSpeed(lowItem.devid, lowItem.itemid, 3,loading,deviceId,data);
-                                        //updateMidSpeed(midItem.devid, midItem.itemid, 0,loading,deviceId,data);
-                                        //updateHighSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
+                                        updateSpeed(windItem.devid, windItem.itemid, 3,loading,deviceId,data);
                                     } else if (data === '高速') {
-                                        //updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
-                                        //updateMidSpeed(midItem.devid, midItem.itemid, 0,loading,deviceId,data);
-                                        updateHighSpeed(highItem.devid, highItem.itemid, 1,loading,deviceId,data);
+                                        updateSpeed(windItem.devid, windItem.itemid, 1,loading,deviceId,data);
                                     } else if (data === '中速') {
-                                        //updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
-                                        updateMidSpeed(midItem.devid, midItem.itemid, 2,loading,deviceId,data);
-                                        //updateHighSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
+                                        updateSpeed(windItem.devid, windItem.itemid, 2,loading,deviceId,data);
                                     }else if (data === '自动') {
-                                        //updateLowSpeed(lowItem.devid, lowItem.itemid, 0,loading,deviceId,data);
-                                        //updateMidSpeed(midItem.devid, midItem.itemid, 1,loading,deviceId,data);
-                                        updateHighSpeed(highItem.devid, highItem.itemid, 0,loading,deviceId,data);
+                                        updateHighSpeed(windItem.devid, windItem.itemid, 4,loading,deviceId,data);
                                     }
                                 },
                                 flag: speed
