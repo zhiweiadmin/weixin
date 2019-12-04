@@ -1232,7 +1232,7 @@ define([
                             }
                             break;
                     }
-                    if (count > 1) {
+                    if (count > 3) {
                         //控制结果不明
                         clearInterval(timer);
                         callback('unknown');
@@ -1996,19 +1996,19 @@ define([
                             ToolBox.device_model_xile({
                                 $container: $('#others'),
                                 afterCallbackHot: function () {
-                                    sendModelControl(item,0,"制热")
+                                    sendModelControl(deviceId,item,0,"制热")
                                 },
                                 afterCallbackCold: function () {
-                                    sendModelControl(item,1,"制冷")
+                                    sendModelControl(deviceId,item,1,"制冷")
                                 },
                                 afterCallbackWind: function () {
-                                    sendModelControl(item,2,"通风")
+                                    sendModelControl(deviceId,item,2,"通风")
                                 },
                                 afterCallbackHeat: function () {
-                                    sendModelControl(item,3,"地暖")
+                                    sendModelControl(deviceId,item,3,"地暖")
                                 },
                                 afterCallbackHotHeat: function () {
-                                    sendModelControl(item,4,"制热+地暖")
+                                    sendModelControl(deviceId,item,4,"制热+地暖")
                                 }
                             })
                         }else{
@@ -2016,10 +2016,10 @@ define([
                             ToolBox.device_model({
                                 $container: $('#others'),
                                 afterCallbackCold: function () {
-                                    sendModelControl(item,1,"制冷");
+                                    sendModelControl(deviceId,item,1,"制冷");
                                 },
                                 afterCallbackHot: function () {
-                                    sendModelControl(item,4,"制热");
+                                    sendModelControl(deviceId,item,4,"制热");
                                 }
                             })
                         }
@@ -2036,7 +2036,7 @@ define([
          * @param val
          * @param name
          */
-        var sendModelControl = function(item,val,name){
+        var sendModelControl = function(deviceId,item,val,name){
             $('#confirm-alert').modal('hide');
             var loading = layer.load(2, {shade: [0.5, '#fff']});
             send_control_new(item.devid, item.itemid, val, false, function (res) {
