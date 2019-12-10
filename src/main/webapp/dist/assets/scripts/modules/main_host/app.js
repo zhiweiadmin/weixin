@@ -1219,22 +1219,20 @@ define([
                             callback('success');
                             //控制成功
                             break;
+                        case '-1':
+                            clearInterval(timer);
+                            callback('fail');
+                            //控制成功
+                            break;
+                        case '106':
+                            clearInterval(timer);
+                            callback('controling');
+                            //控制成功
+                            break;
                         case '3':
                             /*控制超时*/
                             clearInterval(timer);
                             callback('overtime');
-                            //如果要显示
-                            if (is_show) {
-                                $('#msg_control').html('控制超时');
-                                $('#msg_control').addClass('margin-left-5');
-                                setTimeout(function () {
-                                    $('#loading').hide();
-                                    layout_init();
-                                    bindEvents();
-                                    $('#msg_control').removeClass('margin-left-5');
-                                    $('#msg_control').html('获取控制结果中...');
-                                }, 800);
-                            }
                             break;
                     }
                     if (count > 3) {
@@ -1895,16 +1893,28 @@ define([
                             var loading = layer.load(2, {shade: [0.5, '#fff']});
                             set_device_temp(itemname, tempNumFormat, function (res) {
                                 layer.close(loading);
-                                if(res == 'success'){
+                                if(res === 'success'){
                                     refreshCurrentDataByProjectDelay(cur_projectId, function () {
                                         console.log("刷新数据成功")
                                     });
-                                }else{
+                                }else if(res === 'fail'){
                                     var roomId = deviceId.substring(0,deviceId.indexOf('_'));
                                     var i = deviceId.substring(deviceId.indexOf('_')+1);
                                     var obj = getSingleDeviceData(i,roomId);
                                     $(id).html(obj.tempVal+'℃');
-                                    singleAlter2("温度设置失败");
+                                    singleAlter2("控制失败");
+                                }else if(res === 'overtime'){
+                                    var roomId = deviceId.substring(0,deviceId.indexOf('_'));
+                                    var i = deviceId.substring(deviceId.indexOf('_')+1);
+                                    var obj = getSingleDeviceData(i,roomId);
+                                    $(id).html(obj.tempVal+'℃');
+                                    singleAlter2("控制超时");
+                                }else if(res === 'controling'){
+                                    var roomId = deviceId.substring(0,deviceId.indexOf('_'));
+                                    var i = deviceId.substring(deviceId.indexOf('_')+1);
+                                    var obj = getSingleDeviceData(i,roomId);
+                                    $(id).html(obj.tempVal+'℃');
+                                    singleAlter2("设备控制中");
                                 }
                             });
                         }, 2000)
@@ -1961,16 +1971,28 @@ define([
                             var loading = layer.load(2, {shade: [0.5, '#fff']});
                             set_device_temp(itemname, tempNumFormat, function (res) {
                                 layer.close(loading);
-                                if(res == 'success'){
+                                if(res === 'success'){
                                     refreshCurrentDataByProjectDelay(cur_projectId, function () {
                                         console.log("刷新数据成功")
                                     });
-                                }else{
+                                }else if(res === 'fail'){
                                     var roomId = deviceId.substring(0,deviceId.indexOf('_'));
                                     var i = deviceId.substring(deviceId.indexOf('_')+1);
                                     var obj = getSingleDeviceData(i,roomId);
                                     $(id).html(obj.tempVal+'℃');
-                                    singleAlter2("温度设置失败");
+                                    singleAlter2("控制失败");
+                                }else if(res === 'overtime'){
+                                    var roomId = deviceId.substring(0,deviceId.indexOf('_'));
+                                    var i = deviceId.substring(deviceId.indexOf('_')+1);
+                                    var obj = getSingleDeviceData(i,roomId);
+                                    $(id).html(obj.tempVal+'℃');
+                                    singleAlter2("控制超时");
+                                }else if(res === 'controling'){
+                                    var roomId = deviceId.substring(0,deviceId.indexOf('_'));
+                                    var i = deviceId.substring(deviceId.indexOf('_')+1);
+                                    var obj = getSingleDeviceData(i,roomId);
+                                    $(id).html(obj.tempVal+'℃');
+                                    singleAlter2("设备控制中");
                                 }
                             });
                         }, 2000)
