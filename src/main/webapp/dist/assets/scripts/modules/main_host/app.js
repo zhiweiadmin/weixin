@@ -33,6 +33,7 @@ define([
     var temNum = "";
     //当前开关机状态
     var cur_power = -1;
+    var cur_power_set = -1;
     //在家/离家
     //var cur_home=-1,address='',weather='';
     var cur_home = -1, address = '',city = '', weather = '', temperature = '', humidity = '', wind = '', cond_code = '';//add by jiangzhiwei
@@ -51,14 +52,17 @@ define([
     //当前设置减得val
     var cur_minus_set = -1;
     //出水温度 jiangzhiwei
+    var zjDevName;
     var cur_out_temp;
     var cur_in_temp;
     var cur_sys_ext_temp;
     var cur_hot_temp;//制热温度
     var cur_cold_temp;//制冷温度
     var cur_env_temp;//环境温度
-    var run_status = 0;
-    var run_model = 0;
+    var run_status = null;
+    var run_status_set = null;
+    var run_model = null;
+    var run_model_set = null;
     var deviceItems;//变量组数据
     var cur_item_data;//变量组实时数据
     //网关在线/离线
@@ -388,12 +392,15 @@ define([
         cur_hot_temp = null;
         cur_cold_temp = null;
         cur_env_temp=null;
-        run_status = 0;
-        run_model = 0;
         deviceItems = null;//变量组数据
         cur_item_data = null;//变量组实时数据
         agent_condition = 0;
         devices = [];
+        run_status = null;
+        run_status_set = null;
+        run_model = null;
+        run_model_set = null;
+        zjDevName = null;
     }
 
     var layout_init_refresh = function () {
@@ -854,51 +861,63 @@ define([
                 //add by jiangzhiwei
                 if (p.itemname == "Sys_OutTemp") {
                     cur_out_temp = p.val;
+                    zjDevName = p.devName;
                     $('#outTemp').html(cur_out_temp);
                 }
                 if (p.itemname == "Sys_InTemp") {
                     cur_in_temp = p.val;
+                    zjDevName = p.devName;
                     $('#inTemp').html(cur_in_temp);
                 }
                 if (p.itemname == "Sys_ExtTemp") {
                     cur_env_temp = p.val;
+                    zjDevName = p.devName;
                     $('#envTemp').html(cur_env_temp);
                 }
                 if (p.itemname == "Sys_HeatSetP") {
                     cur_hot_temp = p.val;
+                    zjDevName = p.devName;
+                    if(zjDevName.indexOf('TICA') > -1){
+                        cur_hot_temp = 45;
+                    }
                 }
 
                 if (p.itemname == "Sys_CoolSetP") {
                     cur_cold_temp = p.val;
+                    zjDevName = p.devName;
                 }
                 if (p.itemname == "Sys_RunSet") {
                     cur_power = p.val;
-                    if (cur_power == '0') {
-                        $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
-                        $("#host_switch").removeClass("on");
-                    } else if (cur_power == '1') {
-                        $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
-                        $("#host_switch").addClass("on")
-                    }
+                    zjDevName = p.devName;
+                    // if(zjDevName.indexOf('YORK') > -1){
+                    //     if (cur_power == '1') {
+                    //         $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
+                    //         $("#host_switch").removeClass("on");
+                    //     } else if (cur_power == '0') {
+                    //         $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
+                    //         $("#host_switch").addClass("on")
+                    //     }
+                    // }else{
+                    //     if (cur_power == '0') {
+                    //         $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
+                    //         $("#host_switch").removeClass("on");
+                    //     } else if (cur_power == '1') {
+                    //         $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
+                    //         $("#host_switch").addClass("on")
+                    //     }
+                    // }
                 }
-                //
-                if (run_status == 1) {
-                    $(".online_status").attr("src", "../assets/image/img/online.png");
-                    $(this).addClass("online")
-                } else {
-                    $(".online_status").attr("src", "../assets/image/img/offline.png");
-                    $(this).removeClass("online")
-                }//
+                if (p.itemname == "Sys_RunStus") {
+                    cur_power_set = p.val;
+                    zjDevName = p.devName;
+                }
                 if (p.itemname == "Sys_ModelSet") {
+                    run_model_set = p.val;
+                    zjDevName = p.devName;
+                }
+                if (p.itemname == "Sys_ModelStus") {
                     run_model = p.val;
-                    //1是制热 0是制冷
-                    if (run_model == 0) {
-                        $("#cold_model").addClass("color_cold_active");
-                        $("#hot_model").removeClass("color_hot_active");
-                    } else {
-                        $("#hot_model").addClass("color_hot_active")
-                        $("#cold_model").removeClass("color_cold_active")
-                    }
+                    zjDevName = p.devName;
                 }
             })
             if(run_model == 0){
@@ -908,7 +927,77 @@ define([
                 cur_sys_ext_temp = cur_hot_temp;
                 $('#extTemp').html(cur_hot_temp);
             }
+
+            console.log(cur_power);
+            console.log(cur_power_set);
+            console.log(zjDevName);
+
+            if(cur_power != -1){
+                if(zjDevName.indexOf('YORK') > -1){
+                    if (cur_power == '1') {
+                        $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
+                        $("#host_switch").removeClass("on");
+                    } else if (cur_power == '0') {
+                        $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
+                        $("#host_switch").addClass("on")
+                    }
+                }else{
+                    if (cur_power == '0') {
+                        $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
+                        $("#host_switch").removeClass("on");
+                    } else if (cur_power == '1') {
+                        $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
+                        $("#host_switch").addClass("on")
+                    }
+                }
+            }else{
+                console.log('--------');
+                console.log(zjDevName);
+                if(zjDevName.indexOf('YORK') > -1){
+                    if (cur_power_set == '1') {
+                        $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
+                        $("#host_switch").removeClass("on");
+                    } else if (cur_power_set == '0') {
+                        $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
+                        $("#host_switch").addClass("on")
+                    }
+                }else{
+                    if (cur_power_set == '0') {
+                        $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
+                        $("#host_switch").removeClass("on");
+                    } else if (cur_power_set == '1') {
+                        $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
+                        $("#host_switch").addClass("on")
+                    }
+                }
+            }
+            if(zjDevName.indexOf('TICA') > -1){
+                run_model = 1;
+            }
+            if(run_model != null){
+                //1是制热 0是制冷
+                if (run_model == 0) {
+                    $("#cold_model").addClass("color_cold_active");
+                    $("#hot_model").removeClass("color_hot_active");
+                } else {
+                    $("#hot_model").addClass("color_hot_active")
+                    $("#cold_model").removeClass("color_cold_active")
+                }
+            }else{
+                //1是制热 0是制冷
+                if (run_model_set == 0) {
+                    $("#cold_model").addClass("color_cold_active");
+                    $("#hot_model").removeClass("color_hot_active");
+                } else {
+                    $("#hot_model").addClass("color_hot_active")
+                    $("#cold_model").removeClass("color_cold_active")
+                }
+            }
         })
+
+
+
+
     }
 
     //根据变量组id修改变量组名称
@@ -1411,6 +1500,10 @@ define([
 
         //设定模式的动态模式 开启制冷模式
         $("#main").off('tap', "#cold_model").on('tap', '#cold_model', function (e) {
+            console.log(zjDevName)
+            if(zjDevName.indexOf('TICA') > -1){
+                return;
+            }
             //判断是否有权限
             getUserProjectAuth(function (res) {
                 var roleId = ToolBox.getCookie("roleId");
@@ -1445,6 +1538,9 @@ define([
 
         //开机制热模式
         $("#main").off('tap', "#hot_model").on('tap', '#hot_model', function (e) {
+            if(zjDevName.indexOf('TICA') > -1){
+                return;
+            }
             getUserProjectAuth(function (res) {
                 var roleId = ToolBox.getCookie("roleId");
                 //作为普通用户没有主机权限
@@ -1691,9 +1787,8 @@ define([
                 $(".parent").css("height", height * 0.6);
                 $(".child").css("padding-top", height * 0.6 * 0.2);
                 $(".control_temp").css("margin-top", -(height * 0.6 * 0.4));
-                var swiper = new Swiper('.swiper-container');
             }
-
+            var swiper = new Swiper('.swiper-container');
         })
 
         $("#main").off('tap', '.main_room').on('tap', '.main_room', function (e) {
