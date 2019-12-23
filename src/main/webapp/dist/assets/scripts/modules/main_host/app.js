@@ -920,6 +920,9 @@ define([
                     zjDevName = p.devName;
                 }
             })
+            if(zjDevName.indexOf('TICA') > -1){
+                run_model = 1;
+            }
             if(run_model == 0){
                 cur_sys_ext_temp = cur_cold_temp;
                 $('#extTemp').html(cur_cold_temp);
@@ -1593,8 +1596,15 @@ define([
                             //开启loading
                             var loading = layer.load(2, {shade: [0.5, '#fff']});
                             if ($("#host_switch").hasClass('on')) {
+
+                                var val = 0;
+
+                                if(zjDevName.indexOf('YORK') > -1){
+                                    val = 2;
+                                }
+
                                 getValByKey("Sys_RunSet", function (item) {
-                                    send_control(item, 0, true, function (res) {
+                                    send_control(item, val, true, function (res) {
                                         if (res == 'success') {
                                             $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
                                             $("#host_switch").removeClass("on");
@@ -1608,9 +1618,12 @@ define([
                                     })
                                 })
                             } else {
+
+                                var val = 1;
+
                                 getValByKey("Sys_RunSet", function (item) {
                                     console.log(item);
-                                    send_control(item, 1, true, function (res) {
+                                    send_control(item, val, true, function (res) {
                                         if (res == 'success') {
                                             $('#msg_control').html('控制成功');
                                             $('#msg_control').addClass('margin-left-5');
@@ -3532,8 +3545,8 @@ define([
 
     //温度进制转换
     function changeTempFormat(devicename,temp) {
-        if(devicename.indexOf("Xile") > -1){
-            return temp*2;
+        if(devicename.indexOf("XiLe") > -1){
+            return temp + temp;
         }else if (devicename.indexOf("HaiLin") > -1){
             //温度取整
             var tempInt = parseInt(temp);
