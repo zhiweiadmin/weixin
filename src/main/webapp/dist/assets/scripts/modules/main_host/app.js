@@ -934,15 +934,14 @@ define([
             console.log(cur_power);
             console.log(cur_power_set);
             console.log(zjDevName);
-
             if(cur_power != -1){
                 if(zjDevName.indexOf('YORK') > -1){
                     if (cur_power == '1') {
-                        $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
-                        $("#host_switch").removeClass("on");
-                    } else if (cur_power == '0') {
                         $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
                         $("#host_switch").addClass("on")
+                    } else if (cur_power == '0') {
+                        $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
+                        $("#host_switch").removeClass("on");
                     }
                 }else{
                     if (cur_power == '0') {
@@ -1743,6 +1742,8 @@ define([
             //房间ID
             var roomId = $(this).parent('.controle_row').attr("id");
             var devicename = $(this).parent('.controle_row').attr("devicename");
+            console.log('000000')
+            console.log(devicename)
             var name = $(this).parent('.controle_row').attr("name");
             //根据个数来创建设备信息
             //i后期使用装置ID来替换
@@ -1752,9 +1753,13 @@ define([
                 var deviceObj = getSingleDeviceData(i, roomId);
                 //获取Fk_1 前缀
                 var item_pre = deviceObj.modelName.substring(0, deviceObj.modelName.lastIndexOf('_'));
-                var model = (Number(deviceObj.modelVal) === 1) ? "制冷" : "制热";
-                var modelImg = (Number(deviceObj.modelVal) === 1) ? "fa-snowflake-o" : "fa-sun-o";
-                var preClass = (Number(deviceObj.modelVal) === 1) ? "cold" : "hot"
+                var val = 1;
+                if(devicename.indexOf('XiLe') > -1){
+                    val = 0;//xile 0是製冷
+                }
+                var model = (Number(deviceObj.modelVal) === val) ? "制冷" : "制热";
+                var modelImg = (Number(deviceObj.modelVal) === val) ? "fa-snowflake-o" : "fa-sun-o";
+                var preClass = (Number(deviceObj.modelVal) === val) ? "cold" : "hot"
                 var parent = preClass + "_parent";
                 var child = preClass + "_child";
                 var circleId = "child" + deviceId;
@@ -2133,20 +2138,20 @@ define([
                             ToolBox.device_model_xile({
                                 $container: $('#others'),
                                 afterCallbackHot: function () {
-                                    sendModelControl(deviceId,item,0,"制热")
+                                    sendModelControl(deviceId,item,4,"制热")
                                 },
                                 afterCallbackCold: function () {
-                                    sendModelControl(deviceId,item,1,"制冷")
+                                    sendModelControl(deviceId,item,0,"制冷")
                                 },
-                                afterCallbackWind: function () {
-                                    sendModelControl(deviceId,item,2,"通风")
-                                },
-                                afterCallbackHeat: function () {
-                                    sendModelControl(deviceId,item,3,"地暖")
-                                },
-                                afterCallbackHotHeat: function () {
-                                    sendModelControl(deviceId,item,4,"制热+地暖")
-                                }
+                                // afterCallbackWind: function () {
+                                //     sendModelControl(deviceId,item,2,"通风")
+                                // },
+                                // afterCallbackHeat: function () {
+                                //     sendModelControl(deviceId,item,3,"地暖")
+                                // },
+                                // afterCallbackHotHeat: function () {
+                                //     sendModelControl(deviceId,item,4,"制热+地暖")
+                                // }
                             })
                         }else if(devicename.indexOf("HaiLin") > -1){
                             //装置模式设置
@@ -2181,7 +2186,7 @@ define([
                     singleAlter2("控制失败");
                 } else {
                     //返回结果成功再修改环形颜色和背景颜色
-                    if(val === 1 || val === 2){
+                    if(name == '制冷'){
                         $('#child' + deviceId).circleProgress({
                             fill: {
                                 gradient: ["#21BFFE", "#67F7B2"]

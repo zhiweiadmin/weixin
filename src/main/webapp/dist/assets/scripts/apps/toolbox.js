@@ -174,38 +174,38 @@ define([
         var beforeCallback = options['beforeCallback'];
         var afterCallbackCold = options['afterCallbackCold'];
         var afterCallbackHot = options['afterCallbackHot'];
-        var afterCallbackWind = options['afterCallbackWind'];//通风
-        var afterCallbackHeat = options['afterCallbackHeat'];//地暖
-        var afterCallbackHotHeat = options['afterCallbackHotHeat'];//地暖
+        // var afterCallbackWind = options['afterCallbackWind'];//通风
+        // var afterCallbackHeat = options['afterCallbackHeat'];//地暖
+        // var afterCallbackHotHeat = options['afterCallbackHotHeat'];//地暖
         if(typeof beforeCallback == 'function'){
             beforeCallback();
         }
         $container.html(template({'tempId': 'device_model_xile'}));
         if(typeof afterCallbackCold == 'function'){
             $('#confirm-alert a.btn.hot').on('tap', function(){
-                afterCallbackCold();
+                afterCallbackHot();
             });
         }
         if(typeof afterCallbackHot == 'function'){
             $('#confirm-alert a.btn.cold').on('tap', function(){
-                afterCallbackHot();
+                afterCallbackCold();
             });
         }
-        if(typeof afterCallbackWind == 'function'){
-            $('#confirm-alert a.btn.wind').on('tap', function(){
-                afterCallbackWind();
-            });
-        }
-        if(typeof afterCallbackHeat == 'function'){
-            $('#confirm-alert a.btn.heat').on('tap', function(){
-                afterCallbackHeat();
-            });
-        }
-        if(typeof afterCallbackHotHeat == 'function'){
-            $('#confirm-alert a.btn.hotheat').on('tap', function(){
-                afterCallbackHotHeat();
-            });
-        }
+        // if(typeof afterCallbackWind == 'function'){
+        //     $('#confirm-alert a.btn.wind').on('tap', function(){
+        //         afterCallbackWind();
+        //     });
+        // }
+        // if(typeof afterCallbackHeat == 'function'){
+        //     $('#confirm-alert a.btn.heat').on('tap', function(){
+        //         afterCallbackHeat();
+        //     });
+        // }
+        // if(typeof afterCallbackHotHeat == 'function'){
+        //     $('#confirm-alert a.btn.hotheat').on('tap', function(){
+        //         afterCallbackHotHeat();
+        //     });
+        // }
         $('.modal-backdrop').remove();
         $('#confirm-alert').on('show.bs.modal', function (e) {
             // 关键代码，如没将modal设置为 block，则$modala_dialog.height() 为零
