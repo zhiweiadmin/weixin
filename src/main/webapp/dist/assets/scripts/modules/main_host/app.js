@@ -887,7 +887,7 @@ define([
                     zjDevName = p.devName;
                 }
                 if (p.itemname == "Sys_RunSet") {
-                    cur_power = p.val;
+                    cur_power_set = p.val;
                     zjDevName = p.devName;
                     // if(zjDevName.indexOf('YORK') > -1){
                     //     if (cur_power == '1') {
@@ -908,7 +908,7 @@ define([
                     // }
                 }
                 if (p.itemname == "Sys_RunStus") {
-                    cur_power_set = p.val;
+                    cur_power = p.val;
                     zjDevName = p.devName;
                 }
                 if (p.itemname == "Sys_ModelSet") {
@@ -957,11 +957,11 @@ define([
                 console.log(zjDevName);
                 if(zjDevName.indexOf('YORK') > -1){
                     if (cur_power_set == '1') {
-                        $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
-                        $("#host_switch").removeClass("on");
-                    } else if (cur_power_set == '0') {
                         $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
                         $("#host_switch").addClass("on")
+                    } else if (cur_power_set == '0') {
+                        $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
+                        $("#host_switch").removeClass("on");
                     }
                 }else{
                     if (cur_power_set == '0') {
