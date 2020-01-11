@@ -401,6 +401,8 @@ define([
         run_model = null;
         run_model_set = null;
         zjDevName = null;
+        cur_power=-1;
+        cur_power_set=-1;
     }
 
     var layout_init_refresh = function () {
@@ -856,6 +858,13 @@ define([
 
     //显示其他信息
     var show_other_info = function () {
+        if (run_status == 1) {
+            $(".online_status").attr("src", "../assets/image/img/online.png");
+            $(".online_status").addClass("online")
+        } else {
+            $(".online_status").attr("src", "../assets/image/img/offline.png");
+            $(".online_status").removeClass("online")
+        }
         require(['progress'], function () {
             _.each(cur_all_data, function (p) {
                 //add by jiangzhiwei
@@ -930,7 +939,6 @@ define([
                 cur_sys_ext_temp = cur_hot_temp;
                 $('#extTemp').html(cur_hot_temp);
             }
-
             console.log(cur_power);
             console.log(cur_power_set);
             console.log(zjDevName);
@@ -1400,7 +1408,7 @@ define([
             if (Number(cur_power) === 0) {
                 $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
                 $("#host_switch").removeClass("on");
-            } else if (cur_power == '1') {
+            } else{
                 $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
                 $("#host_switch").addClass("on")
             }
@@ -1583,10 +1591,10 @@ define([
                     singleAlter("Constant-account-no-permission-msg")
                 } else {
                     var msg = '';
-                    if (cur_power == '0') {
-                        msg = '确定开机吗?'
-                    } else {
+                    if($("#host_switch").hasClass('on')){
                         msg = '确定关机吗?'
+                    }else{
+                        msg = '确定开机吗?'
                     }
                     ToolBox.confirm_alert({
                         $container: $('#others'),
@@ -1595,19 +1603,18 @@ define([
                             //开启loading
                             var loading = layer.load(2, {shade: [0.5, '#fff']});
                             if ($("#host_switch").hasClass('on')) {
-
                                 var val = 0;
-
                                 if(zjDevName.indexOf('YORK') > -1){
                                     val = 2;
                                 }
-
                                 getValByKey("Sys_RunSet", function (item) {
                                     send_control(item, val, true, function (res) {
                                         if (res == 'success') {
                                             $("#host_switch").attr("src", "../assets/image/img/switch_off_o_new.png");
                                             $("#host_switch").removeClass("on");
-                                            layout_init();
+                                            cur_power = 0;
+                                            //不在刷新
+                                            //layout_init();
                                             bindEvents();
                                         } else {
                                             singleAlter2("关机控制失败");
@@ -1617,20 +1624,19 @@ define([
                                     })
                                 })
                             } else {
-
                                 var val = 1;
-
                                 getValByKey("Sys_RunSet", function (item) {
-                                    console.log(item);
                                     send_control(item, val, true, function (res) {
                                         if (res == 'success') {
                                             $('#msg_control').html('控制成功');
                                             $('#msg_control').addClass('margin-left-5');
-                                            setTimeout(function () {
-                                                layout_init();
-                                                bindEvents();
-                                                init_index_page();
-                                            }, 800);
+                                            // setTimeout(function () {
+                                            //     //不在刷新
+                                            //     layout_init();
+                                            //     bindEvents();
+                                            //     init_index_page();
+                                            // }, 800);
+                                            cur_power = 1;
                                             $("#host_switch").attr("src", "../assets/image/img/switch_on_o_new.png");
                                             $("#host_switch").addClass("on")
                                         } else {
